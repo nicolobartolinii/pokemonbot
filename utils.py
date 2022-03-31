@@ -21,21 +21,13 @@ def compose_images(image_urls):
 
 def imagecreation(ids):  # function to create an image
     images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
-    images = [Image.open(image).resize((734, 1024)) for image in images]
+    images = [Image.open(image).resize((367, 512)) for image in images]
     widths, heights = zip(*(i.size for i in images))
-    # max_width = max(widths)
-    # max_height = max(heights)
-    # i = 0
-    # for height in heights:
-    #     if height < max_height:
-    #         images[i] = images[i].resize((max_width, max_height))
-    #         i += 1
-    # widths, heights = zip(*(i.size for i in images))
     total_width = sum(widths)+140
     max_height = max(heights)+60
     new_im = Image.new('RGBA', (total_width, max_height), (255, 0, 0, 0))
-    x_offset = 100
-    y_offset = 50
+    x_offset = 50
+    y_offset = 30
     for im in images:
         new_im.paste(im, (x_offset, y_offset))
         x_offset += im.size[0]+20
