@@ -26,8 +26,8 @@ def imagecreation(ids):  # function to create an image
     max_width = max(widths)
     max_height = max(heights)
     i = 0
-    for (width, height) in (widths, heights):
-        if (width, height) < (max_width, max_height):
+    for height in heights:
+        if height < max_height:
             images[i] = images[i].resize((max_width, max_height))
             i += 1
     total_width = sum(widths)+140
