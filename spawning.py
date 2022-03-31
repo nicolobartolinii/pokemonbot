@@ -48,22 +48,22 @@ class Spawning(commands.Cog):
         await drop.add_reaction('1️⃣')
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
-
+        await asyncio.sleep(0.3)
         while True:
             tasks = [
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.User) and str(r.emoji) in '1️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣',
                     timeout=60
                 ), name='grab1'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.User) and str(r.emoji) in '2️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣',
                     timeout=60
                 ), name='grab2'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.User) and str(r.emoji) in '3️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣',
                     timeout=60
                 ), name='grab3')
             ]
