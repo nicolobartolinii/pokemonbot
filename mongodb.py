@@ -106,7 +106,7 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
     card_code = get_new_card_code()
     grabbed_cards.insert_one({
         '_id': str(card_code),
-        'cardId': str(card.id),
+        'cardId': str(card['_id']),
         'droppedOn': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S')),
         'droppedBy': str(ctx.author.id) or 'Server',
         'grabbedBy': str(user.id),
