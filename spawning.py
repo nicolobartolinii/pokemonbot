@@ -1,4 +1,6 @@
 import asyncio
+import time
+
 import discord
 from discord.ext import commands
 from pymongo import MongoClient
@@ -49,21 +51,21 @@ class Spawning(commands.Cog):
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
 
-        check = lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in "1️⃣2️⃣3️⃣"
+        timeout = 60
 
-        try:
-            reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60)
-            # TODO il timeout vale solo sull'ultimo spawn
-        except asyncio.TimeoutError:
-            await drop.edit(content="Spawn expired.")
-            return
+        timeout_start = time.time()
 
-        if str(reaction.emoji) == "1️⃣":
-            add_grabbed_card(ctx, user, drops[0])
-        if str(reaction.emoji) == "2️⃣":
-            add_grabbed_card(ctx, user, drops[1])
-        if str(reaction.emoji) == "3️⃣":
-            add_grabbed_card(ctx, user, drops[2])
+        while time.time() < timeout_start + timeout:
+            @commands.Cog.listener()
+            async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
+                if not isinstance(user, discord.User) or str(reaction.emoji) not in "1️⃣2️⃣3️⃣":
+                    return
+                if str(reaction.emoji) == "1️⃣":
+                    add_grabbed_card(ctx, user, drops[0])
+                if str(reaction.emoji) == "2️⃣":
+                    add_grabbed_card(ctx, user, drops[1])
+                if str(reaction.emoji) == "3️⃣":
+                    add_grabbed_card(ctx, user, drops[2])
 
 
 def setup(bot: commands.Bot):

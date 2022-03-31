@@ -101,7 +101,7 @@ def get_new_card_code():
     return base36encode(card_code)
 
 
-def add_grabbed_card(ctx: commands.Context, user: discord.Member, card):
+def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
     # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
     grabbed_cards.insert_one({
