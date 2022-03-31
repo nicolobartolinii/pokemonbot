@@ -67,20 +67,21 @@ def import_all_cards():
         })
 
 
-mongocards = list(cards.find())
-print(len(mongocards))
-for i in range(4530, 14679):
-    if not os.path.exists('./imagesLow'):
-        os.makedirs('./imagesLow')
-    if not os.path.exists('./imagesHigh'):
-        os.makedirs('./imagesHigh')
-    url_low = mongocards[i]['imageLow']
-    r_low = requests.get(url_low)
-    filename_low = f'{url_low.split("/")[-2]}_{url_low.split("/")[-1]}'
-    url_high = mongocards[i]['imageHigh']
-    r_high = requests.get(url_high)
-    filename_high = f'{url_high.split("/")[-2]}_{url_high.split("/")[-1]}'
-    with open(f'./imagesLow/{filename_low}', 'wb') as outfile:
-        outfile.write(r_low.content)
-    with open(f'./imagesHigh/{filename_high}', 'wb') as outfile:
-        outfile.write(r_high.content)
+def download_images():
+    mongocards = list(cards.find())
+    print(len(mongocards))
+    for i in range(4530, 14679):
+        if not os.path.exists('./imagesLow'):
+            os.makedirs('./imagesLow')
+        if not os.path.exists('./imagesHigh'):
+            os.makedirs('./imagesHigh')
+        url_low = mongocards[i]['imageLow']
+        r_low = requests.get(url_low)
+        filename_low = f'{url_low.split("/")[-2]}_{url_low.split("/")[-1]}'
+        url_high = mongocards[i]['imageHigh']
+        r_high = requests.get(url_high)
+        filename_high = f'{url_high.split("/")[-2]}_{url_high.split("/")[-1]}'
+        with open(f'./imagesLow/{filename_low}', 'wb') as outfile:
+            outfile.write(r_low.content)
+        with open(f'./imagesHigh/{filename_high}', 'wb') as outfile:
+            outfile.write(r_high.content)
