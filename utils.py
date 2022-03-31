@@ -23,6 +23,13 @@ def imagecreation(ids):  # function to create an image
     images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
     images = [Image.open(image) for image in images]
     widths, heights = zip(*(i.size for i in images))
+    max_width = max(widths)
+    max_height = max(heights)
+    i = 0
+    for (width, height) in (widths, heights):
+        if (width, height) < (max_width, max_height):
+            images[i] = images[i].resize((max_width, max_height))
+            i += 1
     total_width = sum(widths)+140
     max_height = max(heights)+60
     new_im = Image.new('RGBA', (total_width, max_height), (255, 0, 0, 0))
