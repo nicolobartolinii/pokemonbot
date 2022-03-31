@@ -1,4 +1,7 @@
+from datetime import datetime
+
 import discord
+from discord.ext import commands
 from pymongo import MongoClient
 import pokebase as pb
 from dotenv import load_dotenv
@@ -98,7 +101,21 @@ def get_new_card_code():
     return base36encode(card_code)
 
 
-def add_grabbed_card():
+def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
+    # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
-
-    print(card_code)
+    grabbed_cards.insert_one({
+        '_id': str(card_code),
+        'cardId': str(card.id),
+        'droppedOn': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S')),
+        'droppedBy': str(ctx.author.id) or 'Server',
+        'grabbedBy': str(user.id),
+        'ownedBy': str(user.id)
+        # TODO server in cui è stata droppata la carta
+    })
+    db.animal.update({
+        '_id': str(user.id)
+    }, {
+        '$push': {
+            'inventory': str(card_code)
+        }})

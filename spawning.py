@@ -53,16 +53,17 @@ class Spawning(commands.Cog):
 
         try:
             reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60)
+            # TODO il timeout vale solo sull'ultimo spawn
         except asyncio.TimeoutError:
             await drop.edit(content="Spawn expired.")
             return
 
         if str(reaction.emoji) == "1️⃣":
-            pass
+            add_grabbed_card(ctx, user, drops[0])
         if str(reaction.emoji) == "2️⃣":
-            pass
+            add_grabbed_card(ctx, user, drops[1])
         if str(reaction.emoji) == "3️⃣":
-            pass
+            add_grabbed_card(ctx, user, drops[2])
 
 
 def setup(bot: commands.Bot):
