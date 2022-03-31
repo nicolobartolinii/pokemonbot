@@ -89,7 +89,7 @@ class Spawning(commands.Cog):
                 await drop.edit(content="Spawn expired.")
                 return
 
-            # TODO check che uno abbia fatto p$start oltre a check del cooldown
+            # TODO check che uno abbia fatto p$start
 
             if action == grab1:
                 reaction, user = result
@@ -118,6 +118,8 @@ class Spawning(commands.Cog):
                 card_code = add_grabbed_card(ctx, user, drops[2])
                 await ctx.send(f'{user.mention} grabbed the **{drops[2]["name"]}** card `{card_code}`!')
                 grab3 = ' '
+            if grab1 == grab2 == grab3:
+                return
 
 
 def setup(bot: commands.Bot):

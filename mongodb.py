@@ -131,7 +131,7 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
 def is_grab_cooldown(member: discord.Member):
     last_grab_str = list(users.find({'_id': str(member.id)}))[0]['lastGrab']
     last_grab_obj = datetime.strptime(last_grab_str, '%m/%d/%Y, %H:%M:%S')
-    grab_end = last_grab_obj + timedelta(minutes=10)
+    grab_end = last_grab_obj + timedelta(minutes=10, seconds=5)
     now = datetime.now()
     if now <= grab_end:
         seconds_diff = (grab_end - now).seconds
