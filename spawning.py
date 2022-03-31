@@ -15,7 +15,7 @@ class Spawning(commands.Cog):
 
     @commands.command(name='start')
     async def start(self, ctx: commands.Context):
-        if len(list(users.find({'_id': str(ctx.author.id)}))) != 0:
+        if len(list(users.find({'_id': str(ctx.author.id)}))) == 0:
             users.insert_one({
                 '_id': str(ctx.author.id),
                 'registeredAt': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S')),
