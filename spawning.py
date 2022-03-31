@@ -20,7 +20,7 @@ class Spawning(commands.Cog):
         for drop in drops:
             ids.append(drop['_id'])
         print(ids)
-        imagecreation(ids).save('temp.png', 'PNG')
+        imagecreation(ids).save('./temp.png', 'PNG')
         await ctx.send(file=discord.File(fp='./', filename='temp.png'))
 
 
