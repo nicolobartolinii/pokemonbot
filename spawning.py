@@ -1,6 +1,4 @@
 import asyncio
-import time
-
 import discord
 from discord.ext import commands
 from pymongo import MongoClient
@@ -51,21 +49,51 @@ class Spawning(commands.Cog):
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
 
-        timeout = 60
+        while True:
+            tasks = [
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣',
+                    timeout=60
+                ), name='grab1'),
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣',
+                    timeout=60
+                ), name='grab2'),
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣',
+                    timeout=60
+                ), name='grab3')
+            ]
 
-        timeout_start = time.time()
+            done, pending = asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
-        while time.time() < timeout_start + timeout:
-            @commands.Cog.listener()
-            async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
-                if not isinstance(user, discord.User) or str(reaction.emoji) not in "1️⃣2️⃣3️⃣":
-                    return
-                if str(reaction.emoji) == "1️⃣":
-                    add_grabbed_card(ctx, user, drops[0])
-                if str(reaction.emoji) == "2️⃣":
-                    add_grabbed_card(ctx, user, drops[1])
-                if str(reaction.emoji) == "3️⃣":
-                    add_grabbed_card(ctx, user, drops[2])
+            finished: asyncio.Task = list(done)[0]
+
+            for task in pending:
+                try:
+                    task.cancel()
+                except asyncio.CancelledError:
+                    pass
+
+            action = finished.get_name()
+            try:
+                result = finished.result()
+            except asyncio.TimeoutError:
+                await drop.edit(content="Spawn expired.")
+                return
+
+            if action == 'grab1':
+                reaction, user = result
+                add_grabbed_card(ctx, user, drops[0])
+            elif action == 'grab2':
+                reaction, user = result
+                add_grabbed_card(ctx, user, drops[1])
+            elif action == 'grab3':
+                reaction, user = result
+                add_grabbed_card(ctx, user, drops[2])
 
 
 def setup(bot: commands.Bot):
