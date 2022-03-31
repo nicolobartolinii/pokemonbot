@@ -98,10 +98,7 @@ def get_new_card_code():
     return base36encode(card_code)
 
 
-def add_grabbed_card(user: discord.User, card):
+def add_grabbed_card():
     card_code = get_new_card_code()
 
     print(card_code)
-
-
-add_grabbed_card()
