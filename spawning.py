@@ -68,7 +68,7 @@ class Spawning(commands.Cog):
                 ), name='grab3')
             ]
 
-            done, pending = asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+            done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
             finished: asyncio.Task = list(done)[0]
 
