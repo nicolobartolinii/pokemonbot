@@ -93,18 +93,30 @@ class Spawning(commands.Cog):
 
             if action == grab1:
                 reaction, user = result
+                grab_in_cooldown, time_str = is_grab_cooldown(user)
+                if grab_in_cooldown:
+                    await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
+                    continue
                 card_code = add_grabbed_card(ctx, user, drops[0])
                 await ctx.send(f'{user.mention} grabbed the **{drops[0]["name"]}** card `{card_code}`!')
                 grab1 = ' '
             elif action == grab2:
                 reaction, user = result
+                grab_in_cooldown, time_str = is_grab_cooldown(user)
+                if grab_in_cooldown:
+                    await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
+                    continue
                 card_code = add_grabbed_card(ctx, user, drops[1])
-                await ctx.send(f'{user.mention} grabbed the **{drops[1]["name"]}** card `{card_code}`')
+                await ctx.send(f'{user.mention} grabbed the **{drops[1]["name"]}** card `{card_code}`!')
                 grab2 = ' '
             elif action == grab3:
                 reaction, user = result
+                grab_in_cooldown, time_str = is_grab_cooldown(user)
+                if grab_in_cooldown:
+                    await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
+                    continue
                 card_code = add_grabbed_card(ctx, user, drops[2])
-                await ctx.send(f'{user.mention} grabbed the **{drops[2]["name"]}** card `{card_code}`')
+                await ctx.send(f'{user.mention} grabbed the **{drops[2]["name"]}** card `{card_code}`!')
                 grab3 = ' '
 
 

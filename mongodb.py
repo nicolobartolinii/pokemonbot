@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import discord
 from discord.ext import commands
@@ -129,4 +129,19 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
 
 
 def is_grab_cooldown(member: discord.Member):
+    last_grab_str = list(users.find({'_id': str(member.id)}))[0]['lastGrab']
+    last_grab_obj = datetime.strptime(last_grab_str, '%m/%d/%Y, %H:%M:%S')
+    grab_end = last_grab_obj + timedelta(minutes=10)
+    now = datetime.now()
+    if now <= grab_end:
+        seconds_diff = (grab_end - now).seconds
+        time_str = ''
+        if seconds_diff >= 60:
+            minutes = seconds_diff // 60
+            time_str = f'{minutes} minutes'
+        else:
+            time_str = f'{seconds_diff} seconds'
+        return True, time_str
+    else:
+        return False, 0
     pass
