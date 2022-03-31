@@ -21,7 +21,9 @@ class Spawning(commands.Cog):
             ids.append(drop['_id'])
         print(ids)
         imagecreation(ids).save('./temp.png', 'PNG')
-        await ctx.send(file=discord.File(fp='./', filename='temp.png'))
+        with open('./temp.png', 'wb') as f:
+            picture = discord.File(f)
+            await ctx.send(file=picture)
 
 
 def setup(bot: commands.Bot):
