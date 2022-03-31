@@ -101,7 +101,7 @@ def get_new_card_code():
     return base36encode(card_code)
 
 
-def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
+def add_grabbed_card(ctx: commands.Context, user: discord.Member, card):
     # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
     grabbed_cards.insert_one({
@@ -113,7 +113,7 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
         'ownedBy': str(user.id)
         # TODO server in cui è stata droppata la carta
     })
-    db.animal.update({
+    users.update_one({
         '_id': str(user.id)
     }, {
         '$push': {

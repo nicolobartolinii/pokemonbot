@@ -49,7 +49,7 @@ class Spawning(commands.Cog):
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
 
-        check = lambda r, u: str(r.emoji) in "1️⃣2️⃣3️⃣"
+        check = lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in "1️⃣2️⃣3️⃣"
 
         try:
             reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60)
