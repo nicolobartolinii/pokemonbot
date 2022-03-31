@@ -1,10 +1,10 @@
+import discord
 from pymongo import MongoClient
 import pokebase as pb
 from dotenv import load_dotenv
-import os
 from pokemontcgsdk import Card
-from pokemontcgsdk import Set
-import requests
+import os
+from utils import *
 
 load_dotenv()
 PSW_MONGODB = os.getenv('PSW_MONGODB')
@@ -17,6 +17,9 @@ db = client['discord-bot']
 
 pokemons = db['pokemons']
 cards = db['cards']
+grabbed_cards = db['grabbed_cards']
+general_bot_settings = db['general_bot_settings']
+users = db['users']
 
 
 def add_pokemons(first, last):
@@ -30,12 +33,6 @@ def add_pokemons(first, last):
             'artwork': pb.SpriteResource('pokemon/other/official-artwork', pokemon.id).url
         })
 
-
-# card = Card.where(q='id:"pl1-1"')
-# cards.insert_one({
-#     '_id': card[0].id,
-#     'types': card[0].types
-# })
 
 def import_all_cards():
     all_cards = Card.all()
@@ -85,3 +82,26 @@ def download_images():
             outfile.write(r_low.content)
         with open(f'./imagesHigh/{filename_high}', 'wb') as outfile:
             outfile.write(r_high.content)
+
+
+def get_new_card_code():
+    card_code = int(general_bot_settings.find_one({
+        '_id': 0
+    })['lastCardCode']) + 1
+    general_bot_settings.update_one({
+        '_id': 0
+    }, {
+        '$set': {
+            'lastCardCode': str(card_code)
+        }
+    }, upsert=False)
+    return base36encode(card_code)
+
+
+def add_grabbed_card(user: discord.User, card):
+    card_code = get_new_card_code()
+
+    print(card_code)
+
+
+add_grabbed_card()
