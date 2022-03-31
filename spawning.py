@@ -23,7 +23,10 @@ class Spawning(commands.Cog):
         imagecreation(ids).save('./temp.png', 'PNG')
         with open('./temp.png', 'rb') as f:
             picture = discord.File(f)
-            await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)
+            drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)
+        await drop.add_reaction(':one:')
+        await drop.add_reaction(':two:')
+        await drop.add_reaction(':three:')
 
 
 def setup(bot: commands.Bot):
