@@ -35,6 +35,7 @@ class Spawning(commands.Cog):
     async def spawn(self, ctx: commands.Context):
         if len(list(users.find({'_id': str(ctx.author.id)}))) == 0:
             await ctx.send('You should first register an account using the `p$start` command.')
+            return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         ids = []
         for drop in drops:
