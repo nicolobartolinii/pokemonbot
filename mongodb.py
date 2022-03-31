@@ -119,3 +119,8 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
         '$push': {
             'inventory': str(card_code)
         }})
+    return card_code
+
+
+def is_grab_cooldown(member: discord.Member):
+    pass

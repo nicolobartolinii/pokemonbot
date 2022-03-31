@@ -48,6 +48,9 @@ class Spawning(commands.Cog):
         await drop.add_reaction('1️⃣')
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
+        grab1 = 'grab1'
+        grab2 = 'grab2'
+        grab3 = 'grab3'
         await asyncio.sleep(0.3)
         while True:
             tasks = [
@@ -85,15 +88,21 @@ class Spawning(commands.Cog):
                 await drop.edit(content="Spawn expired.")
                 return
 
-            if action == 'grab1':
+            if action == grab1:
                 reaction, user = result
-                add_grabbed_card(ctx, user, drops[0])
-            elif action == 'grab2':
+                card_code = add_grabbed_card(ctx, user, drops[0])
+                await ctx.send(f'{user.mention} grabbed the {drops[0]["name"]} card {card_code}!')
+                grab1 = ' '
+            elif action == grab2:
                 reaction, user = result
-                add_grabbed_card(ctx, user, drops[1])
-            elif action == 'grab3':
+                card_code = add_grabbed_card(ctx, user, drops[1])
+                await ctx.send(f'{user.mention} grabbed the {drops[1]["name"]} card {card_code}')
+                grab2 = ' '
+            elif action == grab3:
                 reaction, user = result
-                add_grabbed_card(ctx, user, drops[2])
+                card_code = add_grabbed_card(ctx, user, drops[2])
+                await ctx.send(f'{user.mention} grabbed the {drops[2]["name"]} card {card_code}')
+                grab3 = ' '
 
 
 def setup(bot: commands.Bot):
