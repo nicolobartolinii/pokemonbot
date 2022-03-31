@@ -19,13 +19,13 @@ def compose_images(image_urls):
     return image
 
 
-def imagecreation(image_urls):  # function to create an image
-    responses = [requests.get(url) for url in image_urls]
-    images = [Image.open(BytesIO(response.content)) for response in responses]
+def imagecreation(ids):  # function to create an image
+    images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
+    images = [Image.open(image) for image in images]
     widths, heights = zip(*(i.size for i in images))
     total_width = sum(widths)+140
     max_height = max(heights)+60
-    new_im = Image.new('RGB', (total_width, max_height))
+    new_im = Image.new('RGBA', (total_width, max_height), (255, 0, 0, 0))
     x_offset = 50
     y_offset = 30
     for im in images:
