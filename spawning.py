@@ -24,6 +24,7 @@ class Spawning(commands.Cog):
                 'cardsBurned': 0,
                 'cardsGrabbed': 0,
                 'cardsReceived': 0,
+                'lastGrab': '',
                 'inventory': []
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
@@ -88,20 +89,22 @@ class Spawning(commands.Cog):
                 await drop.edit(content="Spawn expired.")
                 return
 
+            # TODO check che uno abbia fatto p$start oltre a check del cooldown
+
             if action == grab1:
                 reaction, user = result
                 card_code = add_grabbed_card(ctx, user, drops[0])
-                await ctx.send(f'{user.mention} grabbed the {drops[0]["name"]} card {card_code}!')
+                await ctx.send(f'{user.mention} grabbed the **{drops[0]["name"]}** card `{card_code}`!')
                 grab1 = ' '
             elif action == grab2:
                 reaction, user = result
                 card_code = add_grabbed_card(ctx, user, drops[1])
-                await ctx.send(f'{user.mention} grabbed the {drops[1]["name"]} card {card_code}')
+                await ctx.send(f'{user.mention} grabbed the **{drops[1]["name"]}** card `{card_code}`')
                 grab2 = ' '
             elif action == grab3:
                 reaction, user = result
                 card_code = add_grabbed_card(ctx, user, drops[2])
-                await ctx.send(f'{user.mention} grabbed the {drops[2]["name"]} card {card_code}')
+                await ctx.send(f'{user.mention} grabbed the **{drops[2]["name"]}** card `{card_code}`')
                 grab3 = ' '
 
 

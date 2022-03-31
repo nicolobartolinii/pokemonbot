@@ -119,6 +119,12 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
         '$push': {
             'inventory': str(card_code)
         }})
+    users.update_one({
+        '_id': str(user.id)
+    }, {
+        '$set': {
+            'lastGrab': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S'))
+        }})
     return card_code
 
 
