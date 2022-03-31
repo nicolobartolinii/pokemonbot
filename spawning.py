@@ -24,9 +24,9 @@ class Spawning(commands.Cog):
         with open('./temp.png', 'rb') as f:
             picture = discord.File(f)
             drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)
-        await drop.add_reaction(':one:')
-        await drop.add_reaction(':two:')
-        await drop.add_reaction(':three:')
+        await drop.add_reaction('1️⃣')
+        await drop.add_reaction('2️⃣')
+        await drop.add_reaction('3️⃣')
 
 
 def setup(bot: commands.Bot):
