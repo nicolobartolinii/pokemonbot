@@ -63,7 +63,7 @@ async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_s
     embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
                           colour=0xffcb05)
     embed.description += f'Card set · **{str(card_set)}**\n'
-    embed.description += f'Total printed · **{str(card_print)}**'
+    embed.description += f'Total printed · **{str(card_print)}**\n'
     embed.description += f'Rarity · **{str(card_rarity)}**'
     card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
     file = discord.File(card_image, filename='image.png')

@@ -177,7 +177,7 @@ class Spawning(commands.Cog):
         await ctx.send(file=file, embed=embed)
 
     @commands.command(name='lookup', aliases=['lu'])
-    async def lookup(self, ctx: commands.Context, card_name: str = None):
+    async def lookup(self, ctx: commands.Context, *, card_name: str = None):
         if card_name is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
             card_code = user_inventory[-1]
