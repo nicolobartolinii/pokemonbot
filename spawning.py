@@ -214,7 +214,7 @@ class Spawning(commands.Cog):
                 try:
                     msg = await self.bot.wait_for(
                         'message',
-                        check=lambda m: m.author == ctx.author and m in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] and m.channel == ctx.channel,
+                        check=lambda m: m.author == ctx.author and m.content in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] and m.channel == ctx.channel,
                         timeout=20
                     )
                 except asyncio.TimeoutError:
