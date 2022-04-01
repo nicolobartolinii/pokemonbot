@@ -23,6 +23,7 @@ cards = db['cards']
 grabbed_cards = db['grabbed_cards']
 general_bot_settings = db['general_bot_settings']
 users = db['users']
+guilds = db['guilds']
 
 
 def add_pokemons(first, last):
