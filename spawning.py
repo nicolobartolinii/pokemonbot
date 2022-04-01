@@ -261,8 +261,8 @@ class Spawning(commands.Cog):
                     await message.add_reaction('⬅')
                     await message.add_reaction('➡')
 
-                    def check(r, u):
-                        return u == ctx.author and str(r.emoji) in ['⬅', '➡']
+                    def check(r: discord.Reaction, u):
+                        return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == ctx.message
 
                     while True:
                         try:
