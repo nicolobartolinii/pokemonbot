@@ -142,8 +142,12 @@ class Spawning(commands.Cog):
             card_name = generic_card['name']
             card_str = f'`{card_code}`·`#{print_num}`·{card_id}·{set_name}·**{card_name}**\n'
             collection.append(card_str)
-        for i in range(10):
-            embed.description += collection[i]
+        i = 1
+        for card in collection:
+            embed.description += card
+            i += 1
+            if i == 11:
+                break
         embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
         await ctx.send(embed=embed)
 
