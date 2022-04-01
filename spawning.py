@@ -125,7 +125,7 @@ class Spawning(commands.Cog):
     async def collection(self, ctx: commands.Context, member: discord.Member = None):  # TODO altri argomenti per filtrare la collection
         if member is None:
             member = ctx.author
-        user = users.find_one({'_id': member.id})
+        user = users.find_one({'_id': str(member.id)})
         cards_owned = user['inventory']
         embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n')
         if len(cards_owned) == 0:
@@ -134,10 +134,10 @@ class Spawning(commands.Cog):
             return
         collection = []
         for card_code in cards_owned:
-            card_info = grabbed_cards.find_one({'_id': str(card_code)})[0]
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
             print_num = card_info['print']
             card_id = card_info['cardId']
-            generic_card = cards.find_one({'_id': str(card_id)})[0]
+            generic_card = cards.find_one({'_id': str(card_id)})
             set_name = generic_card['set']
             card_name = generic_card['name']
             card_str = f'`{card_code}`·`#{print_num}`·{card_id}·{set_name}·**{card_name}**\n'
