@@ -17,7 +17,7 @@ class Wishlist(commands.Cog):
             return
         if member is None:
             member = ctx.author
-        embed = discord.Embed(title=f"{member.mention}'s wishlist", description='[WIP slots extra]\n\n', colour=0xffcb05)
+        embed = discord.Embed(title=f"Wishlist", description=f'Owner: {member.mention}\n[WIP slots extra]\n\n', colour=0xffcb05)
         embed.set_thumbnail(url=member.avatar_url)
         user = users.find_one({'_id': str(member.id)})
         wishlist = user['wishlist']
@@ -43,7 +43,7 @@ class Wishlist(commands.Cog):
             embeds = [embed]
             pages = (len(wishlist) // 10) + 1
             for p in range(1, pages):
-                next_page = discord.Embed(title=f"{member.mention}'s wishlist", description='[WIP slots extra]\n\n', colour=0xffcb05)
+                next_page = discord.Embed(title=f"Wishlist", description=f'Owner: {member.mention}\n[WIP slots extra]\n\n', colour=0xffcb05)
                 for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)):
                     card = cards.fine_one({'_id': str(wishlist[i])})
                     card_str = f'{str(card["set"])} · **{str(card["name"])}**\n'
