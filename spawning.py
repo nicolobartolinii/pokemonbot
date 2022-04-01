@@ -199,14 +199,6 @@ class Spawning(commands.Cog):
                         await message.remove_reaction(reaction, user)
                 except asyncio.TimeoutError:
                     break
-        i = 1
-        for card in collection:  # TODO sistema per andare avanti con le pagine
-            embed.description += card
-            i += 1
-            if i == 11:
-                break
-        embed.set_footer(text=f'Showing cards 1-{10 if len(cards_owned) > 10 else len(cards_owned)} of {len(cards_owned)}')
-        await ctx.send(embed=embed)
 
     @commands.command(name='view', aliases=['v'])
     async def view(self, ctx: commands.Context, card_code: str = None):
