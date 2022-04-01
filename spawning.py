@@ -178,19 +178,42 @@ class Spawning(commands.Cog):
 
     @commands.command(name='lookup', aliases=['lu'])
     async def lookup(self, ctx: commands.Context, card_name: str = None):
+        card_name = ''
+        card_set = ''
+        card_print = ''
+        card_rarity = ''
+        card_id = ''
         if card_name is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
             card_code = user_inventory[-1]
             card_id = grabbed_cards.find_one({'_id': str(card_code)})['cardId']
             card = cards.find_one({'_id': str(card_id)})
-            embed = discord.Embed(name='Card Lookup', description=f'Card name · **{str(card["name"])}**\n', colour=0xffcb05)
-            embed.description += f'Card set · **{str(card["set"])}**\n'
-            embed.description += f'Total printed · **{str(card["timesSpawned"])}**'
+            card_name = card['name']
+            card_set = card['set']
+            card_print = card['totalSpawned']
+            card_rarity = card['rarity']
+        else:
+            cards_filtered = list(cards.fin({'name': {'$regex': f'.*{card_name}.*', '$options': 'i'}}))
+            if len(cards_filtered) == 0:
+                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
+                return
+            elif len(cards_filtered) == 1:
+                card_name = cards_filtered[0]['name']
+                card_set = cards_filtered[0]['set']
+                card_print = cards_filtered[0]['totalSpawned']
+                card_rarity = cards_filtered[0]['rarity']
+                card_id = cards_filtered[0]['_id']
+            else:
+                pass
+            embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
+                                  colour=0xffcb05)
+            embed.description += f'Card set · **{str(card_set)}**\n'
+            embed.description += f'Total printed · **{str(card_print)}**'
+            embed.description += f'Rarity · **{str(card_rarity)}**'
             card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
             file = discord.File(card_image, filename='image.png')
             embed.set_thumbnail(url='attachment://image.png')
             await ctx.send(file=file, embed=embed)
-            return
 
 
 def setup(bot: commands.Bot):
