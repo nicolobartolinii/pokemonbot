@@ -258,21 +258,21 @@ class Spawning(commands.Cog):
                         embeds.append(next_page)
                     cur_page = 0
 
-                    await message.add_reaction(':arrow-left:')
-                    await message.add_reaction(':arrow-right:')
+                    await message.add_reaction(':arrow_left:')
+                    await message.add_reaction(':arrow_right:')
 
                     def check(r, u):
-                        return u == ctx.author and str(r.emoji) in [':arrow-left:', ':arrow-right:']
+                        return u == ctx.author and str(r.emoji) in [':arrow_left:', ':arrow_right:']
 
                     while True:
                         try:
                             reaction, user = await self.bot.wait_for('reaction_add', timeout=45, check=check)
 
-                            if str(reaction.emoji) == ':arrow-right:' and cur_page != pages:
+                            if str(reaction.emoji) == ':arrow_right:' and cur_page != pages:
                                 cur_page += 1
                                 await message.edit(embed=embeds[cur_page])
                                 await message.remove_reaction(reaction, user)
-                            elif str(reaction.emoji) == ':arrow-left:' and cur_page > 0:
+                            elif str(reaction.emoji) == ':arrow_left:' and cur_page > 0:
                                 cur_page -= 1
                                 await message.edit(embed=embeds[cur_page])
                                 await message.remove_reaction(reaction, user)
