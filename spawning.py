@@ -149,7 +149,7 @@ class Spawning(commands.Cog):
             i += 1
             if i == 11:
                 break
-        embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
+        embed.set_footer(text=f'Showing cards 1-{10 if len(cards_owned) > 10 else len(cards_owned)} of {len(cards_owned)}')
         await ctx.send(embed=embed)
 
     @commands.command(name='view', aliases=['v'])
@@ -202,7 +202,15 @@ class Spawning(commands.Cog):
                 card_id = cards_filtered[0]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             else:
-                pass
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
+                field_text = ''
+                for i in range(10):
+                    card_name = cards_filtered[i]['name']
+                    card_set = cards_filtered[i]['set']
+                    field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)'
+                embed.add_field(name=f'Showing cards 1-{10 if len(cards_filtered) > 10 else len(cards_filtered)}', value=field_text)
+                await ctx.send(embed=embed)
+                return
 
 
 def setup(bot: commands.Bot):
