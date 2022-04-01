@@ -34,6 +34,7 @@ class Spawning(commands.Cog):
             return
 
     @commands.command(name='spawn', aliases=['s'])  # TODO cooldown spawn
+    @commands.cooldown(rate=1, per=1800, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p$start` command.')
@@ -246,6 +247,16 @@ class Spawning(commands.Cog):
                 card_id = cards_filtered[int(msg.content) - 1]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
 
+    @spawn.error
+    async def spawn_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            seconds_diff = round(error.retry_after)
+            if seconds_diff >= 60:
+                minutes = seconds_diff // 60
+                time_str = f'{minutes} minutes'
+            else:
+                time_str = f'{seconds_diff} seconds'
+            await ctx.send(f'{ctx.author.mention}, you must wait `{time_str}` before spawning more cards.')
 
 def setup(bot: commands.Bot):
     bot.add_cog(Spawning(bot))
