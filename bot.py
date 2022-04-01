@@ -4,7 +4,7 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents().all()
-default_prefixes = ['p$', 'p']
+default_prefixes = ['p!', 'p', 'p$']
 
 
 async def determine_prefix(bot: commands.Bot, message: discord.Message):
@@ -29,7 +29,7 @@ async def on_guild_join(guild: discord.Guild):
             'serverSpawnCount': 250,
             'spawnChannel': str(guild.text_channels[0].id),
             'messageCounter': 0,
-            'customPrefix': ''
+            'customPrefix': 'p!'
         })
         text_channel = guild.text_channels[0]
         embed = discord.Embed(
