@@ -157,7 +157,11 @@ class Spawning(commands.Cog):
         if card_code is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
             card_code = user_inventory[-1]
-        card_owner_id = users.find_one({'inventory': {'$in': [str(card_code)]}})['_id']
+        card_owner_docu = users.find_one({'inventory': {'$in': [str(card_code)]}})
+        if card_owner_docu is None:
+            await ctx.send(f'Sorry {ctx.author.mention}, that code is invalid.')
+            return
+        card_owner_id = card_owner_docu['_id']
         card_owner = self.bot.get_user(int(card_owner_id))
         grabbed_card = grabbed_cards.find_one({'_id': str(card_code)})
         card_id = grabbed_card['cardId']
