@@ -208,9 +208,25 @@ class Spawning(commands.Cog):
                     card_name = cards_filtered[i]['name']
                     card_set = cards_filtered[i]['set']
                     field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
-                embed.add_field(name=f'Showing cards 1-{10 if len(cards_filtered) > 10 else len(cards_filtered)}', value=field_text)
+                embed.add_field(name=f'Showing cards 1-{10 if len(cards_filtered) > 10 else len(cards_filtered)} of {len(cards_filtered)}', value=field_text)
                 await ctx.send(embed=embed)
-                return
+
+                try:
+                    msg = self.bot.wait_for(
+                        'message',
+                        check=lambda m: m.author == ctx.author and m in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                        timeout=20
+                    )
+                except asyncio.TimeoutError:
+                    return
+
+                card_name = cards_filtered[int(msg)]['name']
+                card_set = cards_filtered[int(msg)]['set']
+                card_print = cards_filtered[int(msg)]['timesSpawned']
+                card_rarity = cards_filtered[int(msg)]['rarity']
+                card_id = cards_filtered[int(msg)]['_id']
+                await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
+
 
 
 def setup(bot: commands.Bot):
