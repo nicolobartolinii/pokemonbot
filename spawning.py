@@ -159,7 +159,7 @@ class Spawning(commands.Cog):
         if len(cards_owned) < 10:
             for i in range(len(cards_owned)):
                 embed.description += collection[i]
-            embed.set_footer(text=f'Showing cards 1-{len(cards_owned)}')
+            embed.set_footer(text=f'Showing cards 1-{len(cards_owned) + 1}')
             await ctx.send(embed=embed)
         elif len(cards_owned) >= 10:
             for i in range(10):
