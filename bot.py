@@ -46,7 +46,7 @@ async def channel(ctx: commands.Context, text_channel: discord.TextChannel):
     guilds.update_one({'_id': str(ctx.guild.id)}, {'$set': {'spawnChannel': str(text_channel.id)}})
 
 
-@commands.command(name='prefix')
+@bot.command(name='prefix')
 @commands.has_guild_permissions(administrator=True)
 @commands.guild_only()
 async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p$'):
