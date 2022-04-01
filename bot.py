@@ -41,13 +41,13 @@ async def on_guild_join(guild: discord.Guild):
 
 
 @bot.command(name='channel')
-@commands.has_guild_permissions(admin=True)
+@commands.has_guild_permissions(administrator=True)
 async def channel(ctx: commands.Context, text_channel: discord.TextChannel):
     guilds.update_one({'_id': str(ctx.guild.id)}, {'$set': {'spawnChannel': str(text_channel.id)}})
 
 
 @commands.command(name='prefix')
-@commands.has_guild_permissions(admin=True)
+@commands.has_guild_permissions(administrator=True)
 @commands.guild_only()
 async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p$'):
     guilds.update_one({'_id': str(ctx.guild.id)}, {'$set': {'customPrefix': custom_prefix}})
@@ -55,7 +55,7 @@ async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p$'):
 
 
 @bot.command(name='server', aliases=['serverinfo', 'si'])
-@commands.has_guild_permissions(admin=True)
+@commands.has_guild_permissions(administrator=True)
 async def server(ctx: commands.Context):
     guild = guilds.find_one({'_id': str(ctx.guild.id)})
     embed = discord.Embed(
