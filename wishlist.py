@@ -27,14 +27,14 @@ class Wishlist(commands.Cog):
             return
         elif len(wishlist) < 10:
             for i in range(len(wishlist)):
-                card = cards.fine_one({'_id': str(wishlist[i])})
+                card = cards.find_one({'_id': str(wishlist[i])})
                 card_str = f'{str(card["set"])} · **{str(card["name"])}**\n'
                 embed.description += card_str
             embed.set_footer(text=f'Showing wishlisted cards 1-{len(wishlist)}')
             await ctx.send(embed=embed)
         elif len(wishlist) >= 10:
             for i in range(10):
-                card = cards.fine_one({'_id': str(wishlist[i])})
+                card = cards.find_one({'_id': str(wishlist[i])})
                 card_str = f'{str(card["set"])} · **{str(card["name"])}**\n'
                 embed.description += card_str
             embed.set_footer(text=f'Showing cards 1-10 of {len(wishlist)}')
@@ -45,7 +45,7 @@ class Wishlist(commands.Cog):
             for p in range(1, pages):
                 next_page = discord.Embed(title=f"Wishlist", description=f'Owner: {member.mention}\n[WIP slots extra]\n\n', colour=0xffcb05)
                 for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)):
-                    card = cards.fine_one({'_id': str(wishlist[i])})
+                    card = cards.find_one({'_id': str(wishlist[i])})
                     card_str = f'{str(card["set"])} · **{str(card["name"])}**\n'
                     embed.description += card_str
                 embed.set_footer(text=f'Showing wishlisted cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)} of {len(wishlist)}')
@@ -183,12 +183,12 @@ class Wishlist(commands.Cog):
                             card_id = cards_filtered[int(msg.content) - 1]['_id']
                             if card_id in wishlist:
                                 await ctx.send(
-                                    f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` is already in your wishlist.')
+                                    f'{ctx.author.mention}, `{cards_filtered[int(msg.content) - 1]["name"]} · {cards_filtered[int(msg.content) - 1]["set"]}` is already in your wishlist.')
                                 return
                             users.update_one({'_id': str(ctx.author.id)}, {'$push': {'wishlist': str(card_id)}})
                             cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': 1}})
                             await ctx.send(
-                                f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully added to your wishlist.')
+                                f'{ctx.author.mention}, `{cards_filtered[int(msg.content) - 1]["name"]} · {cards_filtered[int(msg.content) - 1]["set"]}` has been successfully added to your wishlist.')
                             return
                 try:
                     msg = await self.bot.wait_for(
