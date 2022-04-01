@@ -121,6 +121,32 @@ class Spawning(commands.Cog):
             if grab1 == grab2 == grab3:
                 return
 
+    @commands.command(name='collection', aliases=['c'])
+    async def collection(self, ctx: commands.Context, member: discord.Member = None):  # TODO altri argomenti per filtrare la collection
+        if member is None:
+            member = ctx.author
+        user = users.find_one({'_id': member.id})
+        cards_owned = user['inventory']
+        embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n')
+        if len(cards_owned) == 0:
+            embed.description += 'Card collection is empty.'
+            await ctx.send(embed=embed)
+            return
+        collection = []
+        for card_code in cards_owned:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            print_num = card_info['print']
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            set_name = generic_card['set']
+            card_name = generic_card['name']
+            card_str = f'`{card_code}`·`#{print_num}`·{card_id}·{set_name}·**{card_name}**\n'
+            collection.append(card_str)
+        for i in range(10):
+            embed.description += collection[i]
+        embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
+        await ctx.send(embed=embed)
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Spawning(bot))

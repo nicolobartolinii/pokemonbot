@@ -104,13 +104,15 @@ def get_new_card_code():
 def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
     # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
+    spawns = card['timesSpawned'] + 1 or 1
     grabbed_cards.insert_one({
         '_id': str(card_code),
         'cardId': str(card['_id']),
         'droppedOn': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S')),
         'droppedBy': str(ctx.author.id) or 'Server',
         'grabbedBy': str(user.id),
-        'ownedBy': str(user.id)
+        'ownedBy': str(user.id),
+        'print': str(spawns)
         # TODO server in cui è stata droppata la carta
     })
     users.update_one({
@@ -125,6 +127,13 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
         '$set': {
             'lastGrab': str(datetime.now().strftime('%m/%d/%Y, %H:%M:%S'))
         }})
+    cards.update_one({
+        '_id': str(card['_id'])
+    }, {
+        '$set': {
+            'timesSpawned': spawns
+        }
+    })
     return card_code
 
 
