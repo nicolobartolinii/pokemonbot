@@ -36,7 +36,7 @@ class Spawning(commands.Cog):
     @commands.cooldown(rate=1, per=1800, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         ids = []
@@ -97,7 +97,7 @@ class Spawning(commands.Cog):
                     await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
                     continue
                 if not is_user_registered(user):
-                    await ctx.send('You should first register an account using the `p$start` command.')
+                    await ctx.send('You should first register an account using the `p!start` command.')
                     continue
                 card_code = add_grabbed_card(ctx, user, drops[0])
                 await ctx.send(f'{user.mention} grabbed the **{drops[0]["name"]}** card `{card_code}`!')
@@ -109,7 +109,7 @@ class Spawning(commands.Cog):
                     await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
                     continue
                 if not is_user_registered(user):
-                    await ctx.send('You should first register an account using the `p$start` command.')
+                    await ctx.send('You should first register an account using the `p!start` command.')
                     continue
                 card_code = add_grabbed_card(ctx, user, drops[1])
                 await ctx.send(f'{user.mention} grabbed the **{drops[1]["name"]}** card `{card_code}`!')
@@ -121,7 +121,7 @@ class Spawning(commands.Cog):
                     await ctx.send(f'{user.mention}, you must wait `{time_str}` before grabbing another card.')
                     continue
                 if not is_user_registered(user):
-                    await ctx.send('You should first register an account using the `p$start` command.')
+                    await ctx.send('You should first register an account using the `p!start` command.')
                     continue
                 card_code = add_grabbed_card(ctx, user, drops[2])
                 await ctx.send(f'{user.mention} grabbed the **{drops[2]["name"]}** card `{card_code}`!')
@@ -132,10 +132,10 @@ class Spawning(commands.Cog):
     @commands.command(name='collection', aliases=['c'])
     async def collection(self, ctx: commands.Context, member: discord.Member = None):  # TODO altri argomenti per filtrare la collection
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if not is_user_registered(member or ctx.author):
-            await ctx.send('The member whose collection you are looking for is not registered. He should register an account using the `p$start` command.')
+            await ctx.send('The member whose collection you are looking for is not registered. He should register an account using the `p!start` command.')
             return
         if member is None:
             member = ctx.author
@@ -204,7 +204,7 @@ class Spawning(commands.Cog):
     @commands.command(name='view', aliases=['v'])
     async def view(self, ctx: commands.Context, card_code: str = None):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if card_code is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
@@ -232,7 +232,7 @@ class Spawning(commands.Cog):
     @commands.command(name='lookup', aliases=['lu'])
     async def lookup(self, ctx: commands.Context, *, card_name: str = None):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if card_name is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']

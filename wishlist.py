@@ -10,10 +10,10 @@ class Wishlist(commands.Cog):
     @commands.command(name='wishlist', aliases=['w', 'wl'])
     async def wishlist(self, ctx: commands.Context, *, member: discord.Member = None):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if not is_user_registered(member or ctx.author):
-            await ctx.send('The member whose wishlist you are looking for is not registered. He should register an account using the `p$start` command.')
+            await ctx.send('The member whose wishlist you are looking for is not registered. He should register an account using the `p!start` command.')
             return
         if member is None:
             member = ctx.author
@@ -79,7 +79,7 @@ class Wishlist(commands.Cog):
     @commands.command(name='wishadd', aliases=['wa', 'wadd'])
     async def wishadd(self, ctx: commands.Context, *, card_name: str = None):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if card_name is None:
             await ctx.send(f'{ctx.author.mention}, please specify a card name.')
@@ -213,7 +213,7 @@ class Wishlist(commands.Cog):
     @commands.command(name='wishremove', aliases=['wr', 'wrem'])
     async def wishremove(self, ctx: commands.Context, *, card_name: str = None):
         if not is_user_registered(ctx.author):
-            await ctx.send('You should first register an account using the `p$start` command.')
+            await ctx.send('You should first register an account using the `p!start` command.')
             return
         if card_name is None:
             await ctx.send(f'{ctx.author.mention}, please specify a card name.')

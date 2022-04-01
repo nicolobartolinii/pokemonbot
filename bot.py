@@ -34,7 +34,7 @@ async def on_guild_join(guild: discord.Guild):
         text_channel = guild.text_channels[0]
         embed = discord.Embed(
             title='Welcome to Pokémon Collector Bot!',  # TODO NOME DA RIVEDERE
-            description='Thank you for adding Pokémon Collector Bot to your server! Before you can start playing, have a server admin use the command `p$channel` to set the Pokémon cards spawn channel.',
+            description='Thank you for adding Pokémon Collector Bot to your server! Before you can start playing, have a server admin use the command `p!channel` to set the Pokémon cards spawn channel.',
             colour=0xffcb05
         )
         await text_channel.send(embed=embed)
@@ -49,9 +49,9 @@ async def channel(ctx: commands.Context, text_channel: discord.TextChannel):
 @bot.command(name='prefix')
 @commands.has_guild_permissions(administrator=True)
 @commands.guild_only()
-async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p$'):
+async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p!'):
     guilds.update_one({'_id': str(ctx.guild.id)}, {'$set': {'customPrefix': custom_prefix}})
-    await ctx.send("Prefix set!")
+    await ctx.send(f"Prefix set to `{custom_prefix}`!")
 
 
 @bot.command(name='server', aliases=['serverinfo', 'si'])
