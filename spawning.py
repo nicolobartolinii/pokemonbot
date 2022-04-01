@@ -135,7 +135,7 @@ class Spawning(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p$start` command.')
             return
-        if not is_user_registered(member):
+        if not is_user_registered(member or ctx.author):
             await ctx.send('The member whose collection you are looking for is not registered. He should register an account using the `p$start` command.')
             return
         if member is None:
@@ -224,12 +224,63 @@ class Spawning(commands.Cog):
             else:
                 embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
                 field_text = ''
-                for i in range(10 if len(cards_filtered) > 10 else len(cards_filtered)):
-                    card_name = cards_filtered[i]['name']
-                    card_set = cards_filtered[i]['set']
-                    field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
-                embed.add_field(name=f'Showing cards 1-{10 if len(cards_filtered) > 10 else len(cards_filtered)} of {len(cards_filtered)}', value=field_text)
-                await ctx.send(embed=embed)
+                if len(cards_filtered) < 10:
+                    for i in range(10 if len(cards_filtered) > 10 else len(cards_filtered)):
+                        card_name = cards_filtered[i]['name']
+                        card_set = cards_filtered[i]['set']
+                        field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
+                    embed.add_field(
+                        name=f'Showing cards 1-{len(cards_filtered)} of {len(cards_filtered)}',
+                        value=field_text)
+                    await ctx.send(embed=embed)
+                else:
+                    for i in range(10):
+                        card_name = cards_filtered[i]['name']
+                        card_set = cards_filtered[i]['set']
+                        field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
+                    embed.add_field(
+                        name=f'Showing cards 1-10 of {len(cards_filtered)}',
+                        value=field_text)
+                    message = await ctx.send(embed=embed)
+
+                    embeds = [embed]
+                    pages = (len(cards_filtered) // 10) + 1
+                    for p in range(1, pages):
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
+                        field_text = ''
+                        for i in range(10 * p, 10 * p + 10):
+                            card_name = cards_filtered[i]['name']
+                            card_set = cards_filtered[i]['set']
+                            field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
+                        next_page.add_field(
+                            name=f'Showing cards {10 * p + 1}-{10 * p + 10} of {len(cards_filtered)}',
+                            value=field_text)
+                        embeds.append(next_page)
+                    cur_page = 0
+
+                    await message.add_reaction(':arrow-left:')
+                    await message.add_reaction(':arrow-right:')
+
+                    def check(r, u):
+                        return u == ctx.author and str(r.emoji) in [':arrow-left:', ':arrow-right:']
+
+                    while True:
+                        try:
+                            reaction, user = await self.bot.wait_for('reaction_add', timeout=45, check=check)
+
+                            if str(reaction.emoji) == ':arrow-right:' and cur_page != pages:
+                                cur_page += 1
+                                await message.edit(embed=embeds[cur_page])
+                                await message.remove_reaction(reaction, user)
+                            elif str(reaction.emoji) == ':arrow-left:' and cur_page > 0:
+                                cur_page -= 1
+                                await message.edit(embed=embeds[cur_page])
+                                await message.remove_reaction(reaction, user)
+                            else:
+                                await message.remove_reaction(reaction, user)
+                        except asyncio.TimeoutError:
+                            break
+
 
                 try:
                     msg = await self.bot.wait_for(
@@ -257,6 +308,7 @@ class Spawning(commands.Cog):
             else:
                 time_str = f'{seconds_diff} seconds'
             await ctx.send(f'{ctx.author.mention}, you must wait `{time_str}` before spawning more cards.')
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Spawning(bot))
