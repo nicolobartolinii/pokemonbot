@@ -134,10 +134,10 @@ class Spawning(commands.Cog):
             return
         collection = []
         for card_code in cards_owned:
-            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})[0]
             print_num = card_info['print']
             card_id = card_info['cardId']
-            generic_card = cards.find_one({'_id': str(card_id)})
+            generic_card = cards.find_one({'_id': str(card_id)})[0]
             set_name = generic_card['set']
             card_name = generic_card['name']
             card_str = f'`{card_code}`·`#{print_num}`·{card_id}·{set_name}·**{card_name}**\n'
