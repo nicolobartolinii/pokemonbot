@@ -288,7 +288,7 @@ class Spawning(commands.Cog):
 
                         if action == 'r':
                             reaction, user = result
-                            if str(reaction.emoji) == '➡' and cur_page != pages:
+                            if str(reaction.emoji) == '➡' and cur_page != pages - 1:
                                 cur_page += 1
                                 await message.edit(embed=embeds[cur_page])
                                 await message.remove_reaction(reaction, user)
