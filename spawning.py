@@ -24,15 +24,16 @@ class Spawning(commands.Cog):
                 'cardsBurned': 0,
                 'cardsGrabbed': 0,
                 'cardsReceived': 0,
-                'lastGrab': '',
-                'inventory': []
+                'lastGrab': str((datetime.now() - timedelta(minutes=10, seconds=5)).strftime('%m/%d/%Y, %H:%M:%S')),
+                'inventory': [],
+                'wishlist': []
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
             await ctx.send(f'User {ctx.author.mention} already registered.')
             return
 
-    @commands.command(name='spawn')
+    @commands.command(name='spawn', aliases=['s'])
     async def spawn(self, ctx: commands.Context):
         if len(list(users.find({'_id': str(ctx.author.id)}))) == 0:
             await ctx.send('You should first register an account using the `p$start` command.')
@@ -127,7 +128,7 @@ class Spawning(commands.Cog):
             member = ctx.author
         user = users.find_one({'_id': str(member.id)})
         cards_owned = user['inventory']
-        embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n')
+        embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n', colour=0xffcb05)
         if len(cards_owned) == 0:
             embed.description += 'Card collection is empty.'
             await ctx.send(embed=embed)
@@ -143,13 +144,33 @@ class Spawning(commands.Cog):
             card_str = f'`{card_code}` · `#{print_num}` · {set_name} · **{card_name}**\n'
             collection.append(card_str)
         i = 1
-        for card in collection:
+        for card in collection:  # TODO sistema per andare avanti con le pagine
             embed.description += card
             i += 1
             if i == 11:
                 break
         embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
         await ctx.send(embed=embed)
+
+    @commands.command(name='view', aliases=['v'])
+    async def view(self, ctx: commands.Context, card_code: str = None):
+        if card_code is None:
+            user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
+            card_code = user_inventory[-1]
+        card_owner_id = users.find_one({'inventory': {'$in': [str(card_code)]}})['_id']
+        card_owner = self.bot.get_user(int(card_owner_id))
+        grabbed_card = grabbed_cards.find_one({'_id': str(card_code)})
+        card_id = grabbed_card['cardId']
+        card_print = grabbed_card['print']
+        generic_card = cards.find_one({'_id': str(card_id)})
+        card_set = generic_card['set']
+        card_name = generic_card['name']
+        card_image = f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png'
+        embed = discord.Embed(title='Card Details', description=f'Owned by {card_owner.mention}\n\n', colour=0xffcb05)
+        embed.description += f'`{card_code}` · `#{card_print}` · {card_set} · **{card_name}**\n'
+        file = discord.File(card_image, filename='image.png')
+        embed.set_image(url=f'attachment://image.png')
+        await ctx.send(file=file, embed=embed)
 
 
 def setup(bot: commands.Bot):
