@@ -140,7 +140,7 @@ class Spawning(commands.Cog):
             generic_card = cards.find_one({'_id': str(card_id)})
             set_name = generic_card['set']
             card_name = generic_card['name']
-            card_str = f'`{card_code}`·`#{print_num}`·{card_id}·{set_name}·**{card_name}**\n'
+            card_str = f'`{card_code}` · `#{print_num}` · {set_name} · **{card_name}**\n'
             collection.append(card_str)
         i = 1
         for card in collection:
