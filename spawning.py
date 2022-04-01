@@ -190,7 +190,7 @@ class Spawning(commands.Cog):
             await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             return
         else:
-            cards_filtered = list(cards.find({'name': {'$regex': f'.*{card_name}.*', '$options': 'i'}}))
+            cards_filtered = list(cards.find({'name': {'$regex': f".*{card_name}.*", '$options': 'i'}}))
             if len(cards_filtered) == 0:
                 await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
                 return
@@ -214,7 +214,7 @@ class Spawning(commands.Cog):
                 try:
                     msg = await self.bot.wait_for(
                         'message',
-                        check=lambda m: m.author == ctx.author and m.content in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] and m.channel == ctx.channel,
+                        check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel,
                         timeout=20
                     )
                 except asyncio.TimeoutError:
