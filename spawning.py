@@ -248,7 +248,7 @@ class Spawning(commands.Cog):
         else:
             cards_filtered = list(cards.find({'name': {'$regex': f".*{card_name}.*", '$options': 'i'}}))
             if len(cards_filtered) == 0:
-                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
+                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled its name.')
                 return
             elif len(cards_filtered) == 1:
                 card_name = cards_filtered[0]['name']
@@ -258,7 +258,7 @@ class Spawning(commands.Cog):
                 card_id = cards_filtered[0]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             else:
-                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                 field_text = ''
                 if len(cards_filtered) < 10:
                     for i in range(len(cards_filtered)):
@@ -284,7 +284,7 @@ class Spawning(commands.Cog):
                     embeds = [embed]
                     pages = (len(cards_filtered) // 10) + 1
                     for p in range(1, pages):
-                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                         field_text = ''
                         for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
                             card_wishlists = cards_filtered[i]['wishlists']

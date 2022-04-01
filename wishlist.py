@@ -89,7 +89,7 @@ class Wishlist(commands.Cog):
             user = users.find_one({'_id': str(ctx.author.id)})
             wishlist = user['wishlist']
             if len(cards_filtered) == 0:
-                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
+                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled its name.')
                 return
             elif len(cards_filtered) == 1:
                 card_id = cards_filtered[0]['_id']
@@ -100,7 +100,7 @@ class Wishlist(commands.Cog):
                 cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': 1}})
                 await ctx.send(f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully added to your wishlist.')
             else:
-                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                 field_text = ''
                 if len(cards_filtered) < 10:
                     for i in range(len(cards_filtered)):
@@ -126,7 +126,7 @@ class Wishlist(commands.Cog):
                     embeds = [embed]
                     pages = (len(cards_filtered) // 10) + 1
                     for p in range(1, pages):
-                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                         field_text = ''
                         for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
                             card_wishlists = cards_filtered[i]['wishlists']
@@ -226,7 +226,7 @@ class Wishlist(commands.Cog):
                 '_id': {'$in': wishlist}
             }))
             if len(cards_filtered) == 0:
-                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
+                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled its name.')
                 return
             elif len(cards_filtered) == 1:
                 card_id = cards_filtered[0]['_id']
@@ -237,7 +237,7 @@ class Wishlist(commands.Cog):
                 cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': -1}})
                 await ctx.send(f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully removed from your wishlist.')
             else:
-                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                 field_text = ''
                 if len(cards_filtered) < 10:
                     for i in range(len(cards_filtered)):
@@ -263,7 +263,7 @@ class Wishlist(commands.Cog):
                     embeds = [embed]
                     pages = (len(cards_filtered) // 10) + 1
                     for p in range(1, pages):
-                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                         field_text = ''
                         for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
                             card_wishlists = cards_filtered[i]['wishlists']
