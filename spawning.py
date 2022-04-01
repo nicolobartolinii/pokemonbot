@@ -207,7 +207,7 @@ class Spawning(commands.Cog):
                 for i in range(10):
                     card_name = cards_filtered[i]['name']
                     card_set = cards_filtered[i]['set']
-                    field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)'
+                    field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
                 embed.add_field(name=f'Showing cards 1-{10 if len(cards_filtered) > 10 else len(cards_filtered)}', value=field_text)
                 await ctx.send(embed=embed)
                 return
