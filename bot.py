@@ -9,6 +9,6 @@ TOKEN = os.getenv('TOKEN')
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='p$', intents=intents)
 bot.load_extension('spawning')
-bot.load_extension('events')
+bot.load_extension('wishlist')
 
 bot.run(TOKEN)
