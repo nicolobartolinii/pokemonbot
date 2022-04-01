@@ -44,11 +44,12 @@ class Wishlist(commands.Cog):
             pages = (len(wishlist) // 10) + 1
             for p in range(1, pages):
                 next_page = discord.Embed(title=f"Wishlist", description=f'Owner: {member.mention}\n[WIP slots extra]\n\n', colour=0xffcb05)
+                next_page.set_thumbnail(url=member.avatar_url)
                 for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)):
                     card = cards.find_one({'_id': str(wishlist[i])})
                     card_str = f'{str(card["set"])} · **{str(card["name"])}**\n'
                     embed.description += card_str
-                embed.set_footer(text=f'Showing wishlisted cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)} of {len(wishlist)}')
+                next_page.set_footer(text=f'Showing wishlisted cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(wishlist) else len(wishlist)} of {len(wishlist)}')
                 embeds.append(next_page)
             cur_page = 0
 
