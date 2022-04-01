@@ -76,13 +76,138 @@ class Wishlist(commands.Cog):
                     break
 
     @commands.command(name='wishadd', aliases=['wa', 'wadd'])
-    async def wishadd(self, ctx: commands.Context, *, card_query: str = None):
+    async def wishadd(self, ctx: commands.Context, *, card_name: str = None):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p$start` command.')
             return
-        if card_query is None:
+        if card_name is None:
             await ctx.send(f'{ctx.author.mention}, please specify a card name.')
             return
+        else:
+            cards_filtered = list(cards.find({'name': {'$regex': f".*{card_name}.*", '$options': 'i'}}))
+            user = users.find_one({'_id': str(ctx.author.id)})
+            wishlist = user['wishlist']
+            if len(cards_filtered) == 0:
+                await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
+                return
+            elif len(cards_filtered) == 1:
+                card_id = cards_filtered[0]['_id']
+                if card_id in wishlist:
+                    await ctx.send(f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` is already in your wishlist.')
+                    return
+                users.update_one({'_id': str(ctx.author.id)}, {'$push': {'wishlist': str(card_id)}})
+                cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': 1}})
+                await ctx.send(f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully added to your wishlist.')
+            else:
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                field_text = ''
+                if len(cards_filtered) < 10:
+                    for i in range(len(cards_filtered)):
+                        card_wishlists = cards_filtered[i]['wishlists']
+                        card_name = cards_filtered[i]['name']
+                        card_set = cards_filtered[i]['set']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                    embed.add_field(
+                        name=f'Showing wishlistable cards 1-{len(cards_filtered)}',
+                        value=field_text)
+                    await ctx.send(embed=embed)
+                else:  # TODO aggiungi footer con numero pagina (e tasto per ingrandire l'immagine se fattibile)
+                    for i in range(10):
+                        card_wishlists = cards_filtered[i]['wishlists']
+                        card_name = cards_filtered[i]['name']
+                        card_set = cards_filtered[i]['set']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                    embed.add_field(
+                        name=f'Showing wishlistable 1-10 of {len(cards_filtered)}',
+                        value=field_text)
+                    message = await ctx.send(embed=embed)
+
+                    embeds = [embed]
+                    pages = (len(cards_filtered) // 10) + 1
+                    for p in range(1, pages):
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
+                        field_text = ''
+                        for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
+                            card_wishlists = cards_filtered[i]['wishlists']
+                            card_name = cards_filtered[i]['name']
+                            card_set = cards_filtered[i]['set']
+                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        next_page.add_field(
+                            name=f'Showing wishlistable {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
+                            value=field_text)
+                        embeds.append(next_page)
+                    cur_page = 0
+
+                    await message.add_reaction('⬅')
+                    await message.add_reaction('➡')
+
+                    def check(r: discord.Reaction, u):
+                        return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
+
+                    while True:
+                        tasks = [
+                                asyncio.create_task(self.bot.wait_for('reaction_add', timeout=30, check=check), name='r'),
+                                asyncio.create_task(self.bot.wait_for('message', check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel, timeout=30), name='m')
+                            ]
+
+                        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+
+                        finished: asyncio.Task = list(done)[0]
+
+                        for task in pending:
+                            try:
+                                task.cancel()
+                            except asyncio.CancelledError:
+                                pass
+
+                        action = finished.get_name()
+                        try:
+                            result = finished.result()
+                        except asyncio.TimeoutError:
+                            return
+
+                        if action == 'r':
+                            reaction, user = result
+                            if str(reaction.emoji) == '➡' and cur_page != pages - 1:
+                                cur_page += 1
+                                await message.edit(embed=embeds[cur_page])
+                                await message.remove_reaction(reaction, user)
+                            elif str(reaction.emoji) == '⬅' and cur_page > 0:
+                                cur_page -= 1
+                                await message.edit(embed=embeds[cur_page])
+                                await message.remove_reaction(reaction, user)
+                            else:
+                                await message.remove_reaction(reaction, user)
+                        elif action == 'm':
+                            msg = result
+                            card_id = cards_filtered[int(msg.content) - 1]['_id']
+                            if card_id in wishlist:
+                                await ctx.send(
+                                    f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` is already in your wishlist.')
+                                return
+                            users.update_one({'_id': str(ctx.author.id)}, {'$push': {'wishlist': str(card_id)}})
+                            cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': 1}})
+                            await ctx.send(
+                                f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully added to your wishlist.')
+                            return
+                try:
+                    msg = await self.bot.wait_for(
+                        'message',
+                        check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel,
+                        timeout=30
+                    )
+                except asyncio.TimeoutError:
+                    return
+
+                card_id = cards_filtered[int(msg.content) - 1]['_id']
+                if card_id in wishlist:
+                    await ctx.send(
+                        f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` is already in your wishlist.')
+                    return
+                users.update_one({'_id': str(ctx.author.id)}, {'$push': {'wishlist': str(card_id)}})
+                cards.update_one({'_id': str(card_id)}, {'$inc': {'wishlists': 1}})
+                await ctx.send(
+                    f'{ctx.author.mention}, `{cards_filtered[0]["name"]} · {cards_filtered[0]["set"]}` has been successfully added to your wishlist.')
 
     @commands.command(name='wishremove', aliases=['wr', 'wrem'])
     async def wishremove(self, ctx: commands.Context, *, card_query: str = None):
