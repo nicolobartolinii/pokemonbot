@@ -22,7 +22,7 @@ class Wishlist(commands.Cog):
         user = users.find_one({'_id': str(member.id)})
         wishlist = user['wishlist']
         if len(wishlist) == 0:
-            embed.description += 'Card collection is empty.'
+            embed.description += 'Wishlist is empty.'
             await ctx.send(embed=embed)
             return
         elif len(wishlist) < 10:
