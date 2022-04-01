@@ -1,8 +1,12 @@
 import os
 import random
+
+import discord
 from PIL import Image
 import requests
 from io import BytesIO
+
+from discord.ext import commands
 
 
 def compose_images(image_urls):
@@ -53,3 +57,15 @@ def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
         base36 = alphabet[i] + base36
 
     return sign + base36
+
+
+def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_set: str, card_print: int, card_rarity: str, card_id: str):
+    embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
+                          colour=0xffcb05)
+    embed.description += f'Card set · **{str(card_set)}**\n'
+    embed.description += f'Total printed · **{str(card_print)}**'
+    embed.description += f'Rarity · **{str(card_rarity)}**'
+    card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
+    file = discord.File(card_image, filename='image.png')
+    embed.set_thumbnail(url='attachment://image.png')
+    await ctx.send(file=file, embed=embed)

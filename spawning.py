@@ -178,11 +178,6 @@ class Spawning(commands.Cog):
 
     @commands.command(name='lookup', aliases=['lu'])
     async def lookup(self, ctx: commands.Context, card_name: str = None):
-        card_name = ''
-        card_set = ''
-        card_print = ''
-        card_rarity = ''
-        card_id = ''
         if card_name is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
             card_code = user_inventory[-1]
@@ -192,8 +187,10 @@ class Spawning(commands.Cog):
             card_set = card['set']
             card_print = card['totalSpawned']
             card_rarity = card['rarity']
+            create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
+            return
         else:
-            cards_filtered = list(cards.fin({'name': {'$regex': f'.*{card_name}.*', '$options': 'i'}}))
+            cards_filtered = list(cards.find({'name': {'$regex': f'.*{card_name}.*', '$options': 'i'}}))
             if len(cards_filtered) == 0:
                 await ctx.send(f'Sorry {ctx.author.mention}, that card could not be found. It may not exist, or you may have misspelled their name.')
                 return
@@ -203,17 +200,9 @@ class Spawning(commands.Cog):
                 card_print = cards_filtered[0]['totalSpawned']
                 card_rarity = cards_filtered[0]['rarity']
                 card_id = cards_filtered[0]['_id']
+                create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             else:
                 pass
-            embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
-                                  colour=0xffcb05)
-            embed.description += f'Card set · **{str(card_set)}**\n'
-            embed.description += f'Total printed · **{str(card_print)}**'
-            embed.description += f'Rarity · **{str(card_rarity)}**'
-            card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
-            file = discord.File(card_image, filename='image.png')
-            embed.set_thumbnail(url='attachment://image.png')
-            await ctx.send(file=file, embed=embed)
 
 
 def setup(bot: commands.Bot):
