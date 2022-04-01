@@ -262,7 +262,7 @@ class Spawning(commands.Cog):
                     await message.add_reaction('➡')
 
                     def check(r: discord.Reaction, u):
-                        return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == ctx.message
+                        return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
 
                     while True:
                         try:
@@ -280,7 +280,6 @@ class Spawning(commands.Cog):
                                 await message.remove_reaction(reaction, user)
                         except asyncio.TimeoutError:
                             break
-
 
                 try:
                     msg = await self.bot.wait_for(
