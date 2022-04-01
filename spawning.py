@@ -176,6 +176,22 @@ class Spawning(commands.Cog):
         embed.set_image(url=f'attachment://image.png')
         await ctx.send(file=file, embed=embed)
 
+    @commands.command(name='lookup', aliases=['lu'])
+    async def lookup(self, ctx: commands.Context, card_name: str = None):
+        if card_name is None:
+            user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
+            card_code = user_inventory[-1]
+            card_id = grabbed_cards.find_one({'_id': str(card_code)})['cardId']
+            card = cards.find_one({'_id': str(card_id)})
+            embed = discord.Embed(name='Card Lookup', description=f'Card name · **{str(card["name"])}**\n', colour=0xffcb05)
+            embed.description += f'Card set · **{str(card["set"])}**\n'
+            embed.description += f'Total printed · **{str(card["timesSpawned"])}**'
+            card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
+            file = discord.File(card_image, filename='image.png')
+            embed.set_thumbnail(url='attachment://image.png')
+            await ctx.send(file=file, embed=embed)
+            return
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Spawning(bot))
