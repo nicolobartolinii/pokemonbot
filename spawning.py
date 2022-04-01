@@ -185,7 +185,7 @@ class Spawning(commands.Cog):
             card = cards.find_one({'_id': str(card_id)})
             card_name = card['name']
             card_set = card['set']
-            card_print = card['totalSpawned']
+            card_print = card['timesSpawned']
             card_rarity = card['rarity']
             await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             return
@@ -197,7 +197,7 @@ class Spawning(commands.Cog):
             elif len(cards_filtered) == 1:
                 card_name = cards_filtered[0]['name']
                 card_set = cards_filtered[0]['set']
-                card_print = cards_filtered[0]['totalSpawned']
+                card_print = cards_filtered[0]['timesSpawned']
                 card_rarity = cards_filtered[0]['rarity']
                 card_id = cards_filtered[0]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
