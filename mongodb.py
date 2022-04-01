@@ -154,3 +154,10 @@ def is_grab_cooldown(member: discord.Member):
     else:
         return False, 0
     pass
+
+
+def is_user_registered(member: discord.Member):
+    if len(list(users.find({'_id': str(member.id)}))) == 0:
+        return False
+    else:
+        return True
