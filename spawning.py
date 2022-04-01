@@ -187,7 +187,7 @@ class Spawning(commands.Cog):
             card_set = card['set']
             card_print = card['totalSpawned']
             card_rarity = card['rarity']
-            create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
+            await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             return
         else:
             cards_filtered = list(cards.find({'name': {'$regex': f'.*{card_name}.*', '$options': 'i'}}))
@@ -200,7 +200,7 @@ class Spawning(commands.Cog):
                 card_print = cards_filtered[0]['totalSpawned']
                 card_rarity = cards_filtered[0]['rarity']
                 card_id = cards_filtered[0]['_id']
-                create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
+                await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             else:
                 pass
 

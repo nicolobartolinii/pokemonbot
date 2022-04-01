@@ -59,7 +59,7 @@ def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     return sign + base36
 
 
-def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_set: str, card_print: int, card_rarity: str, card_id: str):
+async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_set: str, card_print: int, card_rarity: str, card_id: str):
     embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
                           colour=0xffcb05)
     embed.description += f'Card set · **{str(card_set)}**\n'
