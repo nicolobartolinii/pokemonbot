@@ -5,7 +5,6 @@ from pymongo import MongoClient
 from mongodb import *
 import random
 from utils import *
-from io import BytesIO
 from datetime import datetime
 
 
@@ -157,6 +156,49 @@ class Spawning(commands.Cog):
             card_name = generic_card['name']
             card_str = f'`{card_code}` · `#{print_num}` · {set_name} · **{card_name}**\n'
             collection.append(card_str)
+        if len(cards_owned) < 10:
+            for i in range(len(cards_owned)):
+                embed.description += collection[i]
+            embed.set_footer(text=f'Showing cards 1-{len(cards_owned)}')
+            await ctx.send(embed=embed)
+        elif len(cards_owned) >= 10:
+            for i in range(10):
+                embed.description += collection[i]
+            embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
+            message = await ctx.send(embed=embed)
+
+            embeds = [embed]
+            pages = (len(cards_owned) // 10) + 1
+            for p in range(1, pages):
+                next_page = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n', colour=0xffcb05)
+                for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_owned) else len(cards_owned)):
+                    embed.description += collection[i]
+                embed.set_footer(text=f'Showing cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_owned) else len(cards_owned)} of {len(cards_owned)}')
+                embeds.append(next_page)
+            cur_page = 0
+
+            await message.add_reaction('⬅')
+            await message.add_reaction('➡')
+
+            def check(r: discord.Reaction, u):
+                return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
+
+            while True:
+                try:
+                    reaction, user = await self.bot.wait_for('reaction_add', timeout=45, check=check)
+
+                    if str(reaction.emoji) == '➡' and cur_page != pages - 1:
+                        cur_page += 1
+                        await message.edit(embed=embeds[cur_page])
+                        await message.remove_reaction(reaction, user)
+                    elif str(reaction.emoji) == '⬅' and cur_page > 0:
+                        cur_page -= 1
+                        await message.edit(embed=embeds[cur_page])
+                        await message.remove_reaction(reaction, user)
+                    else:
+                        await message.remove_reaction(reaction, user)
+                except asyncio.TimeoutError:
+                    break
         i = 1
         for card in collection:  # TODO sistema per andare avanti con le pagine
             embed.description += card
@@ -222,18 +264,18 @@ class Spawning(commands.Cog):
                 card_id = cards_filtered[0]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
             else:
-                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
+                embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
                 field_text = ''
                 if len(cards_filtered) < 10:
-                    for i in range(10 if len(cards_filtered) > 10 else len(cards_filtered)):
+                    for i in range(len(cards_filtered)):
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
                         field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
                     embed.add_field(
-                        name=f'Showing cards 1-{len(cards_filtered)} of {len(cards_filtered)}',
+                        name=f'Showing cards 1-{len(cards_filtered)}',
                         value=field_text)
                     await ctx.send(embed=embed)
-                else:
+                else:  # TODO aggiungi footer con numero pagina e tasto per ingrandire l'immagine se fattibile
                     for i in range(10):
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
@@ -246,14 +288,14 @@ class Spawning(commands.Cog):
                     embeds = [embed]
                     pages = (len(cards_filtered) // 10) + 1
                     for p in range(1, pages):
-                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
+                        next_page = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.', colour=0xffcb05)
                         field_text = ''
                         for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
                             card_name = cards_filtered[i]['name']
                             card_set = cards_filtered[i]['set']
                             field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
                         next_page.add_field(
-                            name=f'Showing cards {10 * p + 1}-{10 * p + 10} of {len(cards_filtered)}',
+                            name=f'Showing cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
                             value=field_text)
                         embeds.append(next_page)
                     cur_page = 0
