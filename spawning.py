@@ -204,7 +204,7 @@ class Spawning(commands.Cog):
             else:
                 embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the character you are looking for.')
                 field_text = ''
-                for i in range(10):
+                for i in range(10 if len(cards_filtered) > 10 else len(cards_filtered)):
                     card_name = cards_filtered[i]['name']
                     card_set = cards_filtered[i]['set']
                     field_text += f'{i + 1}. {card_set} · **{card_name}** (wl)\n'
