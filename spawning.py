@@ -214,17 +214,17 @@ class Spawning(commands.Cog):
                 try:
                     msg = await self.bot.wait_for(
                         'message',
-                        check=lambda m: m.author == ctx.author and m in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                        check=lambda m: m.author == ctx.author and m in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] and m.channel == ctx.channel,
                         timeout=20
                     )
                 except asyncio.TimeoutError:
                     return
 
-                card_name = cards_filtered[int(msg) - 1]['name']
-                card_set = cards_filtered[int(msg) - 1]['set']
-                card_print = cards_filtered[int(msg) - 1]['timesSpawned']
-                card_rarity = cards_filtered[int(msg) - 1]['rarity']
-                card_id = cards_filtered[int(msg) - 1]['_id']
+                card_name = cards_filtered[int(msg.content) - 1]['name']
+                card_set = cards_filtered[int(msg.content) - 1]['set']
+                card_print = cards_filtered[int(msg.content) - 1]['timesSpawned']
+                card_rarity = cards_filtered[int(msg.content) - 1]['rarity']
+                card_id = cards_filtered[int(msg.content) - 1]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
 
 
