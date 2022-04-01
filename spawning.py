@@ -265,9 +265,29 @@ class Spawning(commands.Cog):
                         return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
 
                     while True:
-                        try:
-                            reaction, user = await self.bot.wait_for('reaction_add', timeout=45, check=check)
+                        tasks = [
+                                asyncio.create_task(self.bot.wait_for('reaction_add', timeout=30, check=check), name='r'),
+                                asyncio.create_task(self.bot.wait_for('message', check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel, timeout=30), name='m')
+                            ]
 
+                        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+
+                        finished: asyncio.Task = list(done)[0]
+
+                        for task in pending:
+                            try:
+                                task.cancel()
+                            except asyncio.CancelledError:
+                                pass
+
+                        action = finished.get_name()
+                        try:
+                            result = finished.result()
+                        except asyncio.TimeoutError:
+                            return
+
+                        if action == 'r':
+                            reaction, user = result
                             if str(reaction.emoji) == '➡' and cur_page != pages:
                                 cur_page += 1
                                 await message.edit(embed=embeds[cur_page])
@@ -278,14 +298,22 @@ class Spawning(commands.Cog):
                                 await message.remove_reaction(reaction, user)
                             else:
                                 await message.remove_reaction(reaction, user)
-                        except asyncio.TimeoutError:
-                            break
+                        elif action == 'm':
+                            msg = result
+                            card_name = cards_filtered[int(msg.content) - 1]['name']
+                            card_set = cards_filtered[int(msg.content) - 1]['set']
+                            card_print = cards_filtered[int(msg.content) - 1]['timesSpawned']
+                            card_rarity = cards_filtered[int(msg.content) - 1]['rarity']
+                            card_id = cards_filtered[int(msg.content) - 1]['_id']
+                            await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity,
+                                                           card_id)
+                            return
 
                 try:
                     msg = await self.bot.wait_for(
                         'message',
                         check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel,
-                        timeout=20
+                        timeout=30
                     )
                 except asyncio.TimeoutError:
                     return
