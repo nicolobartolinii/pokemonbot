@@ -26,10 +26,9 @@ async def on_guild_join(guild: discord.Guild):
     if res is None:
         guilds.insert_one({
             '_id': str(guild.id),
-            'serverSpawnCount': 250,
             'spawnChannel': str(guild.text_channels[0].id),
-            'messageCounter': 0,
-            'customPrefix': 'p!'
+            'customPrefix': 'p!',
+            'wishWatching': []
         })
         text_channel = guild.text_channels[0]
         embed = discord.Embed(

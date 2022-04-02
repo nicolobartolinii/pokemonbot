@@ -25,7 +25,8 @@ class Spawning(commands.Cog):
                 'cardsReceived': 0,
                 'lastGrab': str((datetime.now() - timedelta(minutes=10, seconds=5)).strftime('%m/%d/%Y, %H:%M:%S')),
                 'inventory': [],
-                'wishlist': []
+                'wishlist': [],
+                'wishWatching': ''
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
@@ -33,17 +34,34 @@ class Spawning(commands.Cog):
             return
 
     @commands.command(name='spawn', aliases=['s'])  # TODO cooldown spawn
-    @commands.cooldown(rate=1, per=1800, type=commands.BucketType.user)
+    @commands.cooldown(rate=1, per=1200, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p!start` command.')
             return
+        spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
+        if ctx.channel.id != spawn_channel_id:
+            await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
+            return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
+        wish_watching = guilds.find_one({'_id': str(ctx.guild.id)})['wishWatching']
+        watchers = []
+        for wisher in wish_watching:
+            watchers.append(users.find_one({'_id': str(wisher)}))
         ids = []
         for drop in drops:
             ids.append(drop['_id'])
-        print(ids)
+        to_ping = []
+        for drop_id in ids:
+            for watcher in watchers:
+                if drop_id in watcher['wishlist']:
+                    to_ping.append(int(watcher['_id']))
         imagecreation(ids).save('./temp.png', 'PNG')
+        if len(to_ping) > 0:
+            content = 'A card from your wishlist is spawning: '
+            for ping in to_ping:
+                content += f'{str(ctx.guild.get_member(ping).mention)} '
+            await ctx.send(content=content)
         with open('./temp.png', 'rb') as f:
             picture = discord.File(f)
             drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)

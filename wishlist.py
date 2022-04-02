@@ -347,6 +347,23 @@ class Wishlist(commands.Cog):
                 await ctx.send(
                     f'{ctx.author.mention}, `{cards_filtered[int(msg.content) - 1]["name"]} · {cards_filtered[int(msg.content) - 1]["set"]}` has been successfully removed from your wishlist.')
 
+    @commands.command(name='wishwatch', aliases=['ww', 'wishw', 'wwatch'])
+    async def wishwatch(self, ctx: commands.Context):
+        guilds.update_one(
+            {'_id': str(ctx.guild.id)},
+            {'$push': {'wishWatching': str(ctx.author.id)}}
+        )
+        wish_watching = users.find_one({'_id': str(ctx.author.id)})['wishWatching']
+        if wish_watching != '':
+            guilds.update_one(
+                {'_id': str(wish_watching)},
+                {'$pull': {'wishWatching': str(ctx.author.id)}}
+            )
+        users.update_one(
+            {'_id': str(ctx.author.id)},
+            {'$set': {'wishWatching': str(ctx.guild.id)}}
+        )
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Wishlist(bot))
