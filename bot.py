@@ -65,4 +65,11 @@ async def server(ctx: commands.Context):
     await ctx.send(embed=embed)
 
 
+@bot.command(name='help')
+async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci saranno più comandi
+    embed = discord.Embed(title='Pokémon Collector Commands', colour=0xffcb05)
+    embed.add_field(name=f'`spawn`', value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.')
+
+
+
 bot.run(TOKEN)

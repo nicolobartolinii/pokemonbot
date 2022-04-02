@@ -39,12 +39,13 @@ class Spawning(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p!start` command.')
             return
-        spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
+        guild = guilds.find_one({'_id': str(ctx.guild.id)})
+        spawn_channel_id = int(guild['spawnChannel'])
         if ctx.channel.id != spawn_channel_id:
             await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
             return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
-        wish_watching = guilds.find_one({'_id': str(ctx.guild.id)})['wishWatching']
+        wish_watching = guild['wishWatching']
         watchers = []
         for wisher in wish_watching:
             watchers.append(users.find_one({'_id': str(wisher)}))
