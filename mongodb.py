@@ -111,7 +111,7 @@ def get_new_temp_image_number():
             '_id': 0
         }, {
             '$set': {
-                'lastCardCode': '0'
+                'tempImageCounter': '0'
             }
         }, upsert=False)
     else:
@@ -119,7 +119,7 @@ def get_new_temp_image_number():
             '_id': 0
         }, {
             '$set': {
-                'lastCardCode': str(temp_image_number + 1)
+                'tempImageCounter': str(temp_image_number + 1)
             }
         }, upsert=False)
     return temp_image_number
