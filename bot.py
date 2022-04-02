@@ -103,7 +103,7 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Admin only command. Set the current channel as the `spawn` channel.', inline=False)
 
     embed.add_field(name=f'`prefix <prefix>`',
-                    value='Admin onyl command. Set the prefix for this server.', inline=False)
+                    value='Admin only command. Set the prefix for this server.', inline=False)
 
     embed.add_field(name=f'`server`',
                     value='Aliases: `serverinfo`, `si`\nAdmin only command. Shows the spawn channel and the prefix for this server.', inline=False)
