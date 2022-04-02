@@ -38,11 +38,13 @@ class Spawning(commands.Cog):
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `p!start` command.')
+            self.spawn.reset_cooldown(ctx)
             return
         guild = guilds.find_one({'_id': str(ctx.guild.id)})
         spawn_channel_id = int(guild['spawnChannel'])
         if ctx.channel.id != spawn_channel_id:
             await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
+            self.spawn.reset_cooldown(ctx)
             return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         wish_watching = guild['wishWatching']
