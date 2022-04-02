@@ -44,7 +44,8 @@ class Spawning(commands.Cog):
         spawn_channel_id = int(guild['spawnChannel'])
         if ctx.channel.id != spawn_channel_id:
             await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
-            self.spawn.reset_cooldown(ctx)
+            if self.spawn.get_cooldown_retry_after(ctx) == 0.0:
+                self.spawn.reset_cooldown(ctx)
             return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         wish_watching = guild['wishWatching']
@@ -384,6 +385,30 @@ class Spawning(commands.Cog):
                 card_rarity = cards_filtered[int(msg.content) - 1]['rarity']
                 card_id = cards_filtered[int(msg.content) - 1]['_id']
                 await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id)
+
+    @commands.command(name='cooldown', aliases=['cooldowns', 'cd'])
+    async def cooldown(self, ctx: commands.Context):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        seconds_diff_spawn = self.spawn.get_cooldown_retry_after(ctx)
+        grab_in_cooldown, time_str_grab = is_grab_cooldown(ctx.author)
+        embed = discord.Embed(title='Cooldowns', description=f'Showing cooldowns for {ctx.author.mention}\n\n', colour=0xffcb05)
+        if seconds_diff_spawn != 0.0:
+            if seconds_diff_spawn >= 60:
+                minutes = seconds_diff_spawn // 60
+                time_str_spawn = f'{minutes} minutes'
+            else:
+                time_str_spawn = f'{seconds_diff_spawn} seconds'
+            embed.description += f'**Spawn** is available in `{time_str_spawn}`'
+        else:
+            embed.description += f'**Spawn** is currently available'
+        if grab_in_cooldown:
+            embed.description += f'**Grab** is available in `{time_str_grab}`'
+        else:
+            embed.description += f'**Grab** is currentyl available'
+        await ctx.send(embed=embed)
+
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):
