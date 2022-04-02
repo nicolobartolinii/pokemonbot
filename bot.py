@@ -60,7 +60,7 @@ async def server(ctx: commands.Context):
     guild = guilds.find_one({'_id': str(ctx.guild.id)})
     embed = discord.Embed(
         title=f'Server settings for {ctx.guild.name}',
-        description=f'Spawn channel: {ctx.guild.get_channel(guild["spawnChannel"]).mention}\nPrefix: `{guild["customPrefix"]}`',
+        description=f'Spawn channel: {ctx.guild.get_channel(int(guild["spawnChannel"])).mention}\nPrefix: `{guild["customPrefix"]}`',
         colour=0xffcb05
     )
     await ctx.send(embed=embed)
