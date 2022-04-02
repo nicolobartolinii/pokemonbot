@@ -62,6 +62,7 @@ class Spawning(commands.Cog):
                     to_ping.append(int(watcher['_id']))
         temp_image_number = get_new_temp_image_number()
         imagecreation(ids).save(f'./temp{temp_image_number}.png', 'PNG')
+        print(f'DROP IN CORSO DA PARTE DI {ctx.author.name}, TEMP IMAGE NUMBER {temp_image_number}')
         if len(to_ping) > 0:
             content = 'A card from your wishlist is spawning: '
             for ping in to_ping:
@@ -81,17 +82,17 @@ class Spawning(commands.Cog):
             tasks = [
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣' and r.message.id == ctx.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣' and r.message == ctx.message,
                     timeout=60
                 ), name='grab1'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣' and r.message.id == ctx.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣' and r.message == ctx.message,
                     timeout=60
                 ), name='grab2'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣' and r.message.id == ctx.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣' and r.message == ctx.message,
                     timeout=60
                 ), name='grab3')
             ]
@@ -408,7 +409,7 @@ class Spawning(commands.Cog):
         if grab_in_cooldown:
             embed.description += f'**Grab** is available in `{time_str_grab}`\n'
         else:
-            embed.description += f'**Grab** is currentyl available\n'
+            embed.description += f'**Grab** is currently available\n'
         await ctx.send(embed=embed)
 
     @spawn.error
