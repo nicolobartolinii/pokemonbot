@@ -400,13 +400,13 @@ class Spawning(commands.Cog):
                 time_str_spawn = f'{minutes} minutes'
             else:
                 time_str_spawn = f'{seconds_diff_spawn} seconds'
-            embed.description += f'**Spawn** is available in `{time_str_spawn}`'
+            embed.description += f'**Spawn** is available in `{time_str_spawn}`\n'
         else:
-            embed.description += f'**Spawn** is currently available'
+            embed.description += f'**Spawn** is currently available\n'
         if grab_in_cooldown:
-            embed.description += f'**Grab** is available in `{time_str_grab}`'
+            embed.description += f'**Grab** is available in `{time_str_grab}`\n'
         else:
-            embed.description += f'**Grab** is currentyl available'
+            embed.description += f'**Grab** is currentyl available\n'
         await ctx.send(embed=embed)
 
 
