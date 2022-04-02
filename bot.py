@@ -69,7 +69,44 @@ async def server(ctx: commands.Context):
 @bot.command(name='help')
 async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci saranno più comandi
     embed = discord.Embed(title='Pokémon Collector Commands', colour=0xffcb05)
-    embed.add_field(name=f'`spawn`', value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.', inline=False)
+    embed.add_field(name=f'`start`',
+                    value='Register an account for Pokémon Collector bot.', inline=False)
+
+    embed.add_field(name=f'`spawn`',
+                    value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.', inline=False)
+
+    embed.add_field(name=f'`collection <user>`',
+                    value="Aliases: `c`\nView the card collection of yourself or another user. [filtering WIP]", inline=False)
+
+    embed.add_field(name=f'`view <code>`',
+                    value='Aliases: `v`\nView your last card obtained or a specific card with its code.', inline=False)
+
+    embed.add_field(name=f'`lookup <search-query>`',
+                    value='Aliases: `lu`\nLook up the details of a particular card using its name or a part of it. [advanced search queries WIP]', inline=False)
+
+    embed.add_field(name=f'`wishlist <user>`',
+                    value='Aliases: `w`, `wl`\nView the wishlist of yourself or another user.', inline=False)
+
+    embed.add_field(name=f'`wishadd <search-query>`',
+                    value="Aliases: `wa`, `wadd`\nAdd a card to your wishlist. It's recommended to first use the `lookup` command to find the right card.", inline=False)
+
+    embed.add_field(name=f'`wishremove`',
+                    value='Aliases: `wr`, `wrem`\nRemove a card from your wishlist.', inline=False)
+
+    embed.add_field(name=f'`wishwatch`',
+                    value='Aliases: `ww`, `wishw`, `wwatch`\nSet the current channel as the channel where you will be mentioned if a card that spawns is in your wishlist.', inline=False)
+
+    embed.add_field(name=f'`help`',
+                    value='Shows this message.', inline=False)
+
+    embed.add_field(name=f'`channel`',
+                    value='Admin only command. Set the current channel as the `spawn` channel.', inline=False)
+
+    embed.add_field(name=f'`prefix <prefix>`',
+                    value='Admin onyl command. Set the prefix for this server.', inline=False)
+
+    embed.add_field(name=f'`server`',
+                    value='Aliases: `serverinfo`, `si`\nAdmin only command. Shows the spawn channel and the prefix for this server.', inline=False)
     await ctx.send(embed=embed)
 
 
