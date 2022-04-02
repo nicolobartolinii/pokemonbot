@@ -48,25 +48,26 @@ class Spawning(commands.Cog):
                 self.spawn.reset_cooldown(ctx)
             return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
+        ids = []
+        for drop in drops:
+            ids.append(drop['_id'])
         wish_watching = guild['wishWatching']
         watchers = []
         for wisher in wish_watching:
             watchers.append(users.find_one({'_id': str(wisher)}))
-        ids = []
-        for drop in drops:
-            ids.append(drop['_id'])
         to_ping = []
         for drop_id in ids:
             for watcher in watchers:
                 if drop_id in watcher['wishlist']:
                     to_ping.append(int(watcher['_id']))
-        imagecreation(ids).save('./temp.png', 'PNG')
+        temp_image_number = get_new_temp_image_number()
+        imagecreation(ids).save(f'./temp{temp_image_number}.png', 'PNG')
         if len(to_ping) > 0:
             content = 'A card from your wishlist is spawning: '
             for ping in to_ping:
                 content += f'{str(ctx.guild.get_member(ping).mention)} '
             await ctx.send(content=content)
-        with open('./temp.png', 'rb') as f:
+        with open(f'./temp{temp_image_number}.png', 'rb') as f:
             picture = discord.File(f)
             drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)
         await drop.add_reaction('1️⃣')
@@ -80,17 +81,17 @@ class Spawning(commands.Cog):
             tasks = [
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣' and r.message.id == ctx.message.id,
                     timeout=60
                 ), name='grab1'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣' and r.message.id == ctx.message.id,
                     timeout=60
                 ), name='grab2'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣',
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣' and r.message.id == ctx.message.id,
                     timeout=60
                 ), name='grab3')
             ]
@@ -151,7 +152,7 @@ class Spawning(commands.Cog):
             if grab1 == grab2 == grab3:
                 return
 
-    @commands.command(name='collection', aliases=['c'])
+    @commands.command(name='collection', aliases=['c', 'cards'])
     async def collection(self, ctx: commands.Context, member: discord.Member = None):  # TODO altri argomenti per filtrare la collection
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
@@ -231,6 +232,7 @@ class Spawning(commands.Cog):
         if card_code is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
             card_code = user_inventory[-1]
+        card_code = card_code.upper()
         card_owner_docu = users.find_one({'inventory': {'$in': [str(card_code)]}})
         if card_owner_docu is None:
             await ctx.send(f'Sorry {ctx.author.mention}, that code is invalid.')
@@ -408,7 +410,6 @@ class Spawning(commands.Cog):
         else:
             embed.description += f'**Grab** is currentyl available\n'
         await ctx.send(embed=embed)
-
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):

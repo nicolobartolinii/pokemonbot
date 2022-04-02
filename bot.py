@@ -76,7 +76,7 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.', inline=False)
 
     embed.add_field(name=f'`collection <user>`',
-                    value="Aliases: `c`\nView the card collection of yourself or another user. [filtering WIP]", inline=False)
+                    value="Aliases: `c`, `cards`\nView the card collection of yourself or another user. [filtering WIP]", inline=False)
 
     embed.add_field(name=f'`view <code>`',
                     value='Aliases: `v`\nView your last card obtained or a specific card with its code.', inline=False)

@@ -102,6 +102,29 @@ def get_new_card_code():
     return base36encode(card_code)
 
 
+def get_new_temp_image_number():
+    temp_image_number = int(general_bot_settings.find_one({
+        '_id': 0
+    })['tempImageCounter'])
+    if temp_image_number >= 10:
+        general_bot_settings.update_one({
+            '_id': 0
+        }, {
+            '$set': {
+                'lastCardCode': '0'
+            }
+        }, upsert=False)
+    else:
+        general_bot_settings.update_one({
+            '_id': 0
+        }, {
+            '$set': {
+                'lastCardCode': str(temp_image_number + 1)
+            }
+        }, upsert=False)
+    return temp_image_number
+
+
 def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
     # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
