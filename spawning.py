@@ -391,7 +391,7 @@ class Spawning(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
-        seconds_diff_spawn = self.spawn.get_cooldown_retry_after(ctx)
+        seconds_diff_spawn = int(self.spawn.get_cooldown_retry_after(ctx))
         grab_in_cooldown, time_str_grab = is_grab_cooldown(ctx.author)
         embed = discord.Embed(title='Cooldowns', description=f'Showing cooldowns for {ctx.author.mention}\n\n', colour=0xffcb05)
         if seconds_diff_spawn != 0.0:
