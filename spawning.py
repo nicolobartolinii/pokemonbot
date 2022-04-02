@@ -82,17 +82,17 @@ class Spawning(commands.Cog):
             tasks = [
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣' and ctx.message.id == r.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '1️⃣',  # and ctx.message.id == r.message.id,
                     timeout=60
                 ), name='grab1'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣' and ctx.message.id == r.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '2️⃣',  # and ctx.message.id == r.message.id,
                     timeout=60
                 ), name='grab2'),
                 asyncio.create_task(self.bot.wait_for(
                     'reaction_add',
-                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣' and ctx.message.id == r.message.id,
+                    check=lambda r, u: isinstance(u, discord.Member) and str(r.emoji) in '3️⃣',  # and ctx.message.id == r.message.id,
                     timeout=60
                 ), name='grab3')
             ]
