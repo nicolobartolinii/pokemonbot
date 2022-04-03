@@ -74,7 +74,7 @@ class Trades(commands.Cog):
                 result2 = finished[1].result()
             except asyncio.TimeoutError:
                 embed.colour = 0xfd0111
-                embed.add_field(name='Card transfer timed out.', value='')
+                embed.description += '**Card transfer timed out.**'
                 await give_msg.edit(embed=embed)
                 return
 
@@ -83,13 +83,13 @@ class Trades(commands.Cog):
                 reaction_receiver, receiver = result2
                 if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
                     embed.colour = 0xfd0111
-                    embed.add_field(name='Card transfer has been cancelled.', value='')
+                    embed.description += '**Card transfer has been cancelled.**'
                     await give_msg.edit(embed=embed)
                     return
                 elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
                     give_card(ctx.author, member, card_code)
                     embed.colour = 0x35ff42
-                    embed.add_field(name='Card transfer completed.', value='')
+                    embed.description += '**Card transfer completed.**'
                     await give_msg.edit(embed=embed)
                     return
                 else:
@@ -99,13 +99,13 @@ class Trades(commands.Cog):
                 reaction_sender, sender = result2
                 if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
                     embed.colour = 0xfd0111
-                    embed.add_field(name='Card transfer has been cancelled.', value='')
+                    embed.description += '**Card transfer has been cancelled.**'
                     await give_msg.edit(embed=embed)
                     return
                 elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
                     give_card(ctx.author, member, card_code)
                     embed.colour = 0x35ff42
-                    embed.add_field(name='Card transfer completed.', value='')
+                    embed.description += '**Card transfer completed.**'
                     await give_msg.edit(embed=embed)
                     return
                 else:
