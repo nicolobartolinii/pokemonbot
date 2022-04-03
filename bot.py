@@ -86,6 +86,10 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
     embed.add_field(name=f'`lookup <search-query>`',
                     value='Aliases: `lu`\nLook up the details of a particular card using its name or a part of it. [advanced search queries WIP]', inline=False)
 
+    embed.add_field(name=f'`give <user> [card_code]`',
+                    value='Aliases: `g`\nGive another user one of your cards. If `card_code` is omitted, you give to the user your last card obtained.',
+                    inline=False)
+
     embed.add_field(name=f'`wishlist <user>`',
                     value='Aliases: `w`, `wl`\nView the wishlist of yourself or another user.', inline=False)
 
