@@ -10,7 +10,8 @@ default_prefixes = ['p!', 'p', 'p$']
 async def determine_prefix(bot: commands.Bot, message: discord.Message):
     guild = message.guild
     if guild:
-        return guilds.find_one({'_id': str(guild.id)})['customPrefix']
+        custom_prefix = guilds.find_one({'_id': str(guild.id)})['customPrefix']
+        return [custom_prefix, custom_prefix.upper()]
     else:
         return default_prefixes
 
