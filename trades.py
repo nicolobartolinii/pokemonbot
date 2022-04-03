@@ -75,7 +75,7 @@ class Trades(commands.Cog):
             except asyncio.TimeoutError:
                 embed.colour = 0xfd0111
                 embed.add_field(name='Card transfer timed out.', value='')
-                await give_msg.edit(file=file, embed=embed)
+                await give_msg.edit(embed=embed)
                 return
 
             if action1 == 'sender' and action2 == 'receiver':
@@ -84,13 +84,13 @@ class Trades(commands.Cog):
                 if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
                     embed.colour = 0xfd0111
                     embed.add_field(name='Card transfer has been cancelled.', value='')
-                    await give_msg.edit(file=file, embed=embed)
+                    await give_msg.edit(embed=embed)
                     return
                 elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
                     give_card(ctx.author, member, card_code)
                     embed.colour = 0x35ff42
                     embed.add_field(name='Card transfer completed.', value='')
-                    await give_msg.edit(file=file, embed=embed)
+                    await give_msg.edit(embed=embed)
                     return
                 else:
                     pass
@@ -100,13 +100,13 @@ class Trades(commands.Cog):
                 if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
                     embed.colour = 0xfd0111
                     embed.add_field(name='Card transfer has been cancelled.', value='')
-                    await give_msg.edit(file=file, embed=embed)
+                    await give_msg.edit(embed=embed)
                     return
                 elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
                     give_card(ctx.author, member, card_code)
                     embed.colour = 0x35ff42
                     embed.add_field(name='Card transfer completed.', value='')
-                    await give_msg.edit(file=file, embed=embed)
+                    await give_msg.edit(embed=embed)
                     return
                 else:
                     pass
