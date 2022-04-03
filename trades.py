@@ -1,3 +1,5 @@
+import asyncio
+
 from mongodb import *
 
 
@@ -39,7 +41,76 @@ class Trades(commands.Cog):
         embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
         file = discord.File(card_image, filename='image.png')
         embed.set_image(url=f'attachment://image.png')
-        await ctx.send(file=file, embed=embed)
+        give_msg = await ctx.send(file=file, embed=embed)
+        await give_msg.add_reaction('❌')
+        await give_msg.add_reaction('✅')
+        while True:
+            tasks = [
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: u.id == ctx.author.id and str(r.emoji) in '❌✅' and r.message.id == give_msg.id,
+                    timeout=20
+                ), name='sender'),
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: u.id == member.id and str(r.emoji) in '❌✅' and r.message.id == give_msg.id,
+                    timeout=20
+                ), name='receiver')
+            ]
+
+            done, pending = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            finished = list(done)
+
+            for task in pending:
+                try:
+                    task.cancel()
+                except asyncio.CancelledError:
+                    pass
+
+            action1 = finished[0].get_name()
+            action2 = finished[1].get_name()
+            try:
+                result1 = finished[0].result()
+                result2 = finished[1].result()
+            except asyncio.TimeoutError:
+                embed.colour = 0xfd0111
+                embed.add_field(name='Card transfer timed out.', value='')
+                await give_msg.edit(file=file, embed=embed)
+                return
+
+            if action1 == 'sender' and action2 == 'receiver':
+                reaction_sender, sender = result1
+                reaction_receiver, receiver = result2
+                if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
+                    embed.colour = 0xfd0111
+                    embed.add_field(name='Card transfer has been cancelled.', value='')
+                    await give_msg.edit(file=file, embed=embed)
+                    return
+                elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
+                    give_card(ctx.author, member, card_code)
+                    embed.colour = 0x35ff42
+                    embed.add_field(name='Card transfer completed.', value='')
+                    await give_msg.edit(file=file, embed=embed)
+                    return
+                else:
+                    pass
+            elif action1 == 'receiver' and action2 == 'sender':
+                reaction_receiver, receiver = result1
+                reaction_sender, sender = result2
+                if str(reaction_sender.emoji) == '❌' or str(reaction_receiver.emoji) == '❌':
+                    embed.colour = 0xfd0111
+                    embed.add_field(name='Card transfer has been cancelled.', value='')
+                    await give_msg.edit(file=file, embed=embed)
+                    return
+                elif str(reaction_sender.emoji) == '✅' and str(reaction_receiver.emoji) == '✅':
+                    give_card(ctx.author, member, card_code)
+                    embed.colour = 0x35ff42
+                    embed.add_field(name='Card transfer completed.', value='')
+                    await give_msg.edit(file=file, embed=embed)
+                    return
+                else:
+                    pass
+
 
 
 

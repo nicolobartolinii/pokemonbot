@@ -161,6 +161,21 @@ def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
     return card_code
 
 
+def give_card(user1: discord.Member, user2: discord.Member, card_code: str):
+    users.update_one(
+        {'_id': str(user1.id)},
+        {'$pull': {'inventory': str(card_code)}}
+    )
+    users.update_one(
+        {'_id': str(user2.id)},
+        {'$push': {'inventory': str(card_code)}}
+    )
+    grabbed_cards.update_one(
+        {'_id': str(card_code)},
+        {'$set': {'ownedBy': str(user2.id)}}
+    )
+
+
 def is_grab_cooldown(member: discord.Member):
     last_grab_str = list(users.find({'_id': str(member.id)}))[0]['lastGrab']
     last_grab_obj = datetime.strptime(last_grab_str, '%m/%d/%Y, %H:%M:%S')
