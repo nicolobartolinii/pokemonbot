@@ -10,14 +10,14 @@ class Trades(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
+        if ctx.guild.get_member(member.id) is None:
+            await ctx.send(f'User not found.')
+            return
         if not is_user_registered(member):
             await ctx.send('The member you want to give the card to is not registered. He should register an account using the `start` command.')
             return
         if ctx.author.id == member.id:
             await ctx.send(f'Sorry {ctx.author.mention}, you cannot give cards to yourself.')
-            return
-        if ctx.guild.get_member(member.id) is None:
-            await ctx.send(f'User not found.')
             return
         user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
         if card_code is None:
