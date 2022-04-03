@@ -363,6 +363,7 @@ class Wishlist(commands.Cog):
             {'_id': str(ctx.author.id)},
             {'$set': {'wishWatching': str(ctx.guild.id)}}
         )
+        await ctx.send(f'{ctx.author.mention}, your wishlist watch channel has been set to this channel.')
 
 
 def setup(bot: commands.Bot):
