@@ -6,7 +6,7 @@ class Tags(commands.Cog):
         self.bot = bot
 
     @commands.command(name='createtag', aliases=['tagcreate', 'ct', 'tagadd', 'tc'])
-    async def createtag(self, ctx: commands.Context, tag_name: str, emoji: discord.Emoji):
+    async def createtag(self, ctx: commands.Context, tag_name: str, emoji):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
