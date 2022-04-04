@@ -28,7 +28,6 @@ class Trades(commands.Cog):
         if card_code not in user_inventory:
             await ctx.send(f'{ctx.author.mention}, you do not have this card.')
             return
-
         giving = grabbed_cards.find_one({'_id': str(card_code)})
         card_id = giving['cardId']
         card_print = giving['print']
@@ -111,7 +110,41 @@ class Trades(commands.Cog):
                 else:
                     pass
 
+    @commands.command(name='trade')
+    async def trade(self, ctx: commands.Context, member: discord.Member, author_card_code: str, member_card_code: str):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        if ctx.guild.get_member(member.id) is None:
+            await ctx.send(f'User not found.')
+            return
+        if not is_user_registered(member):
+            await ctx.send('The member you want to trade cards with is not registered. He should register an account using the `start` command.')
+            return
+        if ctx.author.id == member.id:
+            await ctx.send(f'Sorry {ctx.author.mention}, you cannot trade cards with yourself.')
+            return
+        author_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
+        member_inventory = users.find_one({'_id': str(member.id)})['inventory']
+        author_card_code = author_card_code.upper()
+        member_card_code = member_card_code.upper()
+        if author_card_code not in author_inventory:
+            await ctx.send(f'{ctx.author.mention}, you do not have this card.')
+            return
+        if member_card_code not in member_inventory:
+            await ctx.send(f'{member.mention} does not have this card.')
+            return
+        author_card_id = grabbed_cards.find_one({'_id': author_card_code})['cardId']
+        member_card_id = grabbed_cards.find_one({'_id': member_card_code})['cardId']
+        ids = [author_card_id, 'trade-arrow', member_card_id]
+        imagecreation(ids).save(f'./temp_trade.png', 'PNG')
+        with open(f'./temp_trade.png', 'rb') as f:
+            picture = discord.File(f)
+            trade = await ctx.send(file=picture)
 
+    @trade.error
+    async def trade_error(self, ctx: commands.Context, error):
+        pass
 
 
 def setup(bot: commands.Bot):

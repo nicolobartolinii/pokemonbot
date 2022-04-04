@@ -62,7 +62,6 @@ class Spawning(commands.Cog):
                     to_ping.append(int(watcher['_id']))
         temp_image_number = get_new_temp_image_number()
         imagecreation(ids).save(f'./temp{temp_image_number}.png', 'PNG')
-        print(f'DROP IN CORSO DA PARTE DI {ctx.author.name}, TEMP IMAGE NUMBER {temp_image_number}')
         if len(to_ping) > 0:
             content = 'A card from your wishlist is spawning: '
             for ping in to_ping:
