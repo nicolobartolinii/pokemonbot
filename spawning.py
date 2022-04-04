@@ -35,7 +35,7 @@ class Spawning(commands.Cog):
             await ctx.send(f'User {ctx.author.mention} already registered.')
             return
 
-    @commands.command(name='spawn', aliases=['s'])  # TODO cooldown spawn
+    @commands.command(name='spawn', aliases=['s'], cooldown_after_parsing=True)
     @commands.cooldown(rate=1, per=1200, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
