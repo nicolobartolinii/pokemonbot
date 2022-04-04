@@ -29,7 +29,7 @@ def imagecreation(ids):  # function to create an image
     else:
         images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
         images[0] = Image.open(images[0]).resize((367, 512))
-        images[1] = Image.open(images[1]).resize((367, 512))
+        images[1] = Image.open(images[1]).resize((446, 307))
         images[2] = Image.open(images[2]).resize((367, 512))
     widths, heights = zip(*(i.size for i in images))
     total_width = sum(widths)+140
