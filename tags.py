@@ -27,6 +27,21 @@ class Tags(commands.Cog):
             users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(emoji)}})
             await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully created.')
 
+    @commands.command(name='deletetag', aliases=['tagdelete', 'dt', 'td'])
+    async def deletetag(self, ctx: commands.Context, tag_name: str):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user_tags = users.find_one({'_id': str(ctx.author.id)})['tags']
+        try:
+            user_tags[tag_name]
+        except KeyError:
+            await ctx.send(f'Sorry {ctx.author.mention}, that tag could not be deleted because it does not exist.')
+            return
+        users.update_one({'_id': str(ctx.author.id)}, {'$unset': {f'tags.{tag_name}': 1}})
+        users.update_one({'_id': str(ctx.author.id)}, {'$unset': {f'tagEmojis.{tag_name}': 1}})
+        await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully deleted.')
+
     @commands.command(name='tags')
     async def tags(self, ctx: commands.Context, member: discord.Member = None):
         if not is_user_registered(ctx.author):
@@ -131,12 +146,16 @@ class Tags(commands.Cog):
         card_name = cards.find_one({'_id': str(card_id)})['name']
         await ctx.send(f'{ctx.author.mention}, the **{card_name}** card has been tagged successfully with the `{tag_name}` tag.')
 
-    @tag.error
-    async def tag_error(self, ctx: commands.Context, error):
-        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
-
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
+
+    @deletetag.error
+    async def deletetag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
+
+    @tag.error
+    async def tag_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 
