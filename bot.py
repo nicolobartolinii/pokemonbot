@@ -21,6 +21,7 @@ bot.remove_command('help')
 bot.load_extension('spawning')
 bot.load_extension('wishlist')
 bot.load_extension('trades')
+bot.load_extension('tags')
 
 
 @bot.event
