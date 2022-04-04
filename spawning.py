@@ -26,7 +26,9 @@ class Spawning(commands.Cog):
                 'lastGrab': str((datetime.now() - timedelta(minutes=10, seconds=5)).strftime('%m/%d/%Y, %H:%M:%S')),
                 'inventory': [],
                 'wishlist': [],
-                'wishWatching': ''
+                'wishWatching': '',
+                'tags': {},
+                'tagEmojis': {}
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
