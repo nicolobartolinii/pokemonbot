@@ -75,10 +75,14 @@ class Spawning(commands.Cog):
         await drop.add_reaction('1️⃣')
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
+        users.update_one(
+            {'_id': str(ctx.author.id)},
+            {'$inc': {'cardsDropped': 3}}
+        )
         grab1 = 'grab1'
         grab2 = 'grab2'
         grab3 = 'grab3'
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.2)
         while True:
             tasks = [
                 asyncio.create_task(self.bot.wait_for(
