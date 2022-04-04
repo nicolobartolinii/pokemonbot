@@ -37,9 +37,10 @@ class Trades(commands.Cog):
         card_wishlists = generic_card['wishlists']
         card_set = generic_card['set']
         card_name = generic_card['name']
+        card_rarity = generic_card['rarity']
         card_image = f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png'
         embed = discord.Embed(title='Card Transfer', description=f'{ctx.author.mention}`→`{member.mention}\n\n', colour=0xffcb05)
-        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `♡{str(card_rarity)}` · {card_set} · **{card_name}**\n'
         file = discord.File(card_image, filename='image.png')
         embed.set_image(url=f'attachment://image.png')
         give_msg = await ctx.send(file=file, embed=embed)
@@ -136,13 +137,36 @@ class Trades(commands.Cog):
         if member_card_code not in member_inventory:
             await ctx.send(f'{member.mention} does not have this card.')
             return
-        author_card_id = grabbed_cards.find_one({'_id': author_card_code})['cardId']
-        member_card_id = grabbed_cards.find_one({'_id': member_card_code})['cardId']
+        author_card = grabbed_cards.find_one({'_id': str(author_card_code)})
+        member_card = grabbed_cards.find_one({'_id': str(member_card_code)})
+        author_card_id = author_card['cardId']
+        member_card_id = member_card['cardId']
         ids = [author_card_id, 'trade-arrow', member_card_id]
         imagecreation(ids).save(f'./temp_trade.png', 'PNG')
+        author_card_print = author_card['print']
+        member_card_print = member_card['print']
+        author_generic_card = cards.find_one({'_id': str(author_card_id)})
+        member_generic_card = cards.find_one({'_id': str(member_card_id)})
+        author_card_wishlists = author_generic_card['wishlists']
+        member_card_wishlists = member_generic_card['wishlists']
+        author_card_set = author_generic_card['set']
+        member_card_set = member_generic_card['set']
+        author_card_name = author_generic_card['name']
+        member_card_name = member_generic_card['name']
+        author_card_rarity = author_generic_card['rarity']
+        member_card_rarity = member_generic_card['rarity']
         with open(f'./temp_trade.png', 'rb') as f:
-            picture = discord.File(f)
-            trade = await ctx.send(file=picture)
+            embed = discord.Embed(
+                title='Card trade',
+                description=f'{ctx.author.mention}\n'
+                            f'`{author_card_code}` · `#{author_card_print}` · `♡{str(author_card_wishlists)}` · `♡{str(author_card_rarity)}`  · {author_card_set} · **{author_card_name}**\n\n'
+                            f'{member.mention}\n'
+                            f'`{member_card_code}` · `#{member_card_print}` · `♡{str(member_card_wishlists)}` · `♡{str(member_card_rarity)}`  · {member_card_set} · **{member_card_name}**\n\n',
+                colour=0xffcb05
+            )
+            file = discord.File(f, filename='image.png')
+            embed.set_image(url=f'attachment://image.png')
+            trade = await ctx.send(file=file, embed=embed)
 
     # @trade.error
     # async def trade_error(self, ctx: commands.Context, error):
