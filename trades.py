@@ -238,7 +238,7 @@ class Trades(commands.Cog):
 
     @trade.error
     async def trade_error(self, ctx: commands.Context, error):
-        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands. ')
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 
 def setup(bot: commands.Bot):

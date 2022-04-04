@@ -27,7 +27,7 @@ class Tags(commands.Cog):
 
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):
-        pass
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 
 def setup(bot: commands.Bot):
