@@ -77,21 +77,25 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
     embed.add_field(name=f'`spawn`',
                     value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.', inline=False)
 
-    embed.add_field(name=f'`collection <user>`',
-                    value="Aliases: `c`, `cards`\nView the card collection of yourself or another user. [filtering WIP]", inline=False)
+    embed.add_field(name=f'`collection [user]`',
+                    value="Aliases: `c`, `cards`\nView the card collection of yourself (in this case `user` can be omitted) or another user. [filtering WIP]", inline=False)
 
-    embed.add_field(name=f'`view <code>`',
-                    value='Aliases: `v`\nView your last card obtained or a specific card with its code.', inline=False)
+    embed.add_field(name=f'`view [code]`',
+                    value='Aliases: `v`\nView your last card obtained (in this case `code` can be omitted) or a specific card with its code.', inline=False)
 
-    embed.add_field(name=f'`lookup <search-query>`',
-                    value='Aliases: `lu`\nLook up the details of a particular card using its name or a part of it. [advanced search queries WIP]', inline=False)
+    embed.add_field(name=f'`lookup [search-query]`',
+                    value='Aliases: `lu`\nLook up the details of a particular card using its name or a part of it. If `search-query` is omitted, you look up your last card obtained. [advanced search queries WIP]', inline=False)
 
     embed.add_field(name=f'`give <user> [card_code]`',
                     value='Aliases: `g`\nGive another user one of your cards. If `card_code` is omitted, you give to the user your last card obtained.',
                     inline=False)
 
-    embed.add_field(name=f'`wishlist <user>`',
-                    value='Aliases: `w`, `wl`\nView the wishlist of yourself or another user.', inline=False)
+    embed.add_field(name=f'`trade <user> <your_card_code> <user_card_code> `',
+                    value='Trade one of your cards with another user for one of their cards. You can only trade one card at a time',
+                    inline=False)
+
+    embed.add_field(name=f'`wishlist [user]`',
+                    value='Aliases: `w`, `wl`\nView the wishlist of yourself (in this case `user` can be omitted) or another user.', inline=False)
 
     embed.add_field(name=f'`wishadd <search-query>`',
                     value="Aliases: `wa`, `wadd`\nAdd a card to your wishlist. It's recommended to first use the `lookup` command to find the right card.", inline=False)
