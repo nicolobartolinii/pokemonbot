@@ -174,6 +174,36 @@ class Tags(commands.Cog):
                 return
         await ctx.send(f'Sorry {ctx.author.mention}, that card is already not tagged.')
 
+    @commands.command(name='renametag', aliases=['tagrename', 'rnt', 'trn'])
+    async def renametag(self, ctx: commands.Context, old_tag_name: str, new_tag_name: str):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        user_tags = user['tags']
+        try:
+            user_tags[old_tag_name]
+        except KeyError:
+            await ctx.send(f'Sorry {ctx.author.mention}, that tag could not be renamed because it does not exist.')
+            return
+        users.update_one({'_id': str(ctx.author.id)}, {'$rename': {f'tags.{old_tag_name}': f'tags.{new_tag_name}', f'tagEmojis.{old_tag_name}': f'tagEmojis.{new_tag_name}'}})
+        await ctx.send(f'{ctx.author.mention}, tag `{old_tag_name}` has successfully been renamed to `{new_tag_name}`.')
+
+    @commands.command(name='tagemoji', aliases=['te'])
+    async def tagemoji(self, ctx: commands.Context, tag_name: str, new_emoji):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        user_tags = user['tags']
+        try:
+            user_tags[tag_name]
+        except KeyError:
+            await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exist.')
+            return
+        users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(new_emoji)}})
+        await ctx.send(f"{ctx.author.mention}, you have successfully changed tag `{tag_name}`'s emoji to `{str(new_emoji)}`.")
+
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
@@ -188,6 +218,14 @@ class Tags(commands.Cog):
 
     @untag.error
     async def untag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
+
+    @renametag.error
+    async def renametag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
+
+    @tagemoji.error
+    async def tagemoji_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 

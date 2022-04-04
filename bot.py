@@ -115,6 +115,14 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='View the tag list of yourself (in this case `user` can be omitted) or another user.',
                     inline=False)
 
+    embed.add_field(name=f'`renametag <old_tag_name> <new_tag_name>`',
+                    value='Aliases: `tagrename`, `rnt`, `trn`\nRename one of your tags. The tag must contain only alphabetic characters, numbers, dashes or underscores.',
+                    inline=False)
+
+    embed.add_field(name=f'`tagemoji <tag_name> <new_emoji>`',
+                    value='Aliases: `te`, `tagadd`, `ct`, `tc`\nChange the emoji on one of your tags. Custom emojis are highly discouraged as they may not be displayed on other servers.',
+                    inline=False)
+
     embed.add_field(name=f'`wishlist [user]`',
                     value='Aliases: `w`, `wl`\nView the wishlist of yourself (in this case `user` can be omitted) or another user.', inline=False)
 
@@ -139,7 +147,5 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
     embed.add_field(name=f'`server`',
                     value='Aliases: `serverinfo`, `si`\nAdmin only command. Shows the spawn channel and the prefix for this server.', inline=False)
     await ctx.send(embed=embed)
-
-
 
 bot.run(TOKEN)
