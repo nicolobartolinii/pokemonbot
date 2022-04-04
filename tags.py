@@ -17,6 +17,7 @@ class Tags(commands.Cog):
                 return
         except KeyError:
             users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tags.{tag_name}': ''}})
+            users.update_one({'_id': str(ctx.author.id)}, {'$pull': {f'tags.{tag_name}': ''}})
             users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(emoji)}})
             await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully created.')
 
