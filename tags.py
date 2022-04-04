@@ -23,7 +23,10 @@ class Tags(commands.Cog):
 
     @commands.command(name='tags')
     async def tags(self, ctx: commands):
-        pass
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+
 
     @commands.command(name='tag', aliases=['t'])
     async def tag(self, ctx: commands.Context, tag_name: str, card_code: str = None):
@@ -58,6 +61,10 @@ class Tags(commands.Cog):
         card_id = grabbed_cards.find_one({'_id': str(card_code)})['cardId']
         card_name = cards.find_one({'_id': str(card_id)})['name']
         await ctx.send(f'{ctx.author.mention}, the **{card_name}** card has been tagged successfully with the `{tag_name}` tag.')
+
+    @tag.error
+    async def tag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):

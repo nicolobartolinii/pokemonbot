@@ -99,6 +99,10 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Aliases: `tagcreate`, `tagadd`, `ct`, `tc`\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
                     inline=False)
 
+    embed.add_field(name=f'`tag <tag_name> [card_code]`',
+                    value='Aliases: `t`\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
+                    inline=False)
+
     embed.add_field(name=f'`wishlist [user]`',
                     value='Aliases: `w`, `wl`\nView the wishlist of yourself (in this case `user` can be omitted) or another user.', inline=False)
 
