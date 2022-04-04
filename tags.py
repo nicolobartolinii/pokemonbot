@@ -202,7 +202,7 @@ class Tags(commands.Cog):
             await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exist.')
             return
         users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(new_emoji)}})
-        await ctx.send(f"{ctx.author.mention}, you have successfully changed tag `{tag_name}`'s emoji to `{str(new_emoji)}`.")
+        await ctx.send(f"{ctx.author.mention}, you have successfully changed tag `{tag_name}`'s emoji to {str(new_emoji)}.")
 
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):
