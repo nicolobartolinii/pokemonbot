@@ -236,12 +236,9 @@ class Trades(commands.Cog):
                 else:
                     pass
 
-    # @trade.error
-    # async def trade_error(self, ctx: commands.Context, error):
-    #     if isinstance(error, commands.CommandInvokeError):
-    #         await ctx.send('CommandInvokeError')
-    #     else:
-    #         await ctx.send('non CommandInvokeError')
+    @trade.error
+    async def trade_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands. ')
 
 
 def setup(bot: commands.Bot):
