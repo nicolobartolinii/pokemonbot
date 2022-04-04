@@ -18,6 +18,10 @@ class Tags(commands.Cog):
                 await ctx.send(f'Sorry {ctx.author.mention}, that tag could not be added because it already exists.')
                 return
         except KeyError:
+            if str(emoji) == '◾':
+                await ctx.send(
+                    f'Sorry {ctx.author.mention}, that emoji cannot be used because it is used for technical purposes.')
+                return
             users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tags.{tag_name}': ''}})
             users.update_one({'_id': str(ctx.author.id)}, {'$pull': {f'tags.{tag_name}': ''}})
             users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(emoji)}})

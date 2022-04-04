@@ -185,7 +185,12 @@ class Spawning(commands.Cog):
             set_name = generic_card['set']
             card_name = generic_card['name']
             card_rarity = generic_card['rarity']
-            card_str = f'`{card_code}` · `#{print_num}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {set_name} · **{card_name}**\n'
+            card_emoji = '◾'
+            for tag in user['tags']:
+                if card_code in user['tags'][tag]:
+                    card_emoji = user['tagEmojis'][tag]
+                    break
+            card_str = f'{card_emoji} `{card_code}` · `#{print_num}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {set_name} · **{card_name}**\n'
             collection.append(card_str)
         if len(cards_owned) < 10:
             for i in range(len(cards_owned)):
