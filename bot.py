@@ -95,6 +95,10 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Trade one of your cards with another user for one of their cards. You can only trade one card at a time',
                     inline=False)
 
+    embed.add_field(name=f'`createtag <tag_name> <emoji>`',
+                    value='Aliases: `tagcreate`, `tagadd`, `ct`, `tc`\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
+                    inline=False)
+
     embed.add_field(name=f'`wishlist [user]`',
                     value='Aliases: `w`, `wl`\nView the wishlist of yourself (in this case `user` can be omitted) or another user.', inline=False)
 
