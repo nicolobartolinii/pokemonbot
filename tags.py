@@ -204,6 +204,73 @@ class Tags(commands.Cog):
         users.update_one({'_id': str(ctx.author.id)}, {'$set': {f'tagEmojis.{tag_name}': str(new_emoji)}})
         await ctx.send(f"{ctx.author.mention}, you have successfully changed tag `{tag_name}`'s emoji to {str(new_emoji)}.")
 
+    @commands.command(name='multitag')
+    async def multitag(self, ctx: commands.Context, tag_name: str, *codes):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        user_inventory = user['inventory']
+        user_tags = user['tags']
+        for code in codes:
+            for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
+                if invalid_char in code:
+                    await ctx.send(f'{ctx.author.mention}, at least one of those card codes is wrong. Please use the `help` command to check the correct usage of commands.')
+                    return
+            if code not in user_inventory:
+                await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
+                return
+        try:
+            user_tags[tag_name]
+        except KeyError:
+            await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exist. You can create a new tag using the `createtag` command.')
+            return
+        for tag in user_tags:
+            tagged_cards = user_tags[tag]
+            for code in codes:
+                if code in tagged_cards:
+                    users.update_one(
+                        {'_id': str(ctx.author.id)},
+                        {'$pull': {f'tags.{tag}': str(code)}}
+                    )
+                users.update_one(
+                    {'_id': str(ctx.author.id)},
+                    {'$push': {f'tags.{tag_name}': str(code)}}
+                )
+        await ctx.send(f'{ctx.author.mention}, the cards have been tagged successfully with the `{tag_name}` tag.')
+
+    @commands.command(name='multiuntag')
+    async def multiuntag(self, ctx: commands.Context, *codes):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        user_inventory = user['inventory']
+        user_tags = user['tags']
+        for code in codes:
+            for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
+                if invalid_char in code:
+                    await ctx.send(f'{ctx.author.mention}, at least one of those card codes is wrong. Please use the `help` command to check the correct usage of commands.')
+                    return
+            if code not in user_inventory:
+                await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
+                return
+        already_untagged = False
+        for tag in user_tags:
+            tagged_cards = user_tags[tag]
+            for code in codes:
+                if code in tagged_cards:
+                    users.update_one(
+                        {'_id': str(ctx.author.id)},
+                        {'$pull': {f'tags.{tag}': str(code)}}
+                    )
+                else:
+                    already_untagged = True
+        if already_untagged:
+            await ctx.send(f'{ctx.author.mention}, at least one of the cards were alreasy untagged. The others have been succesfully untagged.')
+        else:
+            await ctx.send(f'{ctx.author.mention}, the cards have been succesfully untagged.')
+
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
