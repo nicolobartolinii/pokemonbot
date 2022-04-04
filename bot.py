@@ -99,12 +99,16 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Aliases: `tagcreate`, `tagadd`, `ct`, `tc`\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
                     inline=False)
 
-    embed.add_field(name=f'`deletetag <tag_name> <emoji>`',
+    embed.add_field(name=f'`deletetag <tag_name>`',
                     value='Aliases: `tagdelete`, `dy`, `td`\nDelete one of your tags. If any of your cards have this tag, the tag will be removed from those cards.',
                     inline=False)
 
     embed.add_field(name=f'`tag <tag_name> [card_code]`',
                     value='Aliases: `t`\nTag a card. If `card_code` is omitted, you tag your last card obtained.',
+                    inline=False)
+
+    embed.add_field(name=f'`untag [card_code]`',
+                    value='Aliases: `ut`\nUntag a card. If `card_code` is omitted, you untag your last card obtained.',
                     inline=False)
 
     embed.add_field(name=f'`tags [user]`',
