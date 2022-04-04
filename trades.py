@@ -1,5 +1,7 @@
 import asyncio
 
+import discord.ext.commands
+
 from mongodb import *
 
 
@@ -144,7 +146,8 @@ class Trades(commands.Cog):
 
     @trade.error
     async def trade_error(self, ctx: commands.Context, error):
-        pass
+        if isinstance(error, commands.CommandInvokeError):
+            print('errore trade')
 
 
 def setup(bot: commands.Bot):
