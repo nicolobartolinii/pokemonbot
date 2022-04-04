@@ -295,6 +295,13 @@ class Tags(commands.Cog):
     async def tagemoji_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
+    @multitag.error
+    async def multitag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
+
+    @multiuntag.error
+    async def multiuntag_error(self, ctx: commands.Context, error):
+        await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 def setup(bot: commands.Bot):
     bot.add_cog(Tags(bot))

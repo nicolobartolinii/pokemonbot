@@ -111,6 +111,14 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
                     value='Aliases: `ut`\nUntag a card. If `card_code` is omitted, you untag your last card obtained.',
                     inline=False)
 
+    embed.add_field(name=f'`multitag <tag_name> <...card_codes>`',
+                    value='Tag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
+                    inline=False)
+
+    embed.add_field(name=f'`multiuntag <...card_codes>`',
+                    value='Untag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
+                    inline=False)
+
     embed.add_field(name=f'`tags [user]`',
                     value='View the tag list of yourself (in this case `user` can be omitted) or another user.',
                     inline=False)
