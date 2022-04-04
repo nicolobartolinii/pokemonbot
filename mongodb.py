@@ -174,6 +174,8 @@ def give_card(user1: discord.Member, user2: discord.Member, card_code: str):
         {'_id': str(card_code)},
         {'$set': {'ownedBy': str(user2.id)}}
     )
+    users.update_one({'_id': str(user1.id)}, {'$inc': {'cardsGiven': 1}})
+    users.update_one({'_id': str(user2.id)}, {'$inc': {'cardsReceived': 1}})
 
 
 def trade_card(author: discord.Member, member: discord.Member, author_card_code: str, member_card_code: str):
@@ -201,6 +203,10 @@ def trade_card(author: discord.Member, member: discord.Member, author_card_code:
         {'_id': str(member_card_code)},
         {'$set': {'ownedBy': str(author.id)}}
     )
+    users.update_one({'_id': str(author.id)}, {'$inc': {'cardsGiven': 1}})
+    users.update_one({'_id': str(member.id)}, {'$inc': {'cardsReceived': 1}})
+    users.update_one({'_id': str(member.id)}, {'$inc': {'cardsGiven': 1}})
+    users.update_one({'_id': str(author.id)}, {'$inc': {'cardsReceived': 1}})
 
 
 def is_grab_cooldown(member: discord.Member):

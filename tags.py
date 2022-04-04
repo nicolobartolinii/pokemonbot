@@ -16,10 +16,9 @@ class Tags(commands.Cog):
                 await ctx.send(f'Sorry {ctx.author.mention}, that tag could not be added because it already exists.')
                 return
         except KeyError:
-            pass
-        users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tags.{tag_name}': []}})
-        users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tagEmojis.{tag_name}': str(emoji)}})
-        await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully created.')
+            users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tags.{tag_name}': []}})
+            users.update_one({'_id': str(ctx.author.id)}, {'$push': {f'tagEmojis.{tag_name}': str(emoji)}})
+            await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully created.')
 
     @commands.command(name='tags')
     async def tags(self, ctx: commands):
