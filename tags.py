@@ -1,3 +1,5 @@
+import asyncio
+
 from mongodb import *
 
 
@@ -22,11 +24,74 @@ class Tags(commands.Cog):
             await ctx.send(f'{ctx.author.mention}, tag `{tag_name}` has been successfully created.')
 
     @commands.command(name='tags')
-    async def tags(self, ctx: commands):
+    async def tags(self, ctx: commands.Context, member: discord.Member = None):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
+        if not is_user_registered(member or ctx.author):
+            await ctx.send('The member whose tags you are looking for is not registered. He should register an account using the `start` command.')
+            return
+        if member is None:
+            member = ctx.author
+        user = users.find_one({'_id': str(member.id)})
+        tags = user['tags']
+        embed = discord.Embed(title='Tags', description=f"{member.mention}'s tags.\n\n",
+                              colour=0xffcb05)
+        if len(tags) == 0:
+            embed.description += 'Tags list is empty.'
+            await ctx.send(embed=embed)
+            return
+        tags_list_str = []
+        for tag_name in tags:
+            tag_emoji = user['tagEmojis'][tag_name]
+            tag_cards = len(tags[tag_name])
+            tag_str = f'{tag_emoji}`{tag_name}` · **{tag_cards}** {"cards" if tag_cards != 1 else "card"}\n'
+            tags_list_str.append(tag_str)
+        if len(tags) < 10:
+            for i in range(len(tags)):
+                embed.description += tags_list_str[i]
+            embed.set_footer(text=f'Showing tags 1-{len(tags)}')
+            await ctx.send(embed=embed)
+        elif len(tags) >= 10:
+            for i in range(10):
+                embed.description += tags_list_str[i]
+            embed.set_footer(text=f'Showing tags 1-10 of {len(tags)}')
+            message = await ctx.send(embed=embed)
 
+            embeds = [embed]
+            pages = (len(tags) // 10) + 1
+            for p in range(1, pages):
+                next_page = discord.Embed(title='Tags',
+                                          description=f"{member.mention}'s tags.\n\n", colour=0xffcb05)
+                for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(tags) else len(tags)):
+                    next_page.description += tags_list_str[i]
+                next_page.set_footer(
+                    text=f'Showing tags {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(tags) else len(tags)} of {len(tags)}')
+                embeds.append(next_page)
+            cur_page = 0
+
+            await message.add_reaction('⬅')
+            await message.add_reaction('➡')
+
+            def check(r: discord.Reaction, u):
+                return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
+
+            while True:
+                try:
+                    reaction, user = await self.bot.wait_for('reaction_add', timeout=45, check=check)
+
+                    if str(reaction.emoji) == '➡' and cur_page != pages - 1:
+                        cur_page += 1
+                        await message.edit(embed=embeds[cur_page])
+                        await message.remove_reaction(reaction, user)
+                    elif str(reaction.emoji) == '⬅' and cur_page > 0:
+                        cur_page -= 1
+                        await message.edit(embed=embeds[cur_page])
+                        await message.remove_reaction(reaction, user)
+                    else:
+                        await message.remove_reaction(reaction, user)
+                except asyncio.TimeoutError:
+                    break
 
     @commands.command(name='tag', aliases=['t'])
     async def tag(self, ctx: commands.Context, tag_name: str, card_code: str = None):
