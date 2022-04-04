@@ -107,7 +107,8 @@ class Wishlist(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing wishlistable cards 1-{len(cards_filtered)}',
                         value=field_text)
@@ -117,7 +118,8 @@ class Wishlist(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing wishlistable 1-10 of {len(cards_filtered)}',
                         value=field_text)
@@ -132,7 +134,8 @@ class Wishlist(commands.Cog):
                             card_wishlists = cards_filtered[i]['wishlists']
                             card_name = cards_filtered[i]['name']
                             card_set = cards_filtered[i]['set']
-                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                            card_rarity = cards_filtered[i]['rarity']
+                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                         next_page.add_field(
                             name=f'Showing wishlistable {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
                             value=field_text)
@@ -244,7 +247,8 @@ class Wishlist(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing cards 1-{len(cards_filtered)}',
                         value=field_text)
@@ -254,7 +258,8 @@ class Wishlist(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing wishlistable 1-10 of {len(cards_filtered)}',
                         value=field_text)
@@ -269,7 +274,8 @@ class Wishlist(commands.Cog):
                             card_wishlists = cards_filtered[i]['wishlists']
                             card_name = cards_filtered[i]['name']
                             card_set = cards_filtered[i]['set']
-                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                            card_rarity = cards_filtered[i]['rarity']
+                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                         next_page.add_field(
                             name=f'Showing {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
                             value=field_text)

@@ -40,7 +40,7 @@ class Trades(commands.Cog):
         card_rarity = generic_card['rarity']
         card_image = f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png'
         embed = discord.Embed(title='Card Transfer', description=f'{ctx.author.mention}`→`{member.mention}\n\n', colour=0xffcb05)
-        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `♡{str(card_rarity)}` · {card_set} · **{card_name}**\n'
+        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `☆ {str(card_rarity)}` · {card_set} · **{card_name}**\n'
         file = discord.File(card_image, filename='image.png')
         embed.set_image(url=f'attachment://image.png')
         give_msg = await ctx.send(file=file, embed=embed)
@@ -159,9 +159,9 @@ class Trades(commands.Cog):
             embed = discord.Embed(
                 title='Card trade',
                 description=f'{ctx.author.mention}\n'
-                            f'`{author_card_code}` · `#{author_card_print}` · `♡{str(author_card_wishlists)}` · `♡{str(author_card_rarity)}`  · {author_card_set} · **{author_card_name}**\n\n'
+                            f'`{author_card_code}` · `#{author_card_print}` · `♡{str(author_card_wishlists)}` · `☆ {str(author_card_rarity)}`  · {author_card_set} · **{author_card_name}**\n\n'
                             f'{member.mention}\n'
-                            f'`{member_card_code}` · `#{member_card_print}` · `♡{str(member_card_wishlists)}` · `♡{str(member_card_rarity)}`  · {member_card_set} · **{member_card_name}**\n\n',
+                            f'`{member_card_code}` · `#{member_card_print}` · `♡{str(member_card_wishlists)}` · `☆ {str(member_card_rarity)}`  · {member_card_set} · **{member_card_name}**\n\n',
                 colour=0xffcb05
             )
             file = discord.File(f, filename='image.png')

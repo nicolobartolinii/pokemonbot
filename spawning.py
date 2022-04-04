@@ -178,7 +178,8 @@ class Spawning(commands.Cog):
             card_wishlists = generic_card['wishlists']
             set_name = generic_card['set']
             card_name = generic_card['name']
-            card_str = f'`{card_code}` · `#{print_num}` · `♡{str(card_wishlists)}` · {set_name} · **{card_name}**\n'
+            card_rarity = generic_card['rarity']
+            card_str = f'`{card_code}` · `#{print_num}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {set_name} · **{card_name}**\n'
             collection.append(card_str)
         if len(cards_owned) < 10:
             for i in range(len(cards_owned)):
@@ -246,9 +247,10 @@ class Spawning(commands.Cog):
         card_wishlists = generic_card['wishlists']
         card_set = generic_card['set']
         card_name = generic_card['name']
+        card_rarity = generic_card['rarity']
         card_image = f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png'
         embed = discord.Embed(title='Card Details', description=f'Owned by {card_owner.mention}\n\n', colour=0xffcb05)
-        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+        embed.description += f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
         file = discord.File(card_image, filename='image.png')
         embed.set_image(url=f'attachment://image.png')
         await ctx.send(file=file, embed=embed)
@@ -289,7 +291,8 @@ class Spawning(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing cards 1-{len(cards_filtered)}',
                         value=field_text)
@@ -299,7 +302,8 @@ class Spawning(commands.Cog):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
                         card_set = cards_filtered[i]['set']
-                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                        card_rarity = cards_filtered[i]['rarity']
+                        field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                     embed.add_field(
                         name=f'Showing cards 1-10 of {len(cards_filtered)}',
                         value=field_text)
@@ -314,7 +318,8 @@ class Spawning(commands.Cog):
                             card_wishlists = cards_filtered[i]['wishlists']
                             card_name = cards_filtered[i]['name']
                             card_set = cards_filtered[i]['set']
-                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · {card_set} · **{card_name}**\n'
+                            card_rarity = cards_filtered[i]['rarity']
+                            field_text += f'{i + 1}. `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n'
                         next_page.add_field(
                             name=f'Showing cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
                             value=field_text)
