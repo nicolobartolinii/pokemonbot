@@ -167,6 +167,74 @@ class Trades(commands.Cog):
             file = discord.File(f, filename='image.png')
             embed.set_image(url=f'attachment://image.png')
             trade = await ctx.send(file=file, embed=embed)
+        await trade.add_reaction('❌')
+        await trade.add_reaction('✅')
+        while True:
+            tasks = [
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: u.id == ctx.author.id and str(r.emoji) in '❌✅' and r.message.id == trade.id,
+                    timeout=20
+                ), name='author'),
+                asyncio.create_task(self.bot.wait_for(
+                    'reaction_add',
+                    check=lambda r, u: u.id == member.id and str(r.emoji) in '❌✅' and r.message.id == trade.id,
+                    timeout=20
+                ), name='member')
+            ]
+
+            done, pending = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            finished = list(done)
+
+            for task in pending:
+                try:
+                    task.cancel()
+                except asyncio.CancelledError:
+                    pass
+
+            action1 = finished[0].get_name()
+            action2 = finished[1].get_name()
+            try:
+                result1 = finished[0].result()
+                result2 = finished[1].result()
+            except asyncio.TimeoutError:
+                embed.colour = 0xfd0111
+                embed.description += '**Card trade timed out.**'
+                await trade.edit(embed=embed)
+                return
+
+            if action1 == 'author' and action2 == 'member':
+                reaction_author, author = result1
+                reaction_member, member = result2
+                if str(reaction_author.emoji) == '❌' or str(reaction_member.emoji) == '❌':
+                    embed.colour = 0xfd0111
+                    embed.description += '**Card trade has been cancelled.**'
+                    await trade.edit(embed=embed)
+                    return
+                elif str(reaction_author.emoji) == '✅' and str(reaction_member.emoji) == '✅':
+                    trade_card(ctx.author, member, author_card_code, member_card_code)
+                    embed.colour = 0x35ff42
+                    embed.description += '**Card trade completed.**'
+                    await trade.edit(embed=embed)
+                    return
+                else:
+                    pass
+            elif action1 == 'member' and action2 == 'author':
+                reaction_member, member = result1
+                reaction_author, author = result2
+                if str(reaction_author.emoji) == '❌' or str(reaction_member.emoji) == '❌':
+                    embed.colour = 0xfd0111
+                    embed.description += '**Card trade has been cancelled.**'
+                    await trade.edit(embed=embed)
+                    return
+                elif str(reaction_author.emoji) == '✅' and str(reaction_member.emoji) == '✅':
+                    trade_card(ctx.author, member, author_card_code, member_card_code)
+                    embed.colour = 0x35ff42
+                    embed.description += '**Card trade completed.**'
+                    await trade.edit(embed=embed)
+                    return
+                else:
+                    pass
 
     # @trade.error
     # async def trade_error(self, ctx: commands.Context, error):

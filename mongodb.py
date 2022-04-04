@@ -176,6 +176,33 @@ def give_card(user1: discord.Member, user2: discord.Member, card_code: str):
     )
 
 
+def trade_card(author: discord.Member, member: discord.Member, author_card_code: str, member_card_code: str):
+    users.update_one(
+        {'_id': str(author.id)},
+        {'$pull': {'inventory': str(author_card_code)}}
+    )
+    users.update_one(
+        {'_id': str(member.id)},
+        {'$pull': {'inventory': str(member_card_code)}}
+    )
+    users.update_one(
+        {'_id': str(author.id)},
+        {'$push': {'inventory': str(member_card_code)}}
+    )
+    users.update_one(
+        {'_id': str(member.id)},
+        {'$push': {'inventory': str(author_card_code)}}
+    )
+    grabbed_cards.update_one(
+        {'_id': str(author_card_code)},
+        {'$set': {'ownedBy': str(member.id)}}
+    )
+    grabbed_cards.update_one(
+        {'_id': str(member_card_code)},
+        {'$set': {'ownedBy': str(author.id)}}
+    )
+
+
 def is_grab_cooldown(member: discord.Member):
     last_grab_str = list(users.find({'_id': str(member.id)}))[0]['lastGrab']
     last_grab_obj = datetime.strptime(last_grab_str, '%m/%d/%Y, %H:%M:%S')
