@@ -147,11 +147,9 @@ class Trades(commands.Cog):
     @trade.error
     async def trade_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            print(error)
-            print('errore trade')
+            await ctx.send('CommandInvokeError')
         else:
-            print(error)
-            print('errore fuori trade')
+            await ctx.send('non CommandInvokeError')
 
 
 def setup(bot: commands.Bot):
