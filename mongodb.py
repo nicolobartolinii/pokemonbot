@@ -315,8 +315,8 @@ def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reve
         return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
-    elif sort_type == 'rarity' or sort_type == 'r':
-        return sorted(cards_dict_list, key=lambda d: RARITY_ORDER[RARITIES[d['code']]], reverse=not reverse)
+    elif sort_type == 'rarity':
+        return sorted(cards_dict_list, key=lambda d: RARITY_ORDER[RARITIES[d['rarity']]], reverse=not reverse)
     elif sort_type == 'date' or sort_type == 'd':
         if reverse:
             cards_dict_list.reverse()
@@ -402,7 +402,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 }
                 cards_dict_list.append(card_dict)
         return cards_dict_list
-    elif filter_type == 'rarity' or filter_type == 'r':
+    elif filter_type == 'rarity':
         for card_code in cards_list:
             card_info = grabbed_cards.find_one({'_id': str(card_code)})
             card_id = card_info['cardId']
@@ -534,7 +534,7 @@ def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=Fal
         return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
-    elif sort_type == 'rarity' or sort_type == 'r':
+    elif sort_type == 'rarity':
         return sorted(cards_dict_list, key=lambda d: RARITY_ORDER[RARITIES[d['rarity']]], reverse=not reverse)
     elif sort_type == 'date' or sort_type == 'd':
         if reverse:
