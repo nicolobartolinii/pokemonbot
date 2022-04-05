@@ -9,6 +9,8 @@ import re
 
 from discord.ext import commands
 
+from mongodb import RARITIES
+
 
 def compose_images(image_urls):
     bg_url, *other_urls = image_urls
@@ -66,12 +68,13 @@ def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     return sign + base36
 
 
-async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_set: str, card_print: int, card_rarity: str, card_id: str):
+async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_set: str, card_print: int, card_rarity: str, card_id: str, card_artist: str):
     embed = discord.Embed(title='Card Lookup', description=f'Card name · **{str(card_name)}**\n',
                           colour=0xffcb05)
     embed.description += f'Card set · **{str(card_set)}**\n'
     embed.description += f'Total printed · **{str(card_print)}**\n'
-    embed.description += f'Rarity · **{str(card_rarity)}**'
+    embed.description += f'Rarity · **{str(card_rarity)} ({str(RARITIES[str(card_rarity)])})**'
+    embed.description += f'Artist · **{str(card_artist)}**'
     card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
     file = discord.File(card_image, filename='image.png')
     embed.set_thumbnail(url='attachment://image.png')
