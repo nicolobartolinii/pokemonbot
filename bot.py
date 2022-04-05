@@ -63,7 +63,6 @@ async def prefix(ctx: commands.Context, *, custom_prefix: str = 'p!'):
 
 
 @bot.command(name='server', aliases=['serverinfo', 'si'])
-@commands.has_guild_permissions(administrator=True)
 async def server(ctx: commands.Context):
     guild = guilds.find_one({'_id': str(ctx.guild.id)})
     embed = discord.Embed(
@@ -75,90 +74,201 @@ async def server(ctx: commands.Context):
 
 
 @bot.command(name='help')
-async def help(ctx: commands.Context, command: str = None):  # TODO da rifare per bene quando ci saranno più comandi
-    embed = discord.Embed(title='Pokémon Collector Commands', description=f'Use `{str(bot.command_prefix)}help <command>` to see more details about a particular command.', colour=0xffcb05)
-    embed.add_field(name=f'`start`',
-                    value='Register an account for Pokémon Collector bot.', inline=False)
-
-    embed.add_field(name=f'`spawn`',
-                    value='Aliases: `s`\nSpawn a set of cards in the current channel for anyone to grab.', inline=False)
-
-    embed.add_field(name=f'`collection [user]`',
-                    value="Aliases: `c`, `cards`\nView the card collection of yourself (in this case `user` can be omitted) or another user. [filtering WIP]", inline=False)
-
-    embed.add_field(name=f'`view [code]`',
-                    value='Aliases: `v`\nView your last card obtained (in this case `code` can be omitted) or a specific card with its code.', inline=False)
-
-    embed.add_field(name=f'`lookup [search-query]`',
-                    value='Aliases: `lu`\nLook up the details of a particular card using its name or a part of it. If `search-query` is omitted, you look up your last card obtained. [advanced search queries WIP]', inline=False)
-
-    embed.add_field(name=f'`give <user> [card_code]`',
-                    value='Aliases: `g`\nGive another user one of your cards. If `card_code` is omitted, you give to the user your last card obtained.',
-                    inline=False)
-
-    embed.add_field(name=f'`trade <user> <your_card_code> <user_card_code> `',
-                    value='Trade one of your cards with another user for one of their cards. You can only trade one card at a time',
-                    inline=False)
-
-    embed.add_field(name=f'`createtag <tag_name> <emoji>`',
-                    value='Aliases: `tagcreate`, `tagadd`, `ct`, `tc`\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
-                    inline=False)
-
-    embed.add_field(name=f'`deletetag <tag_name>`',
-                    value='Aliases: `tagdelete`, `dy`, `td`\nDelete one of your tags. If any of your cards have this tag, the tag will be removed from those cards.',
-                    inline=False)
-
-    embed.add_field(name=f'`tag <tag_name> [card_code]`',
-                    value='Aliases: `t`\nTag a card. If `card_code` is omitted, you tag your last card obtained.',
-                    inline=False)
-
-    embed.add_field(name=f'`untag [card_code]`',
-                    value='Aliases: `ut`\nUntag a card. If `card_code` is omitted, you untag your last card obtained.',
-                    inline=False)
-
-    embed.add_field(name=f'`multitag <tag_name> <...card_codes>`',
-                    value='Tag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
-                    inline=False)
-
-    embed.add_field(name=f'`multiuntag <...card_codes>`',
-                    value='Untag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
-                    inline=False)
-
-    embed.add_field(name=f'`tags [user]`',
-                    value='View the tag list of yourself (in this case `user` can be omitted) or another user.',
-                    inline=False)
-
-    embed.add_field(name=f'`renametag <old_tag_name> <new_tag_name>`',
-                    value='Aliases: `tagrename`, `rnt`, `trn`\nRename one of your tags. The tag must contain only alphabetic characters, numbers, dashes or underscores.',
-                    inline=False)
-
-    embed.add_field(name=f'`tagemoji <tag_name> <new_emoji>`',
-                    value='Aliases: `te`, `tagadd`, `ct`, `tc`\nChange the emoji on one of your tags. Custom emojis are highly discouraged as they may not be displayed on other servers.',
-                    inline=False)
-
-    embed.add_field(name=f'`wishlist [user]`',
-                    value='Aliases: `w`, `wl`\nView the wishlist of yourself (in this case `user` can be omitted) or another user.', inline=False)
-
-    embed.add_field(name=f'`wishadd <search-query>`',
-                    value="Aliases: `wa`, `wadd`\nAdd a card to your wishlist. It's recommended to first use the `lookup` command to find the right card.", inline=False)
-
-    embed.add_field(name=f'`wishremove`',
-                    value='Aliases: `wr`, `wrem`\nRemove a card from your wishlist.', inline=False)
-
-    embed.add_field(name=f'`wishwatch`',
-                    value='Aliases: `ww`, `wishw`, `wwatch`\nSet the current channel as the channel where you will be mentioned if a card that spawns is in your wishlist.', inline=False)
-
-    embed.add_field(name=f'`help`',
-                    value='Shows this message.', inline=False)
-
-    embed.add_field(name=f'`channel [channel]`',
-                    value='Admin only command. Set the `spawn` channel. If `channel` is omitted, you set the current channel as the spawn channel.', inline=False)
-
-    embed.add_field(name=f'`prefix <prefix>`',
-                    value='Admin only command. Set the prefix for this server.', inline=False)
-
-    embed.add_field(name=f'`server`',
-                    value='Aliases: `serverinfo`, `si`\nAdmin only command. Shows the spawn channel and the prefix for this server.', inline=False)
-    await ctx.send(embed=embed)
+async def help(ctx: commands.Context, command: str = None):
+    if command is None:
+        embed = discord.Embed(title='Pokémon Collector Commands', description='Use `help <command>` to see more details about a particular command.', colour=0xffcb05)
+        embed.add_field(name='**📜Cards**', value='`collection`, `createtag`, `spawn`, `view`', inline=True)
+        embed.add_field(name='**🏷Tags**', value='`deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`', inline=True)
+        embed.add_field(name='**ℹInfo**', value='`cardinfo [WIP]`, `cooldown`, `help`, `lookup`, `server`, `userinfo [WIP]`', inline=True)
+        embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
+        embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
+        embed.add_field(name='**👤Profile**', value='`start`, [WIP]', inline=True)
+        embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
+        await ctx.send(embed=embed)
+    elif command == 'collection' or command == 'c' or command == 'cards':
+        embed = discord.Embed(title='Command Details: `collection [user] [query]`',
+                              description='Aliases: `c`, `cards`\n\nView the card collection of yourself (in this case `user` can be omitted) or another user.\n\nThe `query` parameter is used to sort or filter the collection: please use `help collection-advanced` for more informations.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'advanced-collection':
+        await ctx.send(content="""
+        ```asciidoc
+        General info about sorting and filtering the collection
+        ------------------------
+        Command arguments:
+        [collection [user(optional)] [query]]
+        
+        Collection sorting is done using:
+        ------------------------
+        - order:
+        - order=
+        - o:
+        - o=
+        followed by one of the following parameters:
+        - name or n (sorts the collection by names in alphabetical order)
+        - set or s (sorts the collection by set names in alphabetical order)
+        - code or n (sorts the collection by card codes in alphabetical order)
+        - wishlist or wl (sorts the collection by wishlists in descending order)
+        - print or p (sorts the collection by print numbers in ascending order)
+        - date or d (sorts the collection by date obtained from newest to oldest) [default]
+        - rarity (sorts the collection by rarity from the rarest to the least rare)
+        Those parameters can be followed by the keyword reverse or the letter r to invert the sorting order.
+        
+        Collection filtering is done using:
+        ------------------------
+        - filter:
+        - filter=
+        - f:
+        - f=
+        followed by one of the following selectors and parameters:
+        - name:<card_name> (shows all cards in collection that have <card_name> in their name) (name or n)
+        - set:<set_name> (shows all cards in collection that have <set_name> in their set name) (set or s)
+        - wishlist:<number> (shows all cards in collection that are in <number> wishlists) (wishlist or wl)
+        - print:<number> (shows all cards in collection that have <number> print) (print or p)
+        - rarity:<rarity_name> (shows all cards in collection that have <rarity_name> in their rarity) (rarity)
+        - spawner:<user_id> (shows all cards in collection that have been spawned by <user_id>)
+        - grabber:<user_id> (shows all cards in collection that have been grabbed by <user_id>)
+        - tag:<tag_name> (shows all cards in collection that have been tagged with <tag_name>) (tag or t)
+        
+        Other
+        ------------------------
+        - Filtering and sorting can be combined in the same command
+        - For examples of usage use the help collection-ex command
+        ```
+        """)
+    elif command == 'collection-ex':
+        pass
+    elif command == 'createtag' or command == 'tagcreate' or command == 'tagadd' or command == 'ct' or command == 'tc':
+        embed = discord.Embed(title='Command Details: `createtag <tag_name> <emoji>`',
+                              description='Aliases: `tagcreate`, `tagadd`, `ct`, `tc`\n\nCreate a new tag. The tag must contain only alphabetic characters, numbers, dashes or underscores. Custom emojis are highly discouraged as they may not be displayed on other servers.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'spawn' or command == 's':
+        embed = discord.Embed(title='Command Details: `spawn`',
+                              description='Aliases: `s`\n\nSpawn a set of cards in the current channel for anyone to grab. This command has a cooldown of 20 minutes.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'view' or command == 'v':
+        embed = discord.Embed(title='Command Details: `view [code]`',
+                              description='Aliases: `v`\n\nView your last card obtained (in this case `code` can be omitted) or a specific card with its code.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'deletetag' or command == 'tagdelete' or command == 'dt' or command == 'td':
+        embed = discord.Embed(title='Command Details: `deletetag <tag_name>`',
+                              description='Aliases: `tagdelete`, `dt`, `td`\n\nDelete one of your tags. If any of your cards have this tag, the tag will be removed from those cards.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'renametag' or command == 'tagrename' or command == 'rnt' or command == 'trn':
+        embed = discord.Embed(title='Command Details: `renametag <old_tag_name> <new_tag_name>`',
+                              description='Aliases: `tagrename`, `rnt`, `trn`\n\nRename one of your tags. The tag must contain only alphabetic characters, numbers, dashes or underscores.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'multitag':
+        embed = discord.Embed(title='Command Details: `multitag <tag_name> <...card_codes>`',
+                              description='Tag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'multiuntag':
+        embed = discord.Embed(title='Command Details: `multiuntag <...card_codes>`',
+                              description='Untag one or more cards. Card codes must be separated by spaces only and must be written in capital letters.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'tag' or command == 't':
+        embed = discord.Embed(title='Command Details: `tag <tag_name> [card_code]`',
+                              description='Aliases: `t`\n\nTag a card. If `card_code` is omitted, you tag your last card obtained.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'tagemoji' or command == 'te':
+        embed = discord.Embed(title='Command Details: `tagemoji <tag_name> <new_emoji>`',
+                              description='Aliases: `te`\n\nChange the emoji on one of your tags. Custom emojis are highly discouraged as they may not be displayed on other servers.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'tags':
+        embed = discord.Embed(title='Command Details: `tags [user]`',
+                              description='View the tag list of yourself (in this case `user` can be omitted) or another user.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'untag' or command == 'ut':
+        embed = discord.Embed(title='Command Details: `untag [card_code]`',
+                              description='Aliases: `ut`\n\nUntag a card. If `card_code` is omitted, you untag your last card obtained.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'cardinfo' or command == 'ci' or command == 'cinfo':
+        embed = discord.Embed(title='Command Details: `cardinfo [card_code]`',
+                              description='Command Work In Progress.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'cooldown' or command == 'cd' or command == 'cooldowns':
+        embed = discord.Embed(title='Command Details: `cooldown`',
+                              description='Aliases: `cd`, `cooldowns`\n\nView current grab and spawn cooldowns for yourself.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'help':
+        embed = discord.Embed(title='Command Details: `help [command]`',
+                              description='View the list of the commands (in this case `command` can be omitted) or the details for a particular command.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'lookup' or command == 'lu':
+        embed = discord.Embed(title='Command Details: `lookup [card_name]`',
+                              description='Aliases: `lu`\n\nLook up the details of a particular card using its name or a part of it. If `card_name` is omitted, you look up your last card obtained.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'userinfo' or command == 'ui' or command == 'uinfo':
+        embed = discord.Embed(title='Command Details: `userinfo [user]`',
+                              description='Command Work In Progress.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'wishadd' or command == 'wa' or command == 'wadd':
+        embed = discord.Embed(title='Command Details: `wishadd <card_name>`',
+                              description="Aliases: `wa`, `wadd`\n\nAdd a card to your wishlist. It's recommended to first use the `lookup` command to find the right card.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'wishlist' or command == 'w' or command == 'wl':
+        embed = discord.Embed(title='Command Details: `wishlist [user]`',
+                              description="Aliases: `w`, `wl`\n\nView the wishlist of yourself (in this case `user` can be omitted) or another user.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'wishremove' or command == 'wr' or command == 'wrem':
+        embed = discord.Embed(title='Command Details: `wishremove <card_name>`',
+                              description="Aliases: `wr`, `wrem`\n\nRemove a card from your wishlist.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'wishwatch' or command == 'ww' or command == 'wishw' or command == 'wwatch':
+        embed = discord.Embed(title='Command Details: `wishwatch`',
+                              description="Aliases: `ww`, `wishw`, `wwatch`\n\nSet the current channel as the channel where you will be mentioned if a card that spawns is in your wishlist.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'give' or command == 'g':
+        embed = discord.Embed(title='Command Details: `give <user> [card_code]`',
+                              description="Aliases: `g`\n\nGive another user one of your cards. If `card_code` is omitted, you give to the user your last card obtained.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'trade':
+        embed = discord.Embed(title='Command Details: `trade <user> <your_card_code> <user_card_code>`',
+                              description="Trade one of your cards with another user for one of their cards. You can only trade one card at a time.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'start':
+        embed = discord.Embed(title='Command Details: `start`',
+                              description="Register an account for Pokémon Collector bot.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'channel':
+        embed = discord.Embed(title='Command Details: `channel [channel]`',
+                              description="Admin only command. Set the `spawn` channel. If `channel` is omitted, you set the current channel as the spawn channel.",
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'prefix':
+        embed = discord.Embed(title='Command Details: `prefix <prefix>`',
+                              description='Admin only command. Set the prefix for this server.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'server' or command == 'serverinfo' or command == 'si':
+        embed = discord.Embed(title='Command Details: `server`',
+                              description='Aliases: `serverinfo`, `si`\n\nShows the spawn channel and the prefix for this server.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f'Sorry {ctx.author.mention}, that is not a valid command. Please use the `help` command to see the list of available commands.')
 
 bot.run(TOKEN)
