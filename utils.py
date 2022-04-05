@@ -9,7 +9,38 @@ import re
 
 from discord.ext import commands
 
-from mongodb import RARITIES
+RARITIES = {
+    'Common': 'Common',
+    'Uncommon': 'Uncommon',
+    'Rare': 'Rare',
+    'Rare Shiny': 'Rare',
+    'Classic Collection': 'Rare',
+    'Rare Holo': 'Rare',
+    'Promo': 'Rare',
+    'Amazing Rare': 'Rare',
+    None: 'Rare',
+    'null': 'Rare',
+    'None': 'Rare',
+    'Rare Holo Prism Star': 'Ultra Rare',
+    'Rare Holo EX': 'Ultra Rare',
+    'Rare Holo LV.X': 'Ultra Rare',
+    'Rare Holo Star': 'Ultra Rare',
+    'LEGEND': 'Ultra Rare',
+    'Rare Prime': 'Ultra Rare',
+    'Rare Holo GX': 'Ultra Rare',
+    'Rare Holo V': 'Ultra Rare',
+    'Rare Holo VMAX': 'Ultra Rare',
+    'V': 'Ultra Rare',
+    'VM': 'Ultra Rare',
+    'Rare Holo VSTAR': 'Ultra Rare',
+    'Rare Ultra': 'Ultra Rare',
+    'Rare BREAK': 'Ultra Rare',
+    'Rare ACE': 'Ultra Rare',
+    'Rare Secret': 'Secret Rare',
+    'Rare Shining': 'Secret Rare',
+    'Rare Rainbow': 'Secret Rare',
+    'Rare Shiny GX': 'Secret Rare'
+}
 
 
 def compose_images(image_urls):
