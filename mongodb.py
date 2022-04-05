@@ -239,3 +239,57 @@ def is_user_registered(member: discord.Member):
         return False
     else:
         return True
+
+
+# date: inverti la lista ez
+# code: ordina dict alf in base al code
+# set: ordina dict alf in base al set
+# name: ordina dict alf in base al name
+# tag: ordina dict alf in base al tag
+# print: ordina dict num in base al tag
+# rarity: ordina dict in base alla rarità (da capire bene come fare)
+# wishlists: ordina listdict in base al numero di wishlist
+# reverse=True mette in ordine decrescente
+def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reverse=False) -> list:
+    cards_dict_list = []
+    user = users.find_one({'_id': str(owner_id)})
+    for card_code in cards_list:
+        card_info = grabbed_cards.find_one({'_id': str(card_code)})
+        card_id = card_info['cardId']
+        generic_card = cards.find_one({'_id': str(card_id)})
+        card_emoji = '◾'
+        for tag in user['tags']:
+            if card_code in user['tags'][tag]:
+                card_emoji = user['tagEmojis'][tag]
+                break
+        card_dict = {
+            'code': str(card_code),
+            'id': str(card_id),
+            'name': str(generic_card['name']),
+            'set': str(generic_card['set']),
+            'print': int(card_info['print']),
+            'rarity': str(generic_card['rarity']),
+            'wishlists': int(generic_card['wishlists']),
+            'emoji': str(card_emoji)
+        }
+        cards_dict_list.append(card_dict)
+    if sort_type == 'wishlist' or sort_type == 'wl':
+        return sorted(cards_dict_list, key=lambda d: d['wishlists'], reverse=not reverse)
+    elif sort_type == 'print':
+        return sorted(cards_dict_list, key=lambda d: d['print'], reverse=reverse)
+    elif sort_type == 'name' or sort_type == 'n':
+        return sorted(cards_dict_list, key=lambda d: d['name'], reverse=reverse)
+    elif sort_type == 'set' or sort_type == 's':
+        return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
+    elif sort_type == 'code' or sort_type == 'c':
+        return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
+    elif sort_type == 'rarity':
+        pass
+    elif sort_type == 'date':
+        if reverse:
+            cards_dict_list.reverse()
+            return cards_dict_list
+        else:
+            return cards_dict_list
+    else:
+        return cards_dict_list

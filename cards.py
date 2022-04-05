@@ -159,8 +159,7 @@ class Cards(commands.Cog):
                 return
 
     @commands.command(name='collection', aliases=['c', 'cards'])
-    async def collection(self, ctx: commands.Context, member: typing.Optional[discord.Member] = None, *, query: str):  # TODO altri argomenti per filtrare la collection
-        await ctx.send(query)
+    async def collection(self, ctx: commands.Context, member: typing.Optional[discord.Member] = None, *, query: str = None):  # TODO altri argomenti per filtrare la collection
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
@@ -177,32 +176,31 @@ class Cards(commands.Cog):
             embed.description += 'Card collection is empty.'
             await ctx.send(embed=embed)
             return
+        info_msg = await ctx.send(f"Retrieving {member.mention}'s collection...")
+        cards_dict_list = []
+        if query is not None:
+            query_result = extrapolate_query(query)
+            if query_result[0] == 0:
+                cards_dict_list = sort_list_cards(member.id, cards_owned, query_result[1][0], query_result[2])
+            elif query_result[0] == 3:
+                cards_dict_list = sort_list_cards(member.id, cards_owned)
+        else:
+            cards_dict_list = sort_list_cards(member.id, cards_owned)
         collection = []
-        for card_code in cards_owned:
-            card_info = grabbed_cards.find_one({'_id': str(card_code)})
-            print_num = card_info['print']
-            card_id = card_info['cardId']
-            generic_card = cards.find_one({'_id': str(card_id)})
-            card_wishlists = generic_card['wishlists']
-            set_name = generic_card['set']
-            card_name = generic_card['name']
-            card_rarity = generic_card['rarity']
-            card_emoji = '◾'
-            for tag in user['tags']:
-                if card_code in user['tags'][tag]:
-                    card_emoji = user['tagEmojis'][tag]
-                    break
-            card_str = f'{card_emoji} `{card_code}` · `#{print_num}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {set_name} · **{card_name}**\n'
+        for card_dict in cards_dict_list:
+            card_str = f'{card_dict["emoji"]} `{card_dict["code"]}` · `#{card_dict["print"]}` · `♡{str(card_dict["wishlists"])}` · `☆ {card_dict["rarity"]}` · {card_dict["set"]} · **{card_dict["name"]}**\n'
             collection.append(card_str)
         if len(cards_owned) < 10:
             for i in range(len(cards_owned)):
                 embed.description += collection[i]
             embed.set_footer(text=f'Showing cards 1-{len(cards_owned)}')
+            await info_msg.delete()
             await ctx.send(embed=embed)
         elif len(cards_owned) >= 10:
             for i in range(10):
                 embed.description += collection[i]
             embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
+            await info_msg.delete()
             message = await ctx.send(embed=embed)
 
             embeds = [embed]

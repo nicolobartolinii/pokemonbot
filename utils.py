@@ -5,6 +5,7 @@ import discord
 from PIL import Image
 import requests
 from io import BytesIO
+import re
 
 from discord.ext import commands
 
@@ -75,3 +76,39 @@ async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_s
     file = discord.File(card_image, filename='image.png')
     embed.set_thumbnail(url='attachment://image.png')
     await ctx.send(file=file, embed=embed)
+
+
+def extrapolate_query(query: str):
+    query_list = re.split(' : +|= +| +', query)
+    try:
+        index_order = query_list.index('o')
+    except ValueError:
+        try:
+            index_order = query_list.index('order')
+        except ValueError:
+            index_order = None
+    try:
+        index_filter = query_list.index('f')
+    except ValueError:
+        try:
+            index_filter = query_list.index('filter')
+        except ValueError:
+            index_filter = None
+    if index_order is not None and index_filter is None:
+        order_specs = query_list[index_order + 1:]
+        if order_specs[-1] == 'r' or order_specs[-1] == 'reverse':
+            return 0, order_specs[:-1], True
+        else:
+            return 0, order_specs[:-1], False
+    elif index_order is None and index_filter is not None:
+        filter_specs = query_list[index_filter + 1:]
+        return 1, filter_specs
+    elif index_order is not None and index_filter is not None:
+        order_specs = query_list[index_order + 1:index_filter] if index_order < index_filter else query_list[index_order + 1:]
+        filter_specs = query_list[index_filter + 1:] if index_order < index_filter else query_list[index_filter + 1:index_order]
+        if order_specs[-1] == 'r' or order_specs[-1] == 'reverse':
+            return 2, order_specs[:-1], True, filter_specs
+        else:
+            return 2, order_specs[:-1], False, filter_specs
+    else:
+        return 3, 'error'
