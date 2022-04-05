@@ -167,7 +167,8 @@ class Cards(commands.Cog):
         if member is None:
             member = ctx.author
         user = users.find_one({'_id': str(member.id)})
-        cards_owned = user['inventory'].reverse()
+        cards_owned = user['inventory']
+        cards_owned.reverse()
         embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n', colour=0xffcb05)
         if len(cards_owned) == 0:
             embed.description += 'Card collection is empty.'
