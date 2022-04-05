@@ -328,7 +328,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': card_set,
                     'print': int(card_info['print']),
                     'rarity': str(generic_card['rarity']),
@@ -352,7 +352,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': str(generic_card['set']),
                     'print': card_print,
                     'rarity': str(generic_card['rarity']),
@@ -376,7 +376,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': str(generic_card['set']),
                     'print': int(card_info['print']),
                     'rarity': card_rarity,
@@ -400,7 +400,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': str(generic_card['set']),
                     'print': int(card_info['print']),
                     'rarity': str(generic_card['rarity']),
@@ -424,7 +424,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': str(generic_card['set']),
                     'print': int(card_info['print']),
                     'rarity': str(generic_card['rarity']),
@@ -448,7 +448,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 card_dict = {
                     'code': str(card_code),
                     'id': str(card_id),
-                    'name': str(generic_card['set']),
+                    'name': str(generic_card['name']),
                     'set': str(generic_card['set']),
                     'print': int(card_info['print']),
                     'rarity': str(generic_card['rarity']),
@@ -457,5 +457,28 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 }
                 cards_dict_list.append(card_dict)
         return cards_dict_list
+    else:
+        return cards_dict_list
+
+
+def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=False) -> list:
+    if sort_type == 'wishlist' or sort_type == 'wl':
+        return sorted(cards_dict_list, key=lambda d: d['wishlists'], reverse=not reverse)
+    elif sort_type == 'print':
+        return sorted(cards_dict_list, key=lambda d: d['print'], reverse=reverse)
+    elif sort_type == 'name' or sort_type == 'n':
+        return sorted(cards_dict_list, key=lambda d: d['name'], reverse=reverse)
+    elif sort_type == 'set' or sort_type == 's':
+        return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
+    elif sort_type == 'code' or sort_type == 'c':
+        return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
+    elif sort_type == 'rarity':
+        pass
+    elif sort_type == 'date':
+        if reverse:
+            cards_dict_list.reverse()
+            return cards_dict_list
+        else:
+            return cards_dict_list
     else:
         return cards_dict_list

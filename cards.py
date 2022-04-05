@@ -183,12 +183,12 @@ class Cards(commands.Cog):
             if query_result[0] == 0:
                 cards_dict_list = sort_list_cards(member.id, cards_owned, query_result[1][0], query_result[2])
             elif query_result[0] == 1:
-                try:
-                    filter_query = ' '.join(str(x) for x in query_result[1][1:])
-                    cards_dict_list = filter_cards(member.id, cards_owned, query_result[1][0], filter_query)
-                except TypeError:
-                    await ctx.send('Something went wrong. Please use the `help collection` command to check the usage of advanced queries.')
-                    return
+                filter_query = ' '.join(str(x) for x in query_result[1][1:])
+                cards_dict_list = filter_cards(member.id, cards_owned, query_result[1][0], filter_query)
+            elif query_result[0] == 2:
+                filter_query = ' '.join(str(x) for x in query_result[3][1:])
+                cards_dict_list = filter_cards(member.id, cards_owned, query_result[3][0], filter_query)
+                cards_dict_list = sort_filtered_dict(cards_dict_list, query_result[1][0], query_result[2])
             elif query_result[0] == 3:
                 cards_dict_list = sort_list_cards(member.id, cards_owned)
         else:
