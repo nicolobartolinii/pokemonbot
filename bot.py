@@ -92,44 +92,49 @@ async def help(ctx: commands.Context, command: str = None):
         await ctx.send(embed=embed)
     elif command == 'collection-advanced':
         await ctx.send(content="""
-        ```asciidoc
-        Collection sorting is done using in the query:
-        ------------------------
-        - order:
-        - order=
-        - o:
-        - o=
-        followed by one of the following parameters:
-        - name or n (sorts by names in alphabetical order)
-        - set or s (sorts by set names in alphabetical order)
-        - code or n (sorts by card codes in alphabetical order)
-        - wishlist or wl (sorts by wishlists in descending order)
-        - print or p (sorts by print numbers in ascending order)
-        - date or d (sorts by date obtained from newest to oldest) [default]
-        - rarity (sorts by rarity from the rarest to the least rare)
-        Those parameters can be followed by the keyword reverse or the letter r to invert the sorting order.
-        
-        Collection filtering is done using in the query:
-        ------------------------
-        - filter:
-        - filter=
-        - f:
-        - f=
-        followed by one of the following selectors and parameters:
-        - name:<card_name> (shows all cards that have <card_name> in their name) (name or n)
-        - set:<set_name> (shows all cards that have <set_name> in their set name) (set or s)
-        - wishlist:<number> (shows all cards that are in <number> wishlists) (wishlist or wl)
-        - print:<number> (shows all cards that have <number> print) (print or p)
-        - rarity:<rarity_name> (shows all cards that have <rarity_name> in their rarity) (rarity)
-        - spawner:<user_id> (shows all cards that have been spawned by <user_id>)
-        - grabber:<user_id> (shows all cards that have been grabbed by <user_id>)
-        - tag:<tag_name> (shows all cards that have been tagged with <tag_name>) (tag or t)
-        
-        Other
-        ------------------------
-        - Filtering and sorting can be combined in the same command
-        - For examples of usage use the help collection-ex command
-        ```
+```asciidoc
+General info about usage
+------------------------
+Command arguments:
+[collection [user(optional)] [query]]
+
+Collection sorting is done using in the query:
+------------------------
+- order:
+- order=
+- o:
+- o=
+followed by one of the following parameters:
+- name or n (sorts by names in alphabetical order)
+- set or s (sorts by set names in alphabetical order)
+- code or n (sorts by card codes in alphabetical order)
+- wishlist or wl (sorts by wishlists in descending order)
+- print or p (sorts by print numbers in ascending order)
+- date or d (sorts by date obtained from newest to oldest) [default]
+- rarity (sorts by rarity from the rarest to the least rare)
+Those parameters can be followed by the keyword reverse or the letter r to invert the sorting order.
+
+Collection filtering is done using in the query:
+------------------------
+- filter:
+- filter=
+- f:
+- f=
+followed by one of the following selectors and parameters:
+- name:<card_name> (shows all cards that have <card_name> in their name) (name or n)
+- set:<set_name> (shows all cards that have <set_name> in their set name) (set or s)
+- wishlist:<number> (shows all cards that are in <number> wishlists) (wishlist or wl)
+- print:<number> (shows all cards that have <number> print) (print or p)
+- rarity:<rarity_name> (shows all cards that have <rarity_name> in their rarity) (rarity)
+- spawner:<user_id> (shows all cards that have been spawned by <user_id>)
+- grabber:<user_id> (shows all cards that have been grabbed by <user_id>)
+- tag:<tag_name> (shows all cards that have been tagged with <tag_name>) (tag or t)
+
+Other
+------------------------
+- Filtering and sorting can be combined in the same command
+- For examples of usage use the help collection-ex command
+```
         """)
     elif command == 'collection-ex':
         pass
