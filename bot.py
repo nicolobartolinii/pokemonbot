@@ -90,7 +90,7 @@ async def help(ctx: commands.Context, command: str = None):
                               description='Aliases: `c`, `cards`\n\nView the card collection of yourself (in this case `user` can be omitted) or another user.\n\nThe `query` parameter is used to sort or filter the collection: please use `help collection-advanced` for more informations.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
-    elif command == 'advanced-collection':
+    elif command == 'collection-advanced':
         await ctx.send(content="""
         ```asciidoc
         Collection sorting is done using in the query:
