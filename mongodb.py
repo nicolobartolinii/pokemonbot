@@ -266,7 +266,7 @@ def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reve
         cards_dict_list.append(card_dict)
     if sort_type == 'wishlist' or sort_type == 'wl':
         return sorted(cards_dict_list, key=lambda d: d['wishlists'], reverse=not reverse)
-    elif sort_type == 'print':
+    elif sort_type == 'print' or sort_type == 'p':
         return sorted(cards_dict_list, key=lambda d: d['print'], reverse=reverse)
     elif sort_type == 'name' or sort_type == 'n':
         return sorted(cards_dict_list, key=lambda d: d['name'], reverse=reverse)
@@ -274,9 +274,9 @@ def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reve
         return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
-    elif sort_type == 'rarity':
+    elif sort_type == 'rarity' or sort_type == 'r':
         pass
-    elif sort_type == 'date':
+    elif sort_type == 'date' or sort_type == 'd':
         if reverse:
             cards_dict_list.reverse()
             return cards_dict_list
@@ -457,6 +457,27 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
                 }
                 cards_dict_list.append(card_dict)
         return cards_dict_list
+    elif filter_type == 'tag' or filter_type == 't':
+        try:
+            for card_code in user['tags'][filter_query]:
+                card_info = grabbed_cards.find_one({'_id': str(card_code)})
+                card_id = card_info['cardId']
+                generic_card = cards.find_one({'_id': str(card_id)})
+                card_emoji = user['tagEmojis'][filter_query]
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['name']),
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+            return cards_dict_list
+        except KeyError:
+            return cards_dict_list
     else:
         return cards_dict_list
 
@@ -464,7 +485,7 @@ def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query
 def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=False) -> list:
     if sort_type == 'wishlist' or sort_type == 'wl':
         return sorted(cards_dict_list, key=lambda d: d['wishlists'], reverse=not reverse)
-    elif sort_type == 'print':
+    elif sort_type == 'print' or sort_type == 'p':
         return sorted(cards_dict_list, key=lambda d: d['print'], reverse=reverse)
     elif sort_type == 'name' or sort_type == 'n':
         return sorted(cards_dict_list, key=lambda d: d['name'], reverse=reverse)
@@ -472,9 +493,9 @@ def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=Fal
         return sorted(cards_dict_list, key=lambda d: d['set'], reverse=reverse)
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
-    elif sort_type == 'rarity':
+    elif sort_type == 'rarity' or sort_type == 'r':
         pass
-    elif sort_type == 'date':
+    elif sort_type == 'date' or sort_type == 'd':
         if reverse:
             cards_dict_list.reverse()
             return cards_dict_list
