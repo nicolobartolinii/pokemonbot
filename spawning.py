@@ -35,7 +35,15 @@ class Spawning(commands.Cog):
             await ctx.send(f'User {ctx.author.mention} already registered.')
             return
 
-    @commands.command(name='spawn', aliases=['s'], cooldown_after_parsing=True)
+    @staticmethod
+    def spawn_channel_check():
+        async def predicate(ctx: commands.Context):
+            spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
+            return ctx.channel.id == spawn_channel_id
+        return commands.check(predicate)
+
+    @commands.command(name='spawn', aliases=['s'])
+    @spawn_channel_check()
     @commands.cooldown(rate=1, per=1200, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
         if not is_user_registered(ctx.author):
@@ -43,12 +51,12 @@ class Spawning(commands.Cog):
             self.spawn.reset_cooldown(ctx)
             return
         guild = guilds.find_one({'_id': str(ctx.guild.id)})
-        spawn_channel_id = int(guild['spawnChannel'])
-        if ctx.channel.id != spawn_channel_id:
-            await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
-            if self.spawn.get_cooldown_retry_after(ctx) == 0.0:
-                self.spawn.reset_cooldown(ctx)
-            return
+        # spawn_channel_id = int(guild['spawnChannel'])
+        # if ctx.channel.id != spawn_channel_id:
+        #     await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
+        #     if self.spawn.get_cooldown_retry_after(ctx) == 0.0:
+        #         self.spawn.reset_cooldown(ctx)
+        #     return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         ids = []
         for drop in drops:
