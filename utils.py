@@ -99,7 +99,7 @@ def extrapolate_query(query: str):
         if order_specs[-1] == 'r' or order_specs[-1] == 'reverse':
             return 0, order_specs[:-1], True
         else:
-            return 0, order_specs[:-1], False
+            return 0, order_specs, False
     elif index_order is None and index_filter is not None:
         filter_specs = query_list[index_filter + 1:]
         return 1, filter_specs
