@@ -76,7 +76,7 @@ async def server(ctx: commands.Context):
 
 @bot.command(name='help')
 async def help(ctx: commands.Context, command: str = None):  # TODO da rifare per bene quando ci saranno più comandi
-    embed = discord.Embed(title='Pokémon Collector Commands', description=f'Use `{bot.command_prefix}help <command>` to see more details about a particular command.', colour=0xffcb05)
+    embed = discord.Embed(title='Pokémon Collector Commands', description=f'Use `{str(bot.command_prefix)}help <command>` to see more details about a particular command.', colour=0xffcb05)
     embed.add_field(name=f'`start`',
                     value='Register an account for Pokémon Collector bot.', inline=False)
 
