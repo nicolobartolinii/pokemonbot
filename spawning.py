@@ -51,12 +51,6 @@ class Spawning(commands.Cog):
             self.spawn.reset_cooldown(ctx)
             return
         guild = guilds.find_one({'_id': str(ctx.guild.id)})
-        # spawn_channel_id = int(guild['spawnChannel'])
-        # if ctx.channel.id != spawn_channel_id:
-        #     await ctx.send(f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
-        #     if self.spawn.get_cooldown_retry_after(ctx) == 0.0:
-        #         self.spawn.reset_cooldown(ctx)
-        #     return
         drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
         ids = []
         for drop in drops:
@@ -445,6 +439,10 @@ class Spawning(commands.Cog):
             else:
                 time_str = f'{seconds_diff} seconds'
             await ctx.send(f'{ctx.author.mention}, you must wait `{time_str}` before spawning more cards.')
+        elif isinstance(error, commands.CheckFailure):
+            spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
+            await ctx.send(
+                f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
 
 
 def setup(bot: commands.Bot):
