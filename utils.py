@@ -109,6 +109,6 @@ def extrapolate_query(query: str):
         if order_specs[-1] == 'r' or order_specs[-1] == 'reverse':
             return 2, order_specs[:-1], True, filter_specs
         else:
-            return 2, order_specs[:-1], False, filter_specs
+            return 2, order_specs, False, filter_specs
     else:
         return 3, 'error'
