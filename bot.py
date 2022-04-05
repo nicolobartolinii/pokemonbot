@@ -45,8 +45,11 @@ async def on_guild_join(guild: discord.Guild):
 
 @bot.command(name='channel')
 @commands.has_guild_permissions(administrator=True)
-async def channel(ctx: commands.Context, text_channel: discord.TextChannel):
+async def channel(ctx: commands.Context, text_channel: discord.TextChannel = None):
+    if text_channel is None:
+        text_channel = ctx.channel
     guilds.update_one({'_id': str(ctx.guild.id)}, {'$set': {'spawnChannel': str(text_channel.id)}})
+    await ctx.send(f'Spawn channel set to {text_channel.mention}')
 
 
 @bot.command(name='prefix')
@@ -146,8 +149,8 @@ async def help(ctx: commands.Context):  # TODO da rifare per bene quando ci sara
     embed.add_field(name=f'`help`',
                     value='Shows this message.', inline=False)
 
-    embed.add_field(name=f'`channel`',
-                    value='Admin only command. Set the current channel as the `spawn` channel.', inline=False)
+    embed.add_field(name=f'`channel [channel]`',
+                    value='Admin only command. Set the `spawn` channel. If `channel` is omitted, you set the current channel as the spawn channel.', inline=False)
 
     embed.add_field(name=f'`prefix <prefix>`',
                     value='Admin only command. Set the prefix for this server.', inline=False)
