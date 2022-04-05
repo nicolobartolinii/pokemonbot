@@ -79,7 +79,7 @@ async def create_send_embed_lookup(ctx: commands.Context, card_name: str, card_s
 
 
 def extrapolate_query(query: str):
-    query_list = re.split(r'\s+|:+|=+', query)
+    query_list = re.split(r'[:=\s]\s+', query)
     try:
         index_order = query_list.index('o')
     except ValueError:

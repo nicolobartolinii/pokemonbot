@@ -183,10 +183,8 @@ class Cards(commands.Cog):
             if query_result[0] == 0:
                 cards_dict_list = sort_list_cards(member.id, cards_owned, query_result[1][0], query_result[2])
             elif query_result[0] == 3:
-                await ctx.send('elif')
                 cards_dict_list = sort_list_cards(member.id, cards_owned)
         else:
-            await ctx.send('else')
             cards_dict_list = sort_list_cards(member.id, cards_owned)
         collection = []
         for card_dict in cards_dict_list:
