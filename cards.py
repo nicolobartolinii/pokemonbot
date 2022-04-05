@@ -3,7 +3,6 @@ import typing
 
 from mongodb import *
 from utils import *
-from datetime import datetime
 
 
 class Cards(commands.Cog):

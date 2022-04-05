@@ -1,12 +1,10 @@
 from datetime import datetime, timedelta
 
-import discord
-from discord.ext import commands
-from pymongo import MongoClient
 import pokebase as pb
 from dotenv import load_dotenv
 from pokemontcgsdk import Card
-import os
+from pymongo import MongoClient
+
 from utils import *
 
 load_dotenv()
@@ -263,7 +261,6 @@ def is_grab_cooldown(member: discord.Member):
     now = datetime.now()
     if now <= grab_end:
         seconds_diff = (grab_end - now).seconds
-        time_str = ''
         if seconds_diff >= 60:
             minutes = seconds_diff // 60
             time_str = f'{minutes} minutes'

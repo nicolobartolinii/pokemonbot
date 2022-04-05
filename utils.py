@@ -1,12 +1,9 @@
-import os
-import random
+import re
+from io import BytesIO
 
 import discord
-from PIL import Image
 import requests
-from io import BytesIO
-import re
-
+from PIL import Image
 from discord.ext import commands
 
 RARITIES = {
@@ -58,10 +55,10 @@ def compose_images(image_urls):
 
 def imagecreation(ids):  # function to create an image
     if ids[1] != 'trade-arrow':
-        images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
+        images = [f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png' for card_id in ids]
         images = [Image.open(image).resize((367, 512)) for image in images]
     else:
-        images = [f'./imagesHigh/{id.split("-")[0]}_{id.split("-")[1]}_hires.png' for id in ids]
+        images = [f'./imagesHigh/{card_id.split("-")[0]}_{card_id.split("-")[1]}_hires.png' for card_id in ids]
         images[0] = Image.open(images[0]).resize((367, 512))
         images[1] = Image.open(images[1])
         images[2] = Image.open(images[2]).resize((367, 512))
