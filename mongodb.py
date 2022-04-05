@@ -241,15 +241,6 @@ def is_user_registered(member: discord.Member):
         return True
 
 
-# date: inverti la lista ez
-# code: ordina dict alf in base al code
-# set: ordina dict alf in base al set
-# name: ordina dict alf in base al name
-# tag: ordina dict alf in base al tag
-# print: ordina dict num in base al tag
-# rarity: ordina dict in base alla rarità (da capire bene come fare)
-# wishlists: ordina listdict in base al numero di wishlist
-# reverse=True mette in ordine decrescente
 def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reverse=False) -> list:
     cards_dict_list = []
     user = users.find_one({'_id': str(owner_id)})
@@ -291,5 +282,180 @@ def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reve
             return cards_dict_list
         else:
             return cards_dict_list
+    else:
+        return cards_dict_list
+
+
+def filter_cards(owner_id: int, cards_list: list, filter_type: str, filter_query: str) -> list:
+    cards_dict_list = []
+    user = users.find_one({'_id': str(owner_id)})
+    if filter_type == 'name' or filter_type == 'n':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_name = str(generic_card['name'])
+            if bool(re.match(fr'.*{filter_query}.*', card_name, flags=re.IGNORECASE)):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': card_name,
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'set' or filter_type == 's':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_set = str(generic_card['set'])
+            if bool(re.match(fr'.*{filter_query}.*', card_set, flags=re.IGNORECASE)):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': card_set,
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'print':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_print = int(card_info['print'])
+            if card_print == int(filter_query):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': str(generic_card['set']),
+                    'print': card_print,
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'rarity' or filter_type == 'r':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_rarity = str(generic_card['rarity'])
+            if bool(re.match(fr'.*{filter_query}.*', card_rarity, flags=re.IGNORECASE)):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': card_rarity,
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'wishlist' or filter_type == 'wl':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_wishlists = int(generic_card['wishlists'])
+            if card_wishlists == int(filter_query):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': card_wishlists,
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'spawner':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_spawner = int(card_info['droppedBy'])
+            if card_spawner == int(filter_query):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
+    elif filter_type == 'grabber':
+        for card_code in cards_list:
+            card_info = grabbed_cards.find_one({'_id': str(card_code)})
+            card_id = card_info['cardId']
+            generic_card = cards.find_one({'_id': str(card_id)})
+            card_grabber = int(card_info['grabbedBy'])
+            if card_grabber == int(filter_query):
+                card_emoji = '◾'
+                for tag in user['tags']:
+                    if card_code in user['tags'][tag]:
+                        card_emoji = user['tagEmojis'][tag]
+                        break
+                card_dict = {
+                    'code': str(card_code),
+                    'id': str(card_id),
+                    'name': str(generic_card['set']),
+                    'set': str(generic_card['set']),
+                    'print': int(card_info['print']),
+                    'rarity': str(generic_card['rarity']),
+                    'wishlists': int(generic_card['wishlists']),
+                    'emoji': str(card_emoji)
+                }
+                cards_dict_list.append(card_dict)
+        return cards_dict_list
     else:
         return cards_dict_list

@@ -182,34 +182,45 @@ class Cards(commands.Cog):
             query_result = extrapolate_query(query)
             if query_result[0] == 0:
                 cards_dict_list = sort_list_cards(member.id, cards_owned, query_result[1][0], query_result[2])
+            elif query_result[0] == 1:
+                try:
+                    filter_query = ' '.join(str(x) for x in query_result[1][1:])
+                    cards_dict_list = filter_cards(member.id, cards_owned, query_result[1][0], filter_query)
+                except TypeError:
+                    await ctx.send('Something went wrong. Please use the `help collection` command to check the usage of advanced queries.')
+                    return
             elif query_result[0] == 3:
                 cards_dict_list = sort_list_cards(member.id, cards_owned)
         else:
             cards_dict_list = sort_list_cards(member.id, cards_owned)
+        if len(cards_dict_list) == 0:
+            embed.description += 'The filter does not match any card in the collection or the query is wrong. Please use the `help collection` command to check the usage of advanced queries.'
+            await ctx.send(embed=embed)
+            return
         collection = []
         for card_dict in cards_dict_list:
             card_str = f'{card_dict["emoji"]} `{card_dict["code"]}` · `#{card_dict["print"]}` · `♡{str(card_dict["wishlists"])}` · `☆ {card_dict["rarity"]}` · {card_dict["set"]} · **{card_dict["name"]}**\n'
             collection.append(card_str)
-        if len(cards_owned) < 10:
-            for i in range(len(cards_owned)):
+        if len(collection) < 10:
+            for i in range(len(collection)):
                 embed.description += collection[i]
-            embed.set_footer(text=f'Showing cards 1-{len(cards_owned)}')
+            embed.set_footer(text=f'Showing cards 1-{len(collection)}')
             await info_msg.delete()
             await ctx.send(embed=embed)
-        elif len(cards_owned) >= 10:
+        elif len(collection) >= 10:
             for i in range(10):
                 embed.description += collection[i]
-            embed.set_footer(text=f'Showing cards 1-10 of {len(cards_owned)}')
+            embed.set_footer(text=f'Showing cards 1-10 of {len(collection)}')
             await info_msg.delete()
             message = await ctx.send(embed=embed)
 
             embeds = [embed]
-            pages = (len(cards_owned) // 10) + 1
+            pages = (len(collection) // 10) + 1
             for p in range(1, pages):
                 next_page = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n', colour=0xffcb05)
-                for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(cards_owned) else len(cards_owned)):
+                for i in range(10 * p, (10 * p + 10) if (10 * p + 10) < len(collection) else len(collection)):
                     next_page.description += collection[i]
-                next_page.set_footer(text=f'Showing cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_owned) else len(cards_owned)} of {len(cards_owned)}')
+                next_page.set_footer(text=f'Showing cards {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(collection) else len(collection)} of {len(collection)}')
                 embeds.append(next_page)
             cur_page = 0
 
