@@ -1,4 +1,6 @@
 import asyncio
+import typing
+
 from mongodb import *
 from utils import *
 from datetime import datetime
@@ -157,7 +159,8 @@ class Cards(commands.Cog):
                 return
 
     @commands.command(name='collection', aliases=['c', 'cards'])
-    async def collection(self, ctx: commands.Context, member: discord.Member = None):  # TODO altri argomenti per filtrare la collection
+    async def collection(self, ctx: commands.Context, member: typing.Optional[discord.Member] = None, *, query: str):  # TODO altri argomenti per filtrare la collection
+        await ctx.send(query)
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
