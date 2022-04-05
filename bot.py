@@ -23,7 +23,7 @@ bot.load_extension('cards')
 bot.load_extension('wishlist')
 bot.load_extension('trades')
 bot.load_extension('tags')
-bot.load_extension('profile')
+# bot.load_extension('profile')
 
 
 @bot.event
