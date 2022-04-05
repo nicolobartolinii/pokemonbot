@@ -25,6 +25,47 @@ general_bot_settings = db['general_bot_settings']
 users = db['users']
 guilds = db['guilds']
 
+RARITIES = {
+    'Common': 'Common',
+    'Uncommon': 'Uncommon',
+    'Rare': 'Rare',
+    'Rare Shiny': 'Rare',
+    'Classic Collection': 'Rare',
+    'Rare Holo': 'Rare',
+    'Promo': 'Rare',
+    'Amazing Rare': 'Rare',
+    None: 'Rare',
+    'null': 'Rare',
+    'None': 'Rare',
+    'Rare Holo Prism Star': 'Ultra Rare',
+    'Rare Holo EX': 'Ultra Rare',
+    'Rare Holo LV.X': 'Ultra Rare',
+    'Rare Holo Star': 'Ultra Rare',
+    'LEGEND': 'Ultra Rare',
+    'Rare Prime': 'Ultra Rare',
+    'Rare Holo GX': 'Ultra Rare',
+    'Rare Holo V': 'Ultra Rare',
+    'Rare Holo VMAX': 'Ultra Rare',
+    'V': 'Ultra Rare',
+    'VM': 'Ultra Rare',
+    'Rare Holo VSTAR': 'Ultra Rare',
+    'Rare Ultra': 'Ultra Rare',
+    'Rare BREAK': 'Ultra Rare',
+    'Rare ACE': 'Ultra Rare',
+    'Rare Secret': 'Secret Rare',
+    'Rare Shining': 'Secret Rare',
+    'Rare Rainbow': 'Secret Rare',
+    'Rare Shiny GX': 'Secret Rare'
+}
+
+RARITY_ORDER = {
+    'Common': 0,
+    'Uncommon': 1,
+    'Rare': 2,
+    'Ultra Rare': 3,
+    'Secret Rare': 4
+}
+
 
 def add_pokemons(first, last):
     for i in range(first, last + 1):
@@ -275,7 +316,7 @@ def sort_list_cards(owner_id: int, cards_list: list, sort_type: str = None, reve
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
     elif sort_type == 'rarity' or sort_type == 'r':
-        pass
+        return sorted(cards_dict_list, key=lambda d: RARITY_ORDER[RARITIES[d['code']]], reverse=not reverse)
     elif sort_type == 'date' or sort_type == 'd':
         if reverse:
             cards_dict_list.reverse()
@@ -494,7 +535,7 @@ def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=Fal
     elif sort_type == 'code' or sort_type == 'c':
         return sorted(cards_dict_list, key=lambda d: d['code'], reverse=reverse)
     elif sort_type == 'rarity' or sort_type == 'r':
-        pass
+        return sorted(cards_dict_list, key=lambda d: RARITY_ORDER[RARITIES[d['rarity']]], reverse=not reverse)
     elif sort_type == 'date' or sort_type == 'd':
         if reverse:
             cards_dict_list.reverse()
