@@ -18,10 +18,12 @@ async def determine_prefix(bot: commands.Bot, message: discord.Message):
 
 bot = commands.Bot(command_prefix=determine_prefix, intents=intents)
 bot.remove_command('help')
-bot.load_extension('spawning')
+
+bot.load_extension('cards')
 bot.load_extension('wishlist')
 bot.load_extension('trades')
 bot.load_extension('tags')
+bot.load_extension('profile')
 
 
 @bot.event
