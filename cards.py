@@ -1,14 +1,10 @@
 import asyncio
-import discord
-from discord.ext import commands
-from pymongo import MongoClient
 from mongodb import *
-import random
 from utils import *
 from datetime import datetime
 
 
-class Spawning(commands.Cog):
+class Cards(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -171,7 +167,7 @@ class Spawning(commands.Cog):
         if member is None:
             member = ctx.author
         user = users.find_one({'_id': str(member.id)})
-        cards_owned = user['inventory']
+        cards_owned = user['inventory'].reverse()
         embed = discord.Embed(title='Card Collection', description=f'Cards carried by {member.mention}.\n\n', colour=0xffcb05)
         if len(cards_owned) == 0:
             embed.description += 'Card collection is empty.'
@@ -429,6 +425,16 @@ class Spawning(commands.Cog):
             embed.description += f'**Grab** is currently available\n'
         await ctx.send(embed=embed)
 
+    # @commands.command(name='cardinfo', aliases=['ci'])
+    # async def cardinfo(self, ctx: commands.Context, card_code: str = None):
+    #     if not is_user_registered(ctx.author):
+    #         await ctx.send('You should first register an account using the `start` command.')
+    #         return
+    #     user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
+    #     if card_code is None:
+    #         card_code = user_inventory[-1]
+    #     card_code = card_code.upper()
+
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -446,4 +452,4 @@ class Spawning(commands.Cog):
 
 
 def setup(bot: commands.Bot):
-    bot.add_cog(Spawning(bot))
+    bot.add_cog(Cards(bot))
