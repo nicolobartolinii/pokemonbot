@@ -296,7 +296,8 @@ class Cards(commands.Cog):
             card_print = card['timesSpawned']
             card_rarity = card['rarity']
             card_artist = card['artist']
-            await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id, card_artist)
+            card_wishlists = card['wishlists']
+            await create_send_embed_lookup(ctx, card_name, card_set, card_wishlists, card_print, card_rarity, card_id, card_artist)
             return
         else:
             cards_filtered = sorted(list(cards.find({'name': {'$regex': f".*{card_name}.*", '$options': 'i'}})), key=lambda d: d['wishlists'], reverse=True)
@@ -310,7 +311,8 @@ class Cards(commands.Cog):
                 card_rarity = cards_filtered[0]['rarity']
                 card_id = cards_filtered[0]['_id']
                 card_artist = cards_filtered[0]['artist']
-                await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id, card_artist)
+                card_wishlists = cards_filtered[0]['wishlists']
+                await create_send_embed_lookup(ctx, card_name, card_set, card_wishlists, card_print, card_rarity, card_id, card_artist)
             else:
                 embed = discord.Embed(title='Card Results', description=f'{ctx.author.mention}, please type the number that corresponds to the card you are looking for.', colour=0xffcb05)
                 field_text = ''
@@ -402,7 +404,8 @@ class Cards(commands.Cog):
                             card_rarity = cards_filtered[int(msg.content) - 1]['rarity']
                             card_id = cards_filtered[int(msg.content) - 1]['_id']
                             card_artist = cards_filtered[int(msg.content) - 1]['artist']
-                            await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity,
+                            card_wishlists = cards_filtered[int(msg.content) - 1]['wishlists']
+                            await create_send_embed_lookup(ctx, card_name, card_set, card_wishlists, card_print, card_rarity,
                                                            card_id, card_artist)
                             return
 
@@ -421,7 +424,8 @@ class Cards(commands.Cog):
                 card_rarity = cards_filtered[int(msg.content) - 1]['rarity']
                 card_id = cards_filtered[int(msg.content) - 1]['_id']
                 card_artist = cards_filtered[int(msg.content) - 1]['artist']
-                await create_send_embed_lookup(ctx, card_name, card_set, card_print, card_rarity, card_id, card_artist)
+                card_wishlists = cards_filtered[int(msg.content) - 1]['wishlists']
+                await create_send_embed_lookup(ctx, card_name, card_set, card_wishlists, card_print, card_rarity, card_id, card_artist)
 
     @commands.command(name='cooldown', aliases=['cooldowns', 'cd'])
     async def cooldown(self, ctx: commands.Context):
