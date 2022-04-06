@@ -80,7 +80,7 @@ async def help(ctx: commands.Context, command: str = None):
         embed = discord.Embed(title='Pokémon Collector Commands', description='Use `help <command>` to see more details about a particular command.', colour=0xffcb05)
         embed.add_field(name='**📜Cards**', value='`collection`, `createtag`, `spawn`, `view`', inline=True)
         embed.add_field(name='**🏷Tags**', value='`deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`', inline=True)
-        embed.add_field(name='**ℹInfo**', value='`cardinfo [WIP]`, `cooldown`, `help`, `lookup`, `server`, `userinfo [WIP]`', inline=True)
+        embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`, `userinfo [WIP]`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
         embed.add_field(name='**👤Profile**', value='`start`, [WIP]', inline=True)
