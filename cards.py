@@ -478,10 +478,10 @@ class Cards(commands.Cog):
         date_spawn = datetime.strptime(spawned_on, '%m/%d/%Y, %H:%M:%S')
         date_spawn_unix = time.mktime(date_spawn.timetuple())
         embed = discord.Embed(title='Card Details', description=f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n\n', colour=0xffcb05)
-        embed.description += f'Spawned on <t:{date_spawn_unix}:F>\n\n'
-        embed.description += f'Spawned by <@:{spawned_by}>'
-        embed.description += f'Grabbed by <@:{grabbed_by}>'
-        embed.description += f'Owned by <@:{owned_by}>'
+        embed.description += f'Spawned on <t{str(int(date_spawn_unix))}:F>\n'
+        embed.description += f'Spawned by <@{spawned_by}>\n'
+        embed.description += f'Grabbed by <@{grabbed_by}>\n'
+        embed.description += f'Owned by <@{owned_by}>'
         card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
         file = discord.File(card_image, filename='image.png')
         embed.set_thumbnail(url='attachment://image.png')
