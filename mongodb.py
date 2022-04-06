@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import os
 import pokebase as pb
 from dotenv import load_dotenv
 from pokemontcgsdk import Card
