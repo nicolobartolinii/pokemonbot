@@ -195,7 +195,7 @@ Other
         await ctx.send(embed=embed)
     elif command == 'cardinfo' or command == 'ci' or command == 'cinfo':
         embed = discord.Embed(title='Command Details: `cardinfo [card_code]`',
-                              description='Command Work In Progress.',
+                              description='View the detailed information of a particular card. If `card_code` is omitted, you view the details of your last card obtained. ',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'cooldown' or command == 'cd' or command == 'cooldowns':

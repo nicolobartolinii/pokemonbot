@@ -1,4 +1,5 @@
 import asyncio
+import time
 import typing
 
 from mongodb import *
@@ -253,7 +254,11 @@ class Cards(commands.Cog):
             return
         if card_code is None:
             user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
-            card_code = user_inventory[-1]
+            if len(user_inventory) != 0:
+                card_code = user_inventory[-1]
+            else:
+                await ctx.send(f'Sorry {ctx.author.mention}, your collection is empty.')
+                return
         card_code = card_code.upper()
         card_owner_docu = users.find_one({'inventory': {'$in': [str(card_code)]}})
         if card_owner_docu is None:
@@ -441,15 +446,46 @@ class Cards(commands.Cog):
             embed.description += f'**Grab** is currently available\n'
         await ctx.send(embed=embed)
 
-    # @commands.command(name='cardinfo', aliases=['ci'])
-    # async def cardinfo(self, ctx: commands.Context, card_code: str = None):
-    #     if not is_user_registered(ctx.author):
-    #         await ctx.send('You should first register an account using the `start` command.')
-    #         return
-    #     user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
-    #     if card_code is None:
-    #         card_code = user_inventory[-1]
-    #     card_code = card_code.upper()
+    @commands.command(name='cardinfo', aliases=['ci', 'cinfo'])
+    async def cardinfo(self, ctx: commands.Context, card_code: str = None):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        if card_code is None:
+            user_inventory = users.find_one({'_id': str(ctx.author.id)})['inventory']
+            if len(user_inventory) != 0:
+                card_code = user_inventory[-1]
+            else:
+                await ctx.send(f'Sorry {ctx.author.mention}, your collection is empty.')
+                return
+        card_code = card_code.upper()
+        card_owner_docu = users.find_one({'inventory': {'$in': [str(card_code)]}})
+        if card_owner_docu is None:
+            await ctx.send(f'Sorry {ctx.author.mention}, that code is invalid.')
+            return
+        card = grabbed_cards.find_one({'_id': str(card_code)})
+        card_print = card['print']
+        card_id = card['cardId']
+        generic_card = cards.find_one({'_id': str(card_id)})
+        card_wishlists = generic_card['wishlists']
+        card_rarity = generic_card['rarity']
+        card_set = generic_card['set']
+        card_name = generic_card['name']
+        owned_by = card['ownedBy']
+        spawned_by = card['droppedBy']
+        spawned_on = card['droppedOn']
+        grabbed_by = card['grabbedBy']
+        date_spawn = datetime.strptime(spawned_on, '%m/%d/%Y, %H:%M:%S')
+        date_spawn_unix = time.mktime(date_spawn.timetuple())
+        embed = discord.Embed(title='Card Details', description=f'`{card_code}` · `#{card_print}` · `♡{str(card_wishlists)}` · `☆ {card_rarity}` · {card_set} · **{card_name}**\n\n', colour=0xffcb05)
+        embed.description += f'Spawned on <t:{date_spawn_unix}:F>\n\n'
+        embed.description += f'Spawned by <@:{spawned_by}>'
+        embed.description += f'Grabbed by <@:{grabbed_by}>'
+        embed.description += f'Owned by <@:{owned_by}>'
+        card_image = f'./imagesLow/{card_id.split("-")[0]}_{card_id.split("-")[1]}.png'
+        file = discord.File(card_image, filename='image.png')
+        embed.set_thumbnail(url='attachment://image.png')
+        await ctx.send(file=file, embed=embed)
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):
