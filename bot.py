@@ -78,12 +78,12 @@ async def server(ctx: commands.Context):
 async def help(ctx: commands.Context, command: str = None):
     if command is None:
         embed = discord.Embed(title='Pokémon Collector Commands', description='Use `help <command>` to see more details about a particular command.', colour=0xffcb05)
-        embed.add_field(name='**📜Cards**', value='`collection`, `createtag`, `spawn`, `view`', inline=True)
-        embed.add_field(name='**🏷Tags**', value='`deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`', inline=True)
-        embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`, `userinfo [WIP]`', inline=True)
+        embed.add_field(name='**📜Cards**', value='`collection`, `spawn`, `view`', inline=True)
+        embed.add_field(name='**🏷Tags**', value='`createtag`, `deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`', inline=True)
+        embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`start`, [WIP]', inline=True)
+        embed.add_field(name='**👤Profile**', value='`start`, `profile [WIP]`, [WIP]', inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -214,8 +214,8 @@ Other
                               description='Aliases: `lu`\n\nLook up the details of a particular card using its name or a part of it. If `card_name` is omitted, you look up your last card obtained.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
-    elif command == 'userinfo' or command == 'ui' or command == 'uinfo':
-        embed = discord.Embed(title='Command Details: `userinfo [user]`',
+    elif command == 'profile' or command == 'p':
+        embed = discord.Embed(title='Command Details: `profile [user]`',
                               description='Command Work In Progress.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
