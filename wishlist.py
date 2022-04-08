@@ -113,7 +113,7 @@ class Wishlist(commands.Cog):
                         name=f'Showing wishlistable cards 1-{len(cards_filtered)}',
                         value=field_text)
                     await ctx.send(embed=embed)
-                else:  # TODO aggiungi footer con numero pagina (e tasto per ingrandire l'immagine se fattibile)
+                else:
                     for i in range(10):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
@@ -253,7 +253,7 @@ class Wishlist(commands.Cog):
                         name=f'Showing cards 1-{len(cards_filtered)}',
                         value=field_text)
                     await ctx.send(embed=embed)
-                else:  # TODO aggiungi footer con numero pagina (e tasto per ingrandire l'immagine se fattibile)
+                else:
                     for i in range(10):
                         card_wishlists = cards_filtered[i]['wishlists']
                         card_name = cards_filtered[i]['name']
