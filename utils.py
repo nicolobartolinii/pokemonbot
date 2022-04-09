@@ -1,6 +1,6 @@
 import re
 from io import BytesIO
-
+import random
 import discord
 import requests
 from PIL import Image
@@ -37,6 +37,57 @@ RARITIES = {
     'Rare Shining': 'Secret Rare',
     'Rare Rainbow': 'Secret Rare',
     'Rare Shiny GX': 'Secret Rare'
+}
+
+PROB_LVLS = {
+    1: [900, 100, 0, 0, 0],
+    2: [750, 200, 50, 0, 0],
+    3: [750, 200, 50, 0, 0],
+    4: [750, 200, 50, 0, 0],
+    5: [750, 200, 50, 0, 0],
+    6: [750, 200, 50, 0, 0],
+    7: [750, 200, 50, 0, 0],
+    8: [750, 200, 50, 0, 0],
+    9: [750, 200, 50, 0, 0],
+    10: [750, 200, 50, 0, 0],
+    11: [750, 200, 50, 0, 0],
+    12: [750, 200, 50, 0, 0],
+    13: [750, 200, 50, 0, 0],
+    14: [750, 200, 50, 0, 0],
+    15: [750, 200, 50, 0, 0]
+}
+
+
+def create_array(lvl):
+    print(f'Creating array for level {lvl}')
+    array = []
+    for j in range(5):
+        for _ in range(PROB_LVLS[lvl][j]):
+            array.append(j)
+    return array
+
+
+arrays = []
+for i in range(1, 16):
+    arrays.append(create_array(i))
+
+
+PROB_RARITIES = {
+    1: arrays[1 - 1],
+    2: arrays[2 - 1],
+    3: arrays[3 - 1],
+    4: arrays[4 - 1],
+    5: arrays[5 - 1],
+    6: arrays[6 - 1],
+    7: arrays[7 - 1],
+    8: arrays[8 - 1],
+    9: arrays[9 - 1],
+    10: arrays[10 - 1],
+    11: arrays[11 - 1],
+    12: arrays[12 - 1],
+    13: arrays[13 - 1],
+    14: arrays[14 - 1],
+    15: arrays[15 - 1]
 }
 
 

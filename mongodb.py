@@ -45,8 +45,6 @@ RARITIES = {
     'Rare Holo GX': 'Ultra Rare',
     'Rare Holo V': 'Ultra Rare',
     'Rare Holo VMAX': 'Ultra Rare',
-    'V': 'Ultra Rare',
-    'VM': 'Ultra Rare',
     'Rare Holo VSTAR': 'Ultra Rare',
     'Rare Ultra': 'Ultra Rare',
     'Rare BREAK': 'Ultra Rare',
@@ -63,6 +61,22 @@ RARITY_ORDER = {
     'Rare': 2,
     'Ultra Rare': 3,
     'Secret Rare': 4
+}
+
+RARITY_ORDER_REV = {
+    0: 'Common',
+    1: 'Uncommon',
+    2: 'Rare',
+    3: 'Ultra Rare',
+    4: 'Secret Rare'
+}
+
+CLASS_RARITIES = {
+    'Common': ['Common'],
+    'Uncommon': ['Uncommon'],
+    'Rare': ['Rare', 'Rare Shiny', 'Classic Collection', 'Rare Holo', 'Promo', 'Amazing Rare', None],
+    'Ultra Rare': ['Rare Holo Prism Star', 'Rare Holo EX', 'Rare Holo LV.X', 'Rare Holo Star', 'LEGEND', 'Rare Prime', 'Rare Holo GX', 'Rare Holo V', 'Rare Holo VMAX', 'Rare Holo VSTAR', 'Rare Ultra', 'Rare BREAK', 'Rare ACE'],
+    'Secret Rare': ['Rare Secret', 'Rare Shining', 'Rare Rainbow', 'Rare Shiny GX']
 }
 
 

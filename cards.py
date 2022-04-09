@@ -26,7 +26,10 @@ class Cards(commands.Cog):
                 'wishlist': [],
                 'wishWatching': '',
                 'tags': {},
-                'tagEmojis': {}
+                'tagEmojis': {},
+                'level': 1,
+                'exp': 0,
+                'itemInventory': []
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
@@ -49,7 +52,12 @@ class Cards(commands.Cog):
             self.spawn.reset_cooldown(ctx)
             return
         guild = guilds.find_one({'_id': str(ctx.guild.id)})
-        drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
+        user_level = users.find_one({'_id': str(ctx.author.id)})['level']
+        rarities = [random.choice(PROB_RARITIES[user_level]) for _ in range(3)]
+        # drops = list(db.cards.aggregate([{'$sample': {'size': 3}}]))
+        drops = []
+        for rarity in rarities:
+            drops.append(list(cards.aggregate([{'$match': {'rarity': random.choice(CLASS_RARITIES[RARITY_ORDER_REV[rarity]])}}, {'$sample': {'size': 1}}]))[0])
         ids = []
         for drop in drops:
             ids.append(drop['_id'])
