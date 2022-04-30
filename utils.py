@@ -27,8 +27,6 @@ RARITIES = {
     'Rare Holo GX': 'Ultra Rare',
     'Rare Holo V': 'Ultra Rare',
     'Rare Holo VMAX': 'Ultra Rare',
-    'V': 'Ultra Rare',
-    'VM': 'Ultra Rare',
     'Rare Holo VSTAR': 'Ultra Rare',
     'Rare Ultra': 'Ultra Rare',
     'Rare BREAK': 'Ultra Rare',
@@ -73,21 +71,21 @@ for i in range(1, 16):
 
 
 PROB_RARITIES = {
-    1: arrays[1 - 1],
-    2: arrays[2 - 1],
-    3: arrays[3 - 1],
-    4: arrays[4 - 1],
-    5: arrays[5 - 1],
-    6: arrays[6 - 1],
-    7: arrays[7 - 1],
-    8: arrays[8 - 1],
-    9: arrays[9 - 1],
-    10: arrays[10 - 1],
-    11: arrays[11 - 1],
-    12: arrays[12 - 1],
-    13: arrays[13 - 1],
-    14: arrays[14 - 1],
-    15: arrays[15 - 1]
+    1: arrays[0],
+    2: arrays[1],
+    3: arrays[2],
+    4: arrays[3],
+    5: arrays[4],
+    6: arrays[5],
+    7: arrays[6],
+    8: arrays[7],
+    9: arrays[8],
+    10: arrays[9],
+    11: arrays[10],
+    12: arrays[11],
+    13: arrays[12],
+    14: arrays[13],
+    15: arrays[14]
 }
 
 
@@ -125,7 +123,7 @@ def imagecreation(ids):  # function to create an image
     return new_im
 
 
-def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+def base31encode(number, alphabet='0123456789BCDFGHJKLMNPQRSTVWXYZ'):
     """Converts an integer to a base36 string."""
     if not isinstance(number, int):
         raise TypeError('number must be an integer')

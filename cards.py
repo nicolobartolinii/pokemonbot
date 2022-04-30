@@ -29,7 +29,8 @@ class Cards(commands.Cog):
                 'tagEmojis': {},
                 'level': 1,
                 'exp': 0,
-                'itemInventory': []
+                'itemInventory': [],
+                'profileColor': 0xffcb05
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:

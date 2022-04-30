@@ -79,6 +79,14 @@ CLASS_RARITIES = {
     'Secret Rare': ['Rare Secret', 'Rare Shining', 'Rare Rainbow', 'Rare Shiny GX']
 }
 
+# def exp_func():
+#     pass
+#
+# EXP_AMOUNT = {
+#     1: 418424,
+#     2: 3424210421,
+# }
+
 
 def add_pokemons(first, last):
     for i in range(first, last + 1):
@@ -153,7 +161,7 @@ def get_new_card_code():
             'lastCardCode': str(card_code)
         }
     }, upsert=False)
-    return base36encode(card_code)
+    return base31encode(card_code)
 
 
 def get_new_temp_image_number():
