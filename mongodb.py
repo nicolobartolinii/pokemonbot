@@ -103,6 +103,30 @@ EXP_AMOUNT = {
     20: 1348
 }
 
+RATES = {
+    0: ['Common cards: 99%\nUncommon cards: 0.9%\nRare cards: 0.1%\nUltra rare cards: 0%\nSecret rare cards: 0%', 'Common: 99%, Uncommon: 0.9%, Rare: 0.1%, Ultra rare: 0%, Secret rare: 0%'],
+    1: ['Common cards: 90%\nUncommon cards: 9%\nRare cards: 0.9%\nUltra rare cards: 0.1%\nSecret rare cards: 0%', 'Common: 90%, Uncommon: 9%, Rare: 0.9%, Ultra rare: 0.1%, Secret rare: 0%'],
+    2: ['Common cards: 85%\nUncommon cards: 14%\nRare cards: 0.9%\nUltra rare cards: 0.1%\nSecret rare cards: 0%', 'Common: 85%, Uncommon: 14%, Rare: 0.9%, Ultra rare: 0.1%, Secret rare: 0%'],
+    3: ['Common cards: 75%\nUncommon cards: 20%\nRare cards: 4.8%\nUltra rare cards: 0.2%\nSecret rare cards: 0%', 'Common: 75%, Uncommon: 20%, Rare: 4.8%, Ultra rare: 0.2%, Secret rare: 0%'],
+    4: ['Common cards: 65%\nUncommon cards: 26%\nRare cards: 8.6%\nUltra rare cards: 0.4%\nSecret rare cards: 0%', 'Common: 65%, Uncommon: 26%, Rare: 8.6%, Ultra rare: 0.4%, Secret rare: 0%'],
+    5: ['Common cards: 60%\nUncommon cards: 30%\nRare cards: 9.5%\nUltra rare cards: 0.5%\nSecret rare cards: 0%', 'Common: 60%, Uncommon: 30%, Rare: 9.5%, Ultra rare: 0.5%, Secret rare: 0%'],
+    6: ['Common cards: 50%\nUncommon cards: 33%\nRare cards: 16.25%\nUltra rare cards: 0.75%\nSecret rare cards: 0%', 'Common: 50%, Uncommon: 33%, Rare: 16.25%, Ultra rare: 0.75%, Secret rare: 0%'],
+    7: ['Common cards: 45%\nUncommon cards: 35%\nRare cards: 19%\nUltra rare cards: 1%\nSecret rare cards: 0%', 'Common: 45%, Uncommon: 35%, Rare: 19%, Ultra rare: 1%, Secret rare: 0%'],
+    8: ['Common cards: 40%\nUncommon cards: 36%\nRare cards: 22%\nUltra rare cards: 1.99%\nSecret rare cards: 0.01%', 'Common: 40%, Uncommon: 36%, Rare: 22%, Ultra rare: 1.99%, Secret rare: 0.01%'],
+    9: ['Common cards: 32%\nUncommon cards: 40%\nRare cards: 24%\nUltra rare cards: 3.95%\nSecret rare cards: 0.05%', 'Common: 32%, Uncommon: 40%, Rare: 24%, Ultra rare: 3.95%, Secret rare: 0.05%'],
+    10: ['Common cards: 30%\nUncommon cards: 40%\nRare cards: 25%\nUltra rare cards: 4.9%\nSecret rare cards: 0.1%', 'Common: 30%, Uncommon: 40%, Rare: 25%, Ultra rare: 4.9%, Secret rare: 0.1%'],
+    11: ['Common cards: 25%\nUncommon cards: 40%\nRare cards: 27%\nUltra rare cards: 7.75%\nSecret rare cards: 0.25%', 'Common: 25%, Uncommon: 40%, Rare: 27%, Ultra rare: 7.75%, Secret rare: 0.25%'],
+    12: ['Common cards: 20%\nUncommon cards: 40%\nRare cards: 30%\nUltra rare cards: 9.5%\nSecret rare cards: 0.5%', 'Common: 20%, Uncommon: 40%, Rare: 30%, Ultra rare: 9.5%, Secret rare: 0.5%'],
+    13: ['Common cards: 15%\nUncommon cards: 35%\nRare cards: 35%\nUltra rare cards: 14.25%\nSecret rare cards: 0.75%', 'Common: 15%, Uncommon: 35%, Rare: 35%, Ultra rare: 14.25%, Secret rare: 0.75%'],
+    14: ['Common cards: 10%\nUncommon cards: 25%\nRare cards: 45%\nUltra rare cards: 19%\nSecret rare cards: 1%', 'Common: 10%, Uncommon: 25%, Rare: 45%, Ultra rare: 19%, Secret rare: 1%'],
+    15: ['Common cards: 5%\nUncommon cards: 20%\nRare cards: 50%\nUltra rare cards: 22.5%\nSecret rare cards: 2.5%', 'Commos: 5%, Uncommon: 20%, Rare: 50%, Ultra rare: 22.5%, Secret rare: 2.5%'],
+    16: ['Common cards: 4%\nUncommon cards: 15%\nRare cards: 46%\nUltra rare cards: 30%\nSecret rare cards: 5%', 'Commos: 4%, Uncommon: 15%, Rare: 46%, Ultra rare: 30%, Secret rare: 5%'],
+    17: ['Common cards: 3%\nUncommon cards: 10%\nRare cards: 42%\nUltra rare cards: 37.5%\nSecret rare cards: 7.5%', 'Commos: 3%, Uncommon: 10%, Rare: 42%, Ultra rare: 37.5%, Secret rare: 7.5%'],
+    18: ['Common cards: 2%\nUncommon cards: 8%\nRare cards: 35%\nUltra rare cards: 45%\nSecret rare cards: 10%', 'Commos: 2%, Uncommon: 8%, Rare: 35%, Ultra rare: 45%, Secret rare: 10%'],
+    19: ['Common cards: 1%\nUncommon cards: 5%\nRare cards: 29%\nUltra rare cards: 52.5%\nSecret rare cards: 12.5%', 'Commos: 1%, Uncommon: 5%, Rare: 29%, Ultra rare: 52.5%, Secret rare: 12.5%'],
+    20: ['Common cards: 1%\nUncommon cards: 2%\nRare cards: 25%\nUltra rare cards: 57%\nSecret rare cards: 15%', 'Commos: 1%, Uncommon: 2%, Rare: 25%, Ultra rare: 57%, Secret rare: 15%']
+}
+
 
 async def add_exp(ctx: commands.Context, amount):
     users.update_one({

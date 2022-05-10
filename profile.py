@@ -39,6 +39,20 @@ class Profile(commands.Cog):
         embed.add_field(name='Quick Inventory', value='WIP', inline=False)  # TODO
         await ctx.send(embed=embed)
 
+    @commands.command(name='level', aliases=['lvl'])
+    async def level(self, ctx: commands.Context):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        embed = discord.Embed(title='Level details', description='', colour=0xffcb05)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_thumbnail(url=ctx.author.avatar_url)
+        embed.description += f'Your current level is: **{user["level"]}**\n'
+        embed.description += f'Your have **{user["exp"]}** experience points and you need `{EXP_AMOUNT[user["level"] + 1] - user["exp"]}` more experience points to level up.\n\n'
+        embed.add_field(name='Card drop rates', value=RATES[user['level']][0], inline=False)
+        await ctx.send(embed=embed)
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Profile(bot))
