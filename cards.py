@@ -81,7 +81,7 @@ class Cards(commands.Cog):
         with open(f'./temp{temp_image_number}.png', 'rb') as f:
             picture = discord.File(f)
             drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards! {ctx.author.mention} gained `1 EXP`!', file=picture)
-        add_exp(ctx, 1)
+        await add_exp(ctx, 1)
         await drop.add_reaction('1️⃣')
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')
