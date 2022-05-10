@@ -53,6 +53,17 @@ class Profile(commands.Cog):
         embed.add_field(name='Card drop rates', value=RATES[user['level']][0], inline=False)
         await ctx.send(embed=embed)
 
+    @commands.command(name='levelsinfo', aliases=['levels', 'li'])
+    async def levelsinfo(self, ctx: commands.Context):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        embed = discord.Embed(title='Levels info', description='', colour=0xffcb05)
+        embed.description += f'Below a list of all the things unlocked at each level.'
+        for j in range(21):
+            embed.add_field(name=f'Level {j}', value=RATES[j][1], inline=False)
+        await ctx.send(embed=embed)
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Profile(bot))
