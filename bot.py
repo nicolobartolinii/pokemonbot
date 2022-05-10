@@ -83,7 +83,7 @@ async def help(ctx: commands.Context, command: str = None):
         embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`start`, `profile [WIP]`, [WIP]', inline=True)
+        embed.add_field(name='**👤Profile**', value='`start`, `profile`, [WIP]', inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -216,7 +216,7 @@ Other
         await ctx.send(embed=embed)
     elif command == 'profile' or command == 'p':
         embed = discord.Embed(title='Command Details: `profile [user]`',
-                              description='Command Work In Progress.',
+                              description='Aliases: `p`\n\nView the profile of yourself (in this case `user` can be omitted) or another user.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'wishadd' or command == 'wa' or command == 'wadd':
