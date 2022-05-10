@@ -17,7 +17,7 @@ class Profile(commands.Cog):
         if member is None:
             member = ctx.author
         user = users.find_one({'_id': str(member.id)})
-        embed = discord.Embed(title='User details', description='', colour=int(user['profileColor'], base=16))
+        embed = discord.Embed(title='User details', description='', colour=0xffcb05)  # int(user['profileColor'], base=16))
         embed.set_author(name=member.name, icon_url=member.avatar_url)
         embed.set_thumbnail(url=member.avatar_url)  # TODO sprite pokemon preferito OR avatar
         embed.description = f'Level · **{user["level"]}**/15\n'
