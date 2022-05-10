@@ -37,6 +37,7 @@ class Profile(commands.Cog):
         date_registration_unix = time.mktime(date_registration.timetuple())
         embed.description += f'Playing since · <t:{str(int(date_registration_unix))}:F>'
         embed.add_field(name='Quick Inventory', value='WIP', inline=False)  # TODO
+        await ctx.send(embed=embed)
 
 
 def setup(bot: commands.Bot):
