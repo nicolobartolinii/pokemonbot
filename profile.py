@@ -61,7 +61,7 @@ class Profile(commands.Cog):
         embed = discord.Embed(title='Levels info', description='', colour=0xffcb05)
         embed.description += f'Below a list of all the things unlocked at each level.'
         for j in range(21):
-            embed.add_field(name=f'Level {j}', value=RATES[j][1], inline=False)
+            embed.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
         await ctx.send(embed=embed)
 
 
