@@ -103,7 +103,7 @@ EXP_AMOUNT = {
 }
 
 
-def add_exp(ctx: commands.Context, amount):
+async def add_exp(ctx: commands.Context, amount):
     users.update_one({
         '_id': str(ctx.author.id)
     }, {
