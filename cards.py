@@ -27,7 +27,7 @@ class Cards(commands.Cog):
                 'wishWatching': '',
                 'tags': {},
                 'tagEmojis': {},
-                'level': 1,
+                'level': 0,
                 'exp': 0,
                 'itemInventory': [],
                 'profileColor': 0xffcb05
@@ -80,7 +80,8 @@ class Cards(commands.Cog):
             await ctx.send(content=content)
         with open(f'./temp{temp_image_number}.png', 'rb') as f:
             picture = discord.File(f)
-            drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards!', file=picture)
+            drop = await ctx.send(content=f'{ctx.author.mention} is spawning 3 cards! {ctx.author.mention} gained `1 EXP`!', file=picture)
+        add_exp(ctx, 1)
         await drop.add_reaction('1️⃣')
         await drop.add_reaction('2️⃣')
         await drop.add_reaction('3️⃣')

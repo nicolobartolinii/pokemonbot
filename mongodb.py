@@ -79,13 +79,52 @@ CLASS_RARITIES = {
     'Secret Rare': ['Rare Secret', 'Rare Shining', 'Rare Rainbow', 'Rare Shiny GX']
 }
 
-# def exp_func():
-#     pass
-#
-# EXP_AMOUNT = {
-#     1: 418424,
-#     2: 3424210421,
-# }
+EXP_AMOUNT = {
+    1: 42,
+    2: 89,
+    3: 139,
+    4: 193,
+    5: 254,
+    6: 321,
+    7: 397,
+    8: 482,
+    9: 575,
+    10: 674,
+    11: 772,
+    12: 865,
+    13: 950,
+    14: 1026,
+    15: 1094,
+    16: 1154,
+    17: 1208,
+    18: 1258,
+    19: 1305,
+    20: 1348
+}
+
+
+def add_exp(ctx: commands.Context, amount):
+    users.update_one({
+        '_id': str(ctx.author.id)
+    }, {
+        '$inc': {'exp': amount}
+    })
+    user = users.find_one({'_id': str(ctx.author.id)})
+    if user['exp'] > EXP_AMOUNT[user['level'] + 1]:
+        await level_up(ctx)
+
+
+async def level_up(ctx: commands.Context):
+    users.update_one({
+        '_id': str(ctx.author.id)
+    }, {
+        '$inc': {'level': 1}
+    })
+    user = users.find_one({'_id': str(ctx.author.id)})
+    if user['exp'] > EXP_AMOUNT[user['level'] + 1]:
+        await level_up(ctx)
+    else:
+        await ctx.send(f'{ctx.author.mention}, you are now level `{user["level"]}`! Check your level and other informations with the `level` command.')
 
 
 def add_pokemons(first, last):
