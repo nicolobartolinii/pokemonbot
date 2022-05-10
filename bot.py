@@ -83,7 +83,7 @@ async def help(ctx: commands.Context, command: str = None):
         embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`start`, `profile`, [WIP]', inline=True)
+        embed.add_field(name='**👤Profile**', value='`start`, `profile`, level, levelsinfo', inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -217,6 +217,16 @@ Other
     elif command == 'profile' or command == 'p':
         embed = discord.Embed(title='Command Details: `profile [user]`',
                               description='Aliases: `p`\n\nView the profile of yourself (in this case `user` can be omitted) or another user.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'level' or command == 'lvl':
+        embed = discord.Embed(title='Command Details: `level`',
+                              description='Aliases: `lvl`\n\nView the details of your experience level.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'levelsinfo' or command == 'levels' or command == 'li':
+        embed = discord.Embed(title='Command Details: `levelsinfo`',
+                              description='Aliases: `levels`, `li`\n\nView the list of all things unlocked at each level.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'wishadd' or command == 'wa' or command == 'wadd':
