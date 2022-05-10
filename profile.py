@@ -20,8 +20,8 @@ class Profile(commands.Cog):
         embed = discord.Embed(title='User details', description='', colour=0xffcb05)  # int(user['profileColor'], base=16))
         embed.set_author(name=member.name, icon_url=member.avatar_url)
         embed.set_thumbnail(url=member.avatar_url)  # TODO sprite pokemon preferito OR avatar
-        embed.description = f'Level · **{user["level"]}**/15\n'
-        embed.description += f'Experience · **{user["exp"]}**\n\n'
+        embed.description = f'Level · **{user["level"]}**/20\n'
+        embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
         embed.description += f'Favourite Pokémon · WIP\n\n'  # TODO
         embed.description += f'Cards in collection · **{len(user["inventory"])}**\n'
         embed.description += f'Last card grabbed · `{user["inventory"][-1]}`\n'
@@ -30,8 +30,8 @@ class Profile(commands.Cog):
         embed.description += f'Cards given · **{int(user["cardsGiven"])}**\n'
         embed.description += f'Cards received · **{int(user["cardsReceived"])}**\n'
         embed.description += f'Cards burned · **{int(user["cardsBurned"])}** (WIP)\n'
-        embed.description += f'Minigames played · WIP'  # TODO
-        embed.description += f'Minigames won · WIP'  # TODO
+        embed.description += f'Minigames played · WIP\n'  # TODO
+        embed.description += f'Minigames won · WIP\n'  # TODO
         playing_since = str(user['registeredAt'])
         date_registration = datetime.strptime(playing_since, '%m/%d/%Y, %H:%M:%S')
         date_registration_unix = time.mktime(date_registration.timetuple())

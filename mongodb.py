@@ -80,6 +80,7 @@ CLASS_RARITIES = {
 }
 
 EXP_AMOUNT = {
+    0: 0,
     1: 42,
     2: 89,
     3: 139,
