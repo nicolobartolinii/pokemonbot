@@ -23,15 +23,17 @@ class Profile(commands.Cog):
         embed.set_author(name=member.name, icon_url=member.avatar_url)
         if user['favouritePokemon'] is not None:
             pokemon = pokemons.find_one({'_id': user['favouritePokemon']})
+            poke_name = pokemon['name']
             if random.randint(1, 8192) == 6969:
                 embed.set_thumbnail(url=pokemon['sprite_shiny'])
             else:
                 embed.set_thumbnail(url=pokemon['sprite'])
         else:
+            poke_name = None
             embed.set_thumbnail(url=member.avatar_url)
         embed.description = f'Level · **{user["level"]}**/20\n'
         embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
-        embed.description += f'Favourite Pokémon · WIP\n\n'  # TODO
+        embed.description += f'Favourite Pokémon · {poke_name if not None else "None"}\n\n'
         embed.description += f'Cards in collection · **{len(user["inventory"])}**\n'
         embed.description += f'Last card grabbed · `{user["inventory"][-1] if len(user["inventory"]) != 0 else "None"}`\n'
         embed.description += f'Cards grabbed · **{int(user["cardsGrabbed"])}**\n'
@@ -115,7 +117,7 @@ class Profile(commands.Cog):
         if name is None:
             await ctx.send(f'Sorry {ctx.author.mention}, you should provide a pokémon name. Please use the `help favpokemon` command to check the usage of this command.')
             return
-        if name == '0' or name == 0:
+        if name == 'None' or name == 'none':
             users.update_one(
                 {'_id': str(ctx.author.id)},
                 {'$set': {'favouritePokemon': None}}
@@ -141,7 +143,7 @@ class Profile(commands.Cog):
             field_text = ''
             if len(cards_filtered) < 10:
                 for i in range(len(cards_filtered)):
-                    poke_name = cards_filtered[i]['name']
+                    poke_name = cards_filtered[i]['name'].capitalize()
                     field_text += f'{i + 1}. {poke_name}\n'
                 embed.add_field(
                     name=f'Showing pokémons 1-{len(cards_filtered)}',
@@ -149,7 +151,7 @@ class Profile(commands.Cog):
                 await ctx.send(embed=embed)
             else:
                 for i in range(10):
-                    poke_name = cards_filtered[i]['name']
+                    poke_name = cards_filtered[i]['name'].capitalize()
                     field_text += f'{i + 1}. {poke_name}\n'
                 embed.add_field(
                     name=f'Showing pokémons 1-10 of {len(cards_filtered)}',
@@ -165,7 +167,7 @@ class Profile(commands.Cog):
                     field_text = ''
                     for i in range(10 * p,
                                    (10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)):
-                        poke_name = cards_filtered[i]['name']
+                        poke_name = cards_filtered[i]['name'].capitalize()
                         field_text += f'{i + 1}. {poke_name}\n'
                     next_page.add_field(
                         name=f'Showing pokémons {10 * p + 1}-{(10 * p + 10) if (10 * p + 10) < len(cards_filtered) else len(cards_filtered)} of {len(cards_filtered)}',
