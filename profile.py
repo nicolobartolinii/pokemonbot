@@ -63,6 +63,7 @@ class Profile(commands.Cog):
         embed = discord.Embed(title='Levels info', description='Below a list of all the things unlocked at each level.', colour=0xffcb05)
         for j in range(7):
             embed.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
+        embed.set_footer(text='Page 1/3')
         message = await ctx.send(embed=embed)
         embeds = [embed]
         pages = 3
@@ -72,6 +73,7 @@ class Profile(commands.Cog):
                                       colour=0xffcb05)
             for j in range(7 * p, 7 * (p + 1)):
                 next_page.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
+            next_page.set_footer(text=f'Page {p + 1}/3')
             embeds.append(next_page)
         cur_page = 0
 
