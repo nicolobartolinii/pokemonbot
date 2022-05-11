@@ -70,7 +70,7 @@ class Profile(commands.Cog):
             next_page = discord.Embed(title='Levels info',
                                       description='Below a list of all the things unlocked at each level.',
                                       colour=0xffcb05)
-            for j in range(7 * p, 7 * (p + 1) - 1):
+            for j in range(7 * p, 7 * (p + 1)):
                 next_page.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
             embeds.append(next_page)
         cur_page = 0
