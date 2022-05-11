@@ -108,7 +108,7 @@ class Profile(commands.Cog):
         if name is None:
             await ctx.send(f'Sorry {ctx.author.mention}, you should provide a pokémon name. Please use the `help favpokemon` command to check the usage of this command.')
             return
-        cards_filtered = sorted(list(cards.find({'name': {'$regex': f".*{name}.*", '$options': 'i'}})),
+        cards_filtered = sorted(list(pokemons.find({'name': {'$regex': f".*{name}.*", '$options': 'i'}})),
                                 key=lambda d: d['_id'], reverse=False)
         if len(cards_filtered) == 0:
             await ctx.send(

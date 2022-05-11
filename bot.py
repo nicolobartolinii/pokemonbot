@@ -230,7 +230,7 @@ Other
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'favpokemon' or command == 'favpoke' or command == 'favp' or command == 'fp':
-        embed = discord.Embed(title='Command Details: `favpokemon`',
+        embed = discord.Embed(title='Command Details: `favpokemon <pokemon_name>`',
                               description='Aliases: `favpoke`, `favp`, `fp`\n\nSet a pokémon as your favourite pokémon. This pokemon will appear in your profile and WIP.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
