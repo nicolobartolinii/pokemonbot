@@ -23,7 +23,7 @@ class Profile(commands.Cog):
         embed.set_author(name=member.name, icon_url=member.avatar_url)
         if user['favouritePokemon'] is not None:
             pokemon = pokemons.find_one({'_id': user['favouritePokemon']})
-            poke_name = pokemon['name']
+            poke_name = pokemon['name'].capitalize()
             if random.randint(1, 8192) == 6969:
                 embed.set_thumbnail(url=pokemon['sprite_shiny'])
             else:
@@ -33,7 +33,7 @@ class Profile(commands.Cog):
             embed.set_thumbnail(url=member.avatar_url)
         embed.description = f'Level · **{user["level"]}**/20\n'
         embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
-        embed.description += f'Favourite Pokémon · {poke_name if not None else "None"}\n\n'
+        embed.description += f'Favourite Pokémon · **{poke_name if not None else "None"}**\n\n'
         embed.description += f'Cards in collection · **{len(user["inventory"])}**\n'
         embed.description += f'Last card grabbed · `{user["inventory"][-1] if len(user["inventory"]) != 0 else "None"}`\n'
         embed.description += f'Cards grabbed · **{int(user["cardsGrabbed"])}**\n'
@@ -228,6 +228,23 @@ class Profile(commands.Cog):
                         await ctx.send(
                             f'{ctx.author.mention}, you successfully set **{poke_name.capitalize()}** as your favourite pokémon!')
                         return
+            try:
+                msg = await self.bot.wait_for(
+                    'message',
+                    check=lambda m: m.author == ctx.author and int(m.content) in range(1, len(cards_filtered) + 1) and m.channel == ctx.channel,
+                    timeout=30
+                )
+            except asyncio.TimeoutError:
+                return
+
+            poke_name = cards_filtered[int(msg.content) - 1]['name']
+            poke_id = cards_filtered[int(msg.content) - 1]['_id']
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$set': {'favouritePokemon': poke_id}}
+            )
+            await ctx.send(
+                f'{ctx.author.mention}, you successfully set **{poke_name.capitalize()}** as your favourite pokémon!')
 
 
 def setup(bot: commands.Bot):
