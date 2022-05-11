@@ -1,3 +1,5 @@
+import asyncio
+
 from mongodb import *
 import time
 
@@ -58,11 +60,43 @@ class Profile(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
-        embed = discord.Embed(title='Levels info', description='', colour=0xffcb05)
-        embed.description += f'Below a list of all the things unlocked at each level.'
-        for j in range(21):
+        embed = discord.Embed(title='Levels info', description='Below a list of all the things unlocked at each level.', colour=0xffcb05)
+        for j in range(7):
             embed.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
-        await ctx.send(embed=embed)
+        message = await ctx.send(embed=embed)
+        embeds = [embed]
+        pages = 3
+        for p in range(1, 3):
+            next_page = discord.Embed(title='Levels info',
+                                      description='Below a list of all the things unlocked at each level.',
+                                      colour=0xffcb05)
+            for j in range(7 * p, 7 * (p + 1) - 1):
+                next_page.add_field(name=f'Level {j} ({EXP_AMOUNT[j]} EXP)', value=RATES[j][1], inline=False)
+            embeds.append(next_page)
+        cur_page = 0
+
+        await message.add_reaction('⬅')
+        await message.add_reaction('➡')
+
+        def check(r: discord.Reaction, u):
+            return u == ctx.author and str(r.emoji) in ['⬅', '➡'] and r.message == message
+
+        while True:
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', timeout=20, check=check)
+
+                if str(reaction.emoji) == '➡' and cur_page != pages - 1:
+                    cur_page += 1
+                    await message.edit(embed=embeds[cur_page])
+                    await message.remove_reaction(reaction, user)
+                elif str(reaction.emoji) == '⬅' and cur_page > 0:
+                    cur_page -= 1
+                    await message.edit(embed=embeds[cur_page])
+                    await message.remove_reaction(reaction, user)
+                else:
+                    await message.remove_reaction(reaction, user)
+            except asyncio.TimeoutError:
+                break
 
 
 def setup(bot: commands.Bot):
