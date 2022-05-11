@@ -128,7 +128,7 @@ RATES = {
 }
 
 
-def add_exp(ctx: commands.Context, amount):
+async def add_exp(ctx: commands.Context, amount):
     users.update_one({
         '_id': str(ctx.author.id)
     }, {
@@ -136,10 +136,10 @@ def add_exp(ctx: commands.Context, amount):
     })
     user = users.find_one({'_id': str(ctx.author.id)})
     if user['exp'] > EXP_AMOUNT[user['level'] + 1]:
-        level_up(ctx)
+        await level_up(ctx)
 
 
-def level_up(ctx: commands.Context):
+async def level_up(ctx: commands.Context):
     users.update_one({
         '_id': str(ctx.author.id)
     }, {
@@ -147,7 +147,7 @@ def level_up(ctx: commands.Context):
     })
     user = users.find_one({'_id': str(ctx.author.id)})
     if user['exp'] > EXP_AMOUNT[user['level'] + 1]:
-        level_up(ctx)
+        await level_up(ctx)
     else:
         await ctx.send(f'{ctx.author.mention}, you are now level `{user["level"]}`! Check your level and other informations with the `level` command.')
 
