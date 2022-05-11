@@ -30,7 +30,8 @@ class Cards(commands.Cog):
                 'level': 0,
                 'exp': 0,
                 'itemInventory': [],
-                'profileColor': 0xffcb05
+                'profileColor': 0xffcb05,
+                'favouritePokemon': None,
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
