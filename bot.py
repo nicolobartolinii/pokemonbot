@@ -230,8 +230,8 @@ Other
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'favpokemon' or command == 'favpoke' or command == 'favp' or command == 'fp':
-        embed = discord.Embed(title='Command Details: `favpokemon <pokemon_name>`',
-                              description='Aliases: `favpoke`, `favp`, `fp`\n\nSet a pokémon as your favourite pokémon. This pokemon will appear in your profile and WIP.',
+        embed = discord.Embed(title='Command Details: `favpokemon <pokémon_name>`',
+                              description='Aliases: `favpoke`, `favp`, `fp`\n\nSet a pokémon as your favourite pokémon. This pokemon will appear in your profile (it can sometimes appear shiny) and WIP.\nUse `0` as pokémon name to delete your favourite pokémon.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'wishadd' or command == 'wa' or command == 'wadd':

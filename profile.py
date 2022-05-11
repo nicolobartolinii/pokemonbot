@@ -20,8 +20,15 @@ class Profile(commands.Cog):
             member = ctx.author
         user = users.find_one({'_id': str(member.id)})
         embed = discord.Embed(title='User details', description='', colour=0xffcb05)  # int(user['profileColor'], base=16))
-        embed.set_author(name=member.name, icon_url=user['favouritePokemon'] if not None else member.avatar_url)
-        embed.set_thumbnail(url=member.avatar_url)  # TODO sprite pokemon preferito OR avatar
+        embed.set_author(name=member.name, icon_url=member.avatar_url)
+        if user['favouritePokemon'] is not None:
+            pokemon = pokemons.find_one({'_id': user['favouritePokemon']})
+            if random.randint(1, 8192) == 6969:
+                embed.set_thumbnail(url=pokemon['sprite_shiny'])
+            else:
+                embed.set_thumbnail(url=pokemon['sprite'])
+        else:
+            embed.set_thumbnail(url=member.avatar_url)
         embed.description = f'Level · **{user["level"]}**/20\n'
         embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
         embed.description += f'Favourite Pokémon · WIP\n\n'  # TODO
@@ -108,6 +115,11 @@ class Profile(commands.Cog):
         if name is None:
             await ctx.send(f'Sorry {ctx.author.mention}, you should provide a pokémon name. Please use the `help favpokemon` command to check the usage of this command.')
             return
+        if name == '0' or name == 0:
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$set': {'favouritePokemon': None}}
+            )
         cards_filtered = sorted(list(pokemons.find({'name': {'$regex': f".*{name}.*", '$options': 'i'}})),
                                 key=lambda d: d['_id'], reverse=False)
         if len(cards_filtered) == 0:
