@@ -26,7 +26,7 @@ class Profile(commands.Cog):
         embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
         embed.description += f'Favourite Pokémon · WIP\n\n'  # TODO
         embed.description += f'Cards in collection · **{len(user["inventory"])}**\n'
-        embed.description += f'Last card grabbed · `{user["inventory"][-1]}`\n'
+        embed.description += f'Last card grabbed · `{user["inventory"][-1] if len(user["inventory"]) != 0 else "None"}`\n'
         embed.description += f'Cards grabbed · **{int(user["cardsGrabbed"])}**\n'
         embed.description += f'Cards spawned · **{int(user["cardsDropped"])}**\n'
         embed.description += f'Cards given · **{int(user["cardsGiven"])}**\n'
