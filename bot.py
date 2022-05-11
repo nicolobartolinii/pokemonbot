@@ -83,7 +83,7 @@ async def help(ctx: commands.Context, command: str = None):
         embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`start`, `profile`, level, levelsinfo', inline=True)
+        embed.add_field(name='**👤Profile**', value='`start`, `profile`, `level`, `levelsinfo`, `favpokemon`', inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -227,6 +227,11 @@ Other
     elif command == 'levelsinfo' or command == 'levels' or command == 'li':
         embed = discord.Embed(title='Command Details: `levelsinfo`',
                               description='Aliases: `levels`, `li`\n\nView the list of all things unlocked at each level.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'favpokemon' or command == 'favpoke' or command == 'favp' or command == 'fp':
+        embed = discord.Embed(title='Command Details: `favpokemon`',
+                              description='Aliases: `favpoke`, `favp`, `fp`\n\nSet a pokémon as your favourite pokémon. This pokemon will appear in your profile and WIP.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'wishadd' or command == 'wa' or command == 'wadd':
