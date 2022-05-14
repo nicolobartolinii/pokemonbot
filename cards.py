@@ -542,7 +542,7 @@ class Cards(commands.Cog):
             await msg.edit(embed=embed)
             return
         elif str(r.emoji) == '🔥':
-            burn_card(ctx, user_burning, rewards, card_code)
+            await burn_card(ctx, user_burning, rewards, card_code)
             embed.description += '\n\n**The card has been burned.**'
             embed.colour = 0x35ff42
             await msg.edit(embed=embed)
@@ -598,7 +598,7 @@ class Cards(commands.Cog):
                 return
             if str(r.emoji) == '✅':
                 for card in tagged_cards:
-                    burn_card(ctx, user_burning, rewards, card)
+                    await burn_card(ctx, user_burning, rewards, card)
                 embed.description += '\n\n**Cards have been burned.**'
                 embed.colour = 0x35ff42
                 await msg.edit(embed=embed)
