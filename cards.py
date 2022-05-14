@@ -523,21 +523,9 @@ class Cards(commands.Cog):
             return
         grabbed_card = grabbed_cards.find_one({'_id': card_code})
         card_id = grabbed_card['cardId']
-        card_print = grabbed_card['print']
         card = cards.find_one({'_id': card_id})
-        rarity_class = RARITIES[card['rarity']]
         embed = discord.Embed(title='Burn Card', description=f'{ctx.author.mention}, you will receive:\n\n', colour=0xffcb05)
-        multiplier = det_multiplier(card_print)
-        if rarity_class == 'Common':
-            rewards = [1, int(10 * multiplier)]
-        elif rarity_class == 'Uncommon':
-            rewards = [2, int(15 * multiplier)]
-        elif rarity_class == 'Rare':
-            rewards = [4, int(20 * multiplier)]
-        elif rarity_class == 'Ultra Rare':
-            rewards = [6, int(30 * multiplier)]
-        elif rarity_class == 'Secret Rare':
-            rewards = [10, int(50 * multiplier)]
+        rewards = det_rewards(card_code)
         embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins'
         embed.set_thumbnail(url=card['imageLow'])
         msg = await ctx.send(embed=embed)
@@ -554,34 +542,67 @@ class Cards(commands.Cog):
             await msg.edit(embed=embed)
             return
         elif str(r.emoji) == '🔥':
-            users.update_one(
-                {'_id': str(ctx.author.id)},
-                {'$pull': {'inventory': card_code}}
-            )
-            user_tags = user_burning['tags']
-            if len(user_tags) != 0:
-                for tag in user_tags:
-                    tagged_cards = user_tags[tag]
-                    if card_code in tagged_cards:
-                        users.update_one(
-                            {'_id': str(ctx.author.id)},
-                            {'$pull': {f'tags.{tag}': str(card_code)}}
-                        )
-            users.update_one(
-                {'_id': str(ctx.author.id)},
-                {'$inc': {'coins': rewards[1]}}
-            )
-            users.update_one(
-                {'_id': str(ctx.author.id)},
-                {'$inc': {'cardsBurned': 1}}
-            )
-            general_bot_settings.update_one({'_id': 0},
-                                            {'$push': {'freeCodes': card_code}})
-            await add_exp(ctx, rewards[0])
-            grabbed_cards.delete_one({'_id': card_code})
+            burn_card(ctx, user_burning, rewards, card_code)
             embed.description += '\n\n**The card has been burned.**'
             embed.colour = 0x35ff42
             await msg.edit(embed=embed)
+
+    @commands.command(name='tagburn', aliases=['tb', 'tagb', 'tburn'])
+    async def tagburn(self, ctx: commands.Context, tag_name: str = None):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user_burning = users.find_one({'_id': str(ctx.author.id)})
+        if len(user_burning["inventory"]) == 0:
+            await ctx.send(f'Sorry {ctx.author.mention}, your card collection is empty.')
+            return
+        if tag_name is None:
+            await ctx.send(f'Sorry {ctx.author.mention}, you should provide a tag name.')
+            return
+        tag_name = tag_name.lower()
+        try:
+            tagged_cards = user_burning['tags'][tag_name]
+        except KeyError:
+            await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exists.')
+            return
+        rewards = [0, 0]
+        for card in tagged_cards:
+            card_reward = det_rewards(card)
+            rewards[0] += card_reward[0]
+            rewards[1] += card_reward[1]
+        embed = discord.Embed(title='Burn Tagged Cards', description=f'{ctx.author.mention}, you will receive:\n\n',
+                              colour=0xffcb05)
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n❗❗**Please, before confirming, check the cards you are burning using the** `collection f:tag:{tag_name}` **command.**❗❗'
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction('❌')
+        await msg.add_reaction('🔥')
+
+        try:
+            r, u = await self.bot.wait_for('reaction_add', timeout=30,
+                                           check=lambda reaction, user: user == ctx.author and str(
+                                               reaction.emoji) in '❌🔥')
+        except asyncio.TimeoutError:
+            return
+        if str(r.emoji) == '❌':
+            embed.description += '\n\n**Card burning has been canceled.**'
+            embed.colour = 0xfd0111
+            await msg.edit(embed=embed)
+            return
+        elif str(r.emoji) == '🔥':
+            await msg.add_reaction('✅')
+            try:
+                r, u = await self.bot.wait_for('reaction_add', timeout=10,
+                                               check=lambda reaction, user: user == ctx.author and str(
+                                                   reaction.emoji) == '✅')
+            except asyncio.TimeoutError:
+                return
+            if str(r.emoji) == '✅':
+                for card in tagged_cards:
+                    burn_card(ctx, user_burning, rewards, card)
+                embed.description += '\n\n**Cards have been burned.**'
+                embed.colour = 0x35ff42
+                await msg.edit(embed=embed)
+
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):

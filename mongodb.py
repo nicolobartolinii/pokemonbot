@@ -655,3 +655,51 @@ def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=Fal
             return cards_dict_list
     else:
         return cards_dict_list
+
+
+def det_rewards(card_code: str) -> list:
+    grabbed_card = grabbed_cards.find_one({'_id': card_code})
+    card_id = grabbed_card['cardId']
+    card_print = grabbed_card['print']
+    card = cards.find_one({'_id': card_id})
+    rarity_class = RARITIES[card['rarity']]
+    multiplier = det_multiplier(card_print)
+    if rarity_class == 'Common':
+        rewards = [1, int(10 * multiplier)]
+    elif rarity_class == 'Uncommon':
+        rewards = [2, int(15 * multiplier)]
+    elif rarity_class == 'Rare':
+        rewards = [4, int(20 * multiplier)]
+    elif rarity_class == 'Ultra Rare':
+        rewards = [6, int(30 * multiplier)]
+    elif rarity_class == 'Secret Rare':
+        rewards = [10, int(50 * multiplier)]
+    return rewards
+
+
+def burn_card(ctx: commands.Context, user_burning, rewards: list, card_code: str):
+    users.update_one(
+        {'_id': str(ctx.author.id)},
+        {'$pull': {'inventory': card_code}}
+    )
+    user_tags = user_burning['tags']
+    if len(user_tags) != 0:
+        for tag in user_tags:
+            tagged_cards = user_tags[tag]
+            if card_code in tagged_cards:
+                users.update_one(
+                    {'_id': str(ctx.author.id)},
+                    {'$pull': {f'tags.{tag}': str(card_code)}}
+                )
+    users.update_one(
+        {'_id': str(ctx.author.id)},
+        {'$inc': {'coins': rewards[1]}}
+    )
+    users.update_one(
+        {'_id': str(ctx.author.id)},
+        {'$inc': {'cardsBurned': 1}}
+    )
+    general_bot_settings.update_one({'_id': 0},
+                                    {'$push': {'freeCodes': card_code}})
+    await add_exp(ctx, rewards[0])
+    grabbed_cards.delete_one({'_id': card_code})

@@ -13,6 +13,7 @@ class Tags(commands.Cog):
             await ctx.send('You should first register an account using the `start` command.')
             return
         user_tags = users.find_one({'_id': str(ctx.author.id)})['tags']
+        tag_name = tag_name.lower()
         try:
             if user_tags[tag_name] is not None:
                 await ctx.send(f'Sorry {ctx.author.mention}, that tag could not be added because it already exists.')
@@ -33,6 +34,7 @@ class Tags(commands.Cog):
             await ctx.send('You should first register an account using the `start` command.')
             return
         user_tags = users.find_one({'_id': str(ctx.author.id)})['tags']
+        tag_name = tag_name.lower()
         try:
             user_tags[tag_name]
         except KeyError:
@@ -126,6 +128,7 @@ class Tags(commands.Cog):
         if card_code not in user_inventory:
             await ctx.send(f'{ctx.author.mention}, you are not the owner of that card.')
             return
+        tag_name = tag_name.lower()
         try:
             user_tags[tag_name]
         except KeyError:
@@ -181,6 +184,8 @@ class Tags(commands.Cog):
             return
         user = users.find_one({'_id': str(ctx.author.id)})
         user_tags = user['tags']
+        old_tag_name = old_tag_name.lower()
+        new_tag_name = new_tag_name.lower()
         try:
             user_tags[old_tag_name]
         except KeyError:
@@ -196,6 +201,7 @@ class Tags(commands.Cog):
             return
         user = users.find_one({'_id': str(ctx.author.id)})
         user_tags = user['tags']
+        tag_name = tag_name.lower()
         try:
             user_tags[tag_name]
         except KeyError:
@@ -220,6 +226,7 @@ class Tags(commands.Cog):
             if code not in user_inventory:
                 await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
                 return
+        tag_name = tag_name.lower()
         try:
             user_tags[tag_name]
         except KeyError:
