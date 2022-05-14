@@ -566,13 +566,15 @@ class Cards(commands.Cog):
             await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exists.')
             return
         rewards = [0, 0]
+        single_rewards = []
         for card in tagged_cards:
             card_reward = det_rewards(card)
+            single_rewards.append(card_reward)
             rewards[0] += card_reward[0]
             rewards[1] += card_reward[1]
         embed = discord.Embed(title='Burn Tagged Cards', description=f'{ctx.author.mention}, you will receive:\n\n',
                               colour=0xffcb05)
-        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n❗❗**Please, before confirming, check the cards you are burning using the** `collection f:tag:{tag_name}` **command.**❗❗'
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**Please, before confirming, check the cards you are burning using the** `collection f:tag:{tag_name}` **command.**'
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('❌')
         await msg.add_reaction('🔥')
@@ -597,8 +599,8 @@ class Cards(commands.Cog):
             except asyncio.TimeoutError:
                 return
             if str(r.emoji) == '✅':
-                for card in tagged_cards:
-                    await burn_card(ctx, user_burning, rewards, card)
+                for j in range(len(tagged_cards)):
+                    await burn_card(ctx, user_burning, single_rewards[j], tagged_cards[j])
                 embed.description += '\n\n**Cards have been burned.**'
                 embed.colour = 0x35ff42
                 await msg.edit(embed=embed)
