@@ -677,7 +677,7 @@ def det_rewards(card_code: str) -> list:
     return rewards
 
 
-def burn_card(ctx: commands.Context, user_burning, rewards: list, card_code: str):
+async def burn_card(ctx: commands.Context, user_burning, rewards: list, card_code: str):
     users.update_one(
         {'_id': str(ctx.author.id)},
         {'$pull': {'inventory': card_code}}
