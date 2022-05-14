@@ -548,7 +548,7 @@ class Cards(commands.Cog):
             return u == ctx.author and str(r.emoji) in '❌🔥'
 
         try:
-            r, u = await client.wait_for('reaction_add', timeout=30, check=check)
+            r, u = await self.bot.wait_for('reaction_add', timeout=30, check=check)
         except asyncio.TimeoutError:
             return
         if r == '❌':
