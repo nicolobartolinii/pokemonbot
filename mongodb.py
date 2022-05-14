@@ -298,6 +298,15 @@ def give_card(user1: discord.Member, user2: discord.Member, card_code: str):
         {'_id': str(user1.id)},
         {'$pull': {'inventory': str(card_code)}}
     )
+    user_tags = users.find_one({'_id': str(user1.id)})['tags']
+    if len(user_tags) != 0:
+        for tag in user_tags:
+            tagged_cards = user_tags[tag]
+            if card_code in tagged_cards:
+                users.update_one(
+                    {'_id': str(user1.id)},
+                    {'$pull': {f'tags.{tag}': str(card_code)}}
+                )
     users.update_one(
         {'_id': str(user2.id)},
         {'$push': {'inventory': str(card_code)}}
@@ -315,10 +324,28 @@ def trade_card(author: discord.Member, member: discord.Member, author_card_code:
         {'_id': str(author.id)},
         {'$pull': {'inventory': str(author_card_code)}}
     )
+    user1_tags = users.find_one({'_id': str(author.id)})['tags']
+    if len(user1_tags) != 0:
+        for tag in user1_tags:
+            tagged_cards = user1_tags[tag]
+            if author_card_code in tagged_cards:
+                users.update_one(
+                    {'_id': str(author.id)},
+                    {'$pull': {f'tags.{tag}': str(author_card_code)}}
+                )
     users.update_one(
         {'_id': str(member.id)},
         {'$pull': {'inventory': str(member_card_code)}}
     )
+    user2_tags = users.find_one({'_id': str(member.id)})['tags']
+    if len(user2_tags) != 0:
+        for tag in user2_tags:
+            tagged_cards = user2_tags[tag]
+            if member_card_code in tagged_cards:
+                users.update_one(
+                    {'_id': str(member.id)},
+                    {'$pull': {f'tags.{tag}': str(member_card_code)}}
+                )
     users.update_one(
         {'_id': str(author.id)},
         {'$push': {'inventory': str(member_card_code)}}

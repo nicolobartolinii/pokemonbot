@@ -32,6 +32,7 @@ class Cards(commands.Cog):
                 'itemInventory': [],
                 'profileColor': 0xffcb05,
                 'favouritePokemon': None,
+                'coins': 0
             })
             await ctx.send(f'Succesfully registered user {ctx.author.mention}.')
         else:
@@ -504,6 +505,86 @@ class Cards(commands.Cog):
         file = discord.File(card_image, filename='image.png')
         embed.set_thumbnail(url='attachment://image.png')
         await ctx.send(file=file, embed=embed)
+
+    @commands.command(name='burn', aliases=['b'])
+    async def burn(self, ctx: commands.Context, card_code: str = None):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        if len(user["inventory"]) == 0:
+            await ctx.send(f'Sorry {ctx.author.mention}, your card collection is empty.')
+            return
+        if card_code is None:
+            card_code = user['inventory'][-1]
+        card_code = card_code.upper()
+        if card_code not in user['inventory']:
+            await ctx.send(f'Sorry {ctx.author.mention}, that card code is invalid.')
+            return
+        grabbed_card = grabbed_cards.find_one({'_id': card_code})
+        card_id = grabbed_card['cardId']
+        card_print = grabbed_card['print']
+        card = cards.find_one({'_id': card_id})
+        rarity_class = RARITIES[card['rarity']]
+        embed = discord.Embed(title='Burn Card', description=f'{ctx.author.mention}, you will receive:\n\n', colour=0xffcb05)
+        multiplier = det_multiplier(card_print)
+        if rarity_class == 'Common':
+            rewards = [1, int(10 * multiplier)]
+        elif rarity_class == 'Uncommon':
+            rewards = [2, int(15 * multiplier)]
+        elif rarity_class == 'Rare':
+            rewards = [4, int(20 * multiplier)]
+        elif rarity_class == 'Ultra Rare':
+            rewards = [6, int(30 * multiplier)]
+        elif rarity_class == 'Secret Rare':
+            rewards = [10, int(50 * multiplier)]
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins'
+        embed.set_thumbnail(url=card['imageLow'])
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction('❌')
+        await msg.add_reaction('🔥')
+
+        def check(r, u):
+            return u == ctx.author and str(r.emoji) in '❌🔥'
+
+        try:
+            r, u = await client.wait_for('reaction_add', timeout=30, check=check)
+        except asyncio.TimeoutError:
+            return
+        if r == '❌':
+            embed.description += '\n\n**Card burning has been canceled.**'
+            embed.colour = 0xfd0111
+            await msg.edit(embed=embed)
+            return
+        elif r == '🔥':
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$pull': {'inventory': card_code}}
+            )
+            user_tags = user['tags']
+            if len(user_tags) != 0:
+                for tag in user_tags:
+                    tagged_cards = user_tags[tag]
+                    if card_code in tagged_cards:
+                        users.update_one(
+                            {'_id': str(ctx.author.id)},
+                            {'$pull': {f'tags.{tag}': str(card_code)}}
+                        )
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$inc': {'coins': rewards[1]}}
+            )
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$inc': {'cardsBurned': 1}}
+            )
+            general_bot_settings.update_one({'_id': 0},
+                                            {'$push': {'freeCodes': card_code}})
+            await add_exp(ctx, rewards[0])
+            grabbed_cards.delete_one({'_id': card_code})
+            embed.description += '\n\n**The card has been burned.**'
+            embed.colour = 0x35ff42
+            await msg.edit(embed=embed)
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):

@@ -1,3 +1,4 @@
+import math
 import re
 from io import BytesIO
 import random
@@ -99,6 +100,10 @@ PROB_RARITIES = {
     19: arrays[19],
     20: arrays[20]
 }
+
+
+def det_multiplier(print_num: int):
+    return round((math.e ** (1 - (0.003 * print_num))) + 1, 1)
 
 
 def compose_images(image_urls):

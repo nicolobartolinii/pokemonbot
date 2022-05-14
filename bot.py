@@ -287,4 +287,10 @@ Other
     else:
         await ctx.send(f'Sorry {ctx.author.mention}, that is not a valid command. Please use the `help` command to see the list of available commands.')
 
+
+@bot.command(name='aggiornaroba')
+@commands.is_owner()
+async def aggiornaroba(ctx: commands.Context):
+    users.update_many({}, {'$set': {'coins': 0}})
+
 bot.run(TOKEN)
