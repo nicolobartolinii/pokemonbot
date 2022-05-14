@@ -103,7 +103,7 @@ PROB_RARITIES = {
 
 
 def det_multiplier(print_num: int):
-    return round((math.e ** (1 - (0.003 * print_num))) + 1, 1)
+    return round((math.e ** (1 - (0.003 * float(print_num)))) + 1, 1)
 
 
 def compose_images(image_urls):
