@@ -511,14 +511,14 @@ class Cards(commands.Cog):
         if not is_user_registered(ctx.author):
             await ctx.send('You should first register an account using the `start` command.')
             return
-        user = users.find_one({'_id': str(ctx.author.id)})
-        if len(user["inventory"]) == 0:
+        user_burning = users.find_one({'_id': str(ctx.author.id)})
+        if len(user_burning["inventory"]) == 0:
             await ctx.send(f'Sorry {ctx.author.mention}, your card collection is empty.')
             return
         if card_code is None:
-            card_code = user['inventory'][-1]
+            card_code = user_burning['inventory'][-1]
         card_code = card_code.upper()
-        if card_code not in user['inventory']:
+        if card_code not in user_burning['inventory']:
             await ctx.send(f'Sorry {ctx.author.mention}, that card code is invalid.')
             return
         grabbed_card = grabbed_cards.find_one({'_id': card_code})
@@ -544,24 +544,21 @@ class Cards(commands.Cog):
         await msg.add_reaction('❌')
         await msg.add_reaction('🔥')
 
-        def check(r, u):
-            return u == ctx.author and str(r.emoji) in '❌🔥'
-
         try:
-            r, u = await self.bot.wait_for('reaction_add', timeout=30, check=check)
+            r, u = await self.bot.wait_for('reaction_add', timeout=30, check=lambda reaction, user: user == ctx.author and str(reaction.emoji) in '❌🔥')
         except asyncio.TimeoutError:
             return
-        if r == '❌':
+        if str(r.emoji) == '❌':
             embed.description += '\n\n**Card burning has been canceled.**'
             embed.colour = 0xfd0111
             await msg.edit(embed=embed)
             return
-        elif r == '🔥':
+        elif str(r.emoji) == '🔥':
             users.update_one(
                 {'_id': str(ctx.author.id)},
                 {'$pull': {'inventory': card_code}}
             )
-            user_tags = user['tags']
+            user_tags = user_burning['tags']
             if len(user_tags) != 0:
                 for tag in user_tags:
                     tagged_cards = user_tags[tag]
