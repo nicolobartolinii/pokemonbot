@@ -256,7 +256,7 @@ class Profile(commands.Cog):
         embed = discord.Embed(title='Coins', description='', colour=0xffcb05)
         embed.description = f'{ctx.author.mention}, you have:\n\n'
         embed.description += f'🪙 **{user["coins"]}** Coins'
-        embed.set_footer(text='Coins can be spent using the `shop` command.')
+        embed.set_footer(text='Coins can be spent using the shop command.')
         embed.set_thumbnail(url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 

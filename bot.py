@@ -84,7 +84,7 @@ async def help(ctx: commands.Context, command: str = None):
         embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`start`, `profile`, `level`, `levelsinfo`, `favpokemon`', inline=True)
+        embed.add_field(name='**👤Profile**', value='`coins`, `favpokemon`, `level`, `levelsinfo`, `start`, `profile`', inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -298,6 +298,11 @@ Other
     elif command == 'tagburn' or command == 'tb' or command == 'tagb' or command == 'tburn':
         embed = discord.Embed(title='Command Details: `tagburn <tag_name>`',
                               description='**Aliases**: `tb`, `tagb`, `tburn`\n\nBurn all the cards in your collection that are tagged with `tag_name` and collect their resources.\n\nBurning cards is useful to obtain **experience points** and other resources.',
+                              colour=0xffcb05)
+        await ctx.send(embed=embed)
+    elif command == 'coins' or command == 'money' or command == 'balance' or command == 'cash':
+        embed = discord.Embed(title='Command Details: `coins`',
+                              description='**Aliases**: `money`, `balance`\n\nView the amount of your coins.\n\nCoins can be spent in the `shop` to buy card packs and other things.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     else:
