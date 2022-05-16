@@ -553,7 +553,8 @@ class Cards(commands.Cog):
             await ctx.send('You should first register an account using the `start` command.')
             return
         user_burning = users.find_one({'_id': str(ctx.author.id)})
-        if len(user_burning["inventory"]) == 0:
+        user_inventory = user_burning['inventory']
+        if len(user_inventory) == 0:
             await ctx.send(f'Sorry {ctx.author.mention}, your card collection is empty.')
             return
         if tag_name is None:
@@ -574,7 +575,7 @@ class Cards(commands.Cog):
             rewards[1] += card_reward[1]
         embed = discord.Embed(title='Burn Tagged Cards', description=f'{ctx.author.mention}, you will receive:\n\n',
                               colour=0xffcb05)
-        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**Please, before confirming, check the cards you are burning using the** `collection f:tag:{tag_name}` **command.**'
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**You are burning the {round((len(tagged_cards)/len(user_inventory)) * 100, 1)}% of your collection. Please, before confirming, check the cards you are burning using the** `collection f:tag:{tag_name}` **command.**'
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('❌')
         await msg.add_reaction('🔥')
@@ -601,6 +602,62 @@ class Cards(commands.Cog):
             if str(r.emoji) == '✅':
                 for j in range(len(tagged_cards)):
                     await burn_card(ctx, user_burning, single_rewards[j], tagged_cards[j])
+                embed.description += '\n\n**Cards have been burned.**'
+                embed.colour = 0x35ff42
+                await msg.edit(embed=embed)
+
+    @commands.command(name='multiburn', aliases=['mb'])
+    async def multiburn(self, ctx: commands.Context, *codes):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user_burning = users.find_one({'_id': str(ctx.author.id)})
+        user_inventory = user_burning['inventory']
+        for code in codes:
+            code = code.capitalize()
+            for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
+                if invalid_char in code:
+                    await ctx.send(f'{ctx.author.mention}, at least one of those card codes is wrong. Please use the `help` command to check the correct usage of commands.')
+                    return
+            if code not in user_inventory:
+                await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
+                return
+        rewards = [0, 0]
+        single_rewards = []
+        for card in codes:
+            card_reward = det_rewards(card)
+            single_rewards.append(card_reward)
+            rewards[0] += card_reward[0]
+            rewards[1] += card_reward[1]
+        embed = discord.Embed(title='Burn Tagged Cards', description=f'{ctx.author.mention}, you will receive:\n\n',
+                              colour=0xffcb05)
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**You are burning the {round((len(codes) / len(user_inventory)) * 100, 1)}% of your collection. Please, before confirming, check if the cards you have selected are the ones you want to burn.'
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction('❌')
+        await msg.add_reaction('🔥')
+
+        try:
+            r, u = await self.bot.wait_for('reaction_add', timeout=30,
+                                           check=lambda reaction, user: user == ctx.author and str(
+                                               reaction.emoji) in '❌🔥')
+        except asyncio.TimeoutError:
+            return
+        if str(r.emoji) == '❌':
+            embed.description += '\n\n**Card burning has been canceled.**'
+            embed.colour = 0xfd0111
+            await msg.edit(embed=embed)
+            return
+        elif str(r.emoji) == '🔥':
+            await msg.add_reaction('✅')
+            try:
+                r, u = await self.bot.wait_for('reaction_add', timeout=10,
+                                               check=lambda reaction, user: user == ctx.author and str(
+                                                   reaction.emoji) == '✅')
+            except asyncio.TimeoutError:
+                return
+            if str(r.emoji) == '✅':
+                for j in range(len(codes)):
+                    await burn_card(ctx, user_burning, single_rewards[j], codes[j])
                 embed.description += '\n\n**Cards have been burned.**'
                 embed.colour = 0x35ff42
                 await msg.edit(embed=embed)

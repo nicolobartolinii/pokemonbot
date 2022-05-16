@@ -60,7 +60,7 @@ class Profile(commands.Cog):
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_thumbnail(url=ctx.author.avatar_url)
         embed.description += f'Your current level is: **{user["level"]}**\n'
-        embed.description += f'Your have **{user["exp"]}** experience points and you need `{EXP_AMOUNT[user["level"] + 1] - user["exp"]}` more experience points to level up.\n\n'
+        embed.description += f'You have **{user["exp"]}** experience points and you need `{EXP_AMOUNT[user["level"] + 1] - user["exp"]}` more experience points to level up.\n\n'
         embed.add_field(name='Card drop rates', value=RATES[user['level']][0], inline=False)
         await ctx.send(embed=embed)
 
