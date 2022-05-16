@@ -312,11 +312,20 @@ Other
 @bot.command(name='aggiornaroba')
 @commands.is_owner()
 async def aggiornaroba(ctx: commands.Context):
-    general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
-    free_codes = general_bot_settings_db['freeCodes']
-    for code in free_codes:
-        card = grabbed_cards.find_one({'_id': str(code)})
-        if card is not None:
-            await ctx.send(f'{code}')
+    # general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
+    # free_codes = general_bot_settings_db['freeCodes']
+    # for code in free_codes:
+    #     card = grabbed_cards.find_one({'_id': str(code)})
+    #     if card is not None:
+    #         await ctx.send(f'{code}')
+    ids = grabbed_cards.find({}, {'_id': 1}).hint({'_id': 1})
+    for idd in ids:
+        ris = users.find({'$in': {'inventory': idd}})
+        if len(ris) > 1:
+            await ctx.send(f'doppione {idd}:\n{ris}')
+        elif len(ris) == 0:
+            await ctx.send(f'nullo {idd}')
+        elif len(ris) == 1:
+            print(f'{idd} OK')
 
 bot.run(TOKEN)
