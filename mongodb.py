@@ -703,6 +703,6 @@ async def burn_card(ctx: commands.Context, user_burning, rewards: list, card_cod
         {'$inc': {'cardsBurned': 1}}
     )
     general_bot_settings.update_one({'_id': 0},
-                                    {'$push': {'freeCodes': card_code}})
+                                    {'$push': {'freeCodes': str(card_code)}})
     await add_exp(ctx, rewards[0])
-    grabbed_cards.delete_one({'_id': card_code})
+    grabbed_cards.delete_one({'_id': str(card_code)})
