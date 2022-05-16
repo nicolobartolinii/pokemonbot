@@ -46,7 +46,7 @@ class Cards(commands.Cog):
             return ctx.channel.id == spawn_channel_id
         return commands.check(predicate)
 
-    @commands.command(name='spawn', aliases=['s'])
+    @commands.command(name='spawn', aliases=['s', 'S'])
     @spawn_channel_check()
     @commands.cooldown(rate=1, per=1200, type=commands.BucketType.user)
     async def spawn(self, ctx: commands.Context):
