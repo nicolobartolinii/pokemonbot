@@ -291,7 +291,7 @@ Other
         await ctx.send(embed=embed)
     elif command == 'multiburn' or command == 'mb':
         embed = discord.Embed(title='Command Details: `multiburn <...card_codes>`',
-                              description='**Aliases**: `b`\n\nBurn more than one cards and collect their resources. Card codes must be separated by spaces only and should be written in capital letters.\n\nBurning cards is useful to obtain **experience points** and other resources.',
+                              description='**Aliases**: `mb`\n\nBurn more than one cards and collect their resources. Card codes must be separated by spaces only and should be written in capital letters.\n\nBurning cards is useful to obtain **experience points** and other resources.',
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     elif command == 'tagburn' or command == 'tb' or command == 'tagb' or command == 'tburn':

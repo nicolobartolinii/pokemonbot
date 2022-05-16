@@ -614,7 +614,7 @@ class Cards(commands.Cog):
         user_burning = users.find_one({'_id': str(ctx.author.id)})
         user_inventory = user_burning['inventory']
         for code in codes:
-            code = code.capitalize()
+            code = code.upper()
             for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
                 if invalid_char in code:
                     await ctx.send(f'{ctx.author.mention}, at least one of those card codes is wrong. Please use the `help` command to check the correct usage of commands.')
@@ -661,7 +661,6 @@ class Cards(commands.Cog):
                 embed.description += '\n\n**Cards have been burned.**'
                 embed.colour = 0x35ff42
                 await msg.edit(embed=embed)
-
 
     @spawn.error
     async def spawn_error(self, ctx: commands.Context, error):
