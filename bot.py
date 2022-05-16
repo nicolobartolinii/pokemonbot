@@ -327,5 +327,7 @@ async def aggiornaroba(ctx: commands.Context):
             await ctx.send(f'nullo {idd}')
         elif len(ris) == 1:
             print(f'{idd} OK')
+        elif ris is None:
+            await ctx.send(f'None {idd}')
 
 bot.run(TOKEN)
