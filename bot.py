@@ -320,7 +320,7 @@ async def aggiornaroba(ctx: commands.Context):
     #         await ctx.send(f'{code}')
     ids = list(grabbed_cards.find({}, {'_id': 1}))
     for idd in ids:
-        ris = list(users.find({'inventory': {'$in': idd}}))
+        ris = list(users.find({'inventory': {'$in': [idd]}}))
         if len(ris) > 1:
             await ctx.send(f'doppione {idd}:\n{ris}')
         elif len(ris) == 0:
