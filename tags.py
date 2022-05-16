@@ -218,8 +218,8 @@ class Tags(commands.Cog):
         user = users.find_one({'_id': str(ctx.author.id)})
         user_inventory = user['inventory']
         user_tags = user['tags']
+        codes = [code.upper() for code in codes]
         for code in codes:
-            code = code.upper()
             for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
                 if invalid_char in code:
                     await ctx.send(f'{ctx.author.mention}, at least one of those card codes is wrong. Please use the `help` command to check the correct usage of commands.')
@@ -255,6 +255,7 @@ class Tags(commands.Cog):
         user = users.find_one({'_id': str(ctx.author.id)})
         user_inventory = user['inventory']
         user_tags = user['tags']
+        codes = [code.upper() for code in codes]
         for code in codes:
             for invalid_char in [',', '@', '#', '.', '-', ':', ';', '_', '!', '$', 'ù', 'à', 'è', 'ì', 'ò', '?', '^']:
                 if invalid_char in code:
