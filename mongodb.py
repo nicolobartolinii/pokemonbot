@@ -215,17 +215,21 @@ def download_images():
 
 
 def get_new_card_code():
-    card_code = int(general_bot_settings.find_one({
-        '_id': 0
-    })['lastCardCode']) + 1
-    general_bot_settings.update_one({
-        '_id': 0
-    }, {
-        '$set': {
-            'lastCardCode': str(card_code)
-        }
-    }, upsert=False)
-    return base31encode(card_code)
+    general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
+    if len(general_bot_settings_db['freeCodes']) != 0:
+        card_code = random.choice(general_bot_settings_db['free_codes'])
+        general_bot_settings.update_one({'_id': 0}, {'$pull': {'freeCodes': str(card_code)}})
+        return card_code
+    else:
+        card_code = int(general_bot_settings_db['lastCardCode']) + 1
+        general_bot_settings.update_one({
+            '_id': 0
+        }, {
+            '$set': {
+                'lastCardCode': str(card_code)
+            }
+        }, upsert=False)
+        return base31encode(card_code)
 
 
 def get_new_temp_image_number():
@@ -252,7 +256,6 @@ def get_new_temp_image_number():
 
 
 def add_grabbed_card(ctx: commands.Context, user: discord.User, card):
-    # TODO fai un array nel database generale dove metti i codici delle carte bruciate e qui fai prima il check se c'è qualche codice in quell'array
     card_code = get_new_card_code()
     spawns = card['timesSpawned'] + 1 or 1
     grabbed_cards.insert_one({
