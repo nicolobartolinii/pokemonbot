@@ -264,7 +264,6 @@ class Tags(commands.Cog):
             if code not in user_inventory:
                 await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
                 return
-        already_untagged = False
         for code in codes:
             for tag in user_tags:
                 tagged_cards = user_tags[tag]
@@ -273,12 +272,7 @@ class Tags(commands.Cog):
                         {'_id': str(ctx.author.id)},
                         {'$pull': {f'tags.{tag}': str(code)}}
                     )
-                else:
-                    already_untagged = True
-        if already_untagged:
-            await ctx.send(f'{ctx.author.mention}, at least one of the cards were already untagged. The others have been succesfully untagged.')
-        else:
-            await ctx.send(f'{ctx.author.mention}, the cards have been succesfully untagged.')
+        await ctx.send(f'{ctx.author.mention}, the cards have been succesfully untagged.')
 
     @createtag.error
     async def createtag_error(self, ctx: commands.Context, error):

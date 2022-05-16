@@ -631,7 +631,7 @@ class Cards(commands.Cog):
             rewards[1] += card_reward[1]
         embed = discord.Embed(title='Burn Tagged Cards', description=f'{ctx.author.mention}, you will receive:\n\n',
                               colour=0xffcb05)
-        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**You are burning the {round((len(codes) / len(user_inventory)) * 100, 1)}% of your collection. Please, before confirming, check if the cards you have selected are the ones you want to burn.'
+        embed.description += f'💫 **{rewards[0]}** Exp\n🪙 **{rewards[1]}** Coins\n\n**You are burning the {round((len(codes) / len(user_inventory)) * 100, 1)}% of your collection. Please, before confirming, check if the cards you have selected are the ones you want to burn.**'
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('❌')
         await msg.add_reaction('🔥')
