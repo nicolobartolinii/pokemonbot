@@ -217,7 +217,7 @@ def download_images():
 def get_new_card_code():
     general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
     if len(general_bot_settings_db['freeCodes']) != 0:
-        card_code = random.choice(general_bot_settings_db['free_codes'])
+        card_code = random.choice(general_bot_settings_db['freeCodes'])
         general_bot_settings.update_one({'_id': 0}, {'$pull': {'freeCodes': str(card_code)}})
         return card_code
     else:
