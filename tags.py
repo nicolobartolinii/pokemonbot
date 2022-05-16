@@ -233,18 +233,18 @@ class Tags(commands.Cog):
         except KeyError:
             await ctx.send(f'Sorry {ctx.author.mention}, that tag does not exist. You can create a new tag using the `createtag` command.')
             return
-        for tag in user_tags:
-            tagged_cards = user_tags[tag]
-            for code in codes:
+        for code in codes:
+            for tag in user_tags:
+                tagged_cards = user_tags[tag]
                 if code in tagged_cards:
                     users.update_one(
                         {'_id': str(ctx.author.id)},
                         {'$pull': {f'tags.{tag}': str(code)}}
                     )
-                users.update_one(
-                    {'_id': str(ctx.author.id)},
-                    {'$push': {f'tags.{tag_name}': str(code)}}
-                )
+            users.update_one(
+                {'_id': str(ctx.author.id)},
+                {'$push': {f'tags.{tag_name}': str(code)}}
+            )
         await ctx.send(f'{ctx.author.mention}, the cards have been tagged successfully with the `{tag_name}` tag.')
 
     @commands.command(name='multiuntag')
@@ -265,9 +265,9 @@ class Tags(commands.Cog):
                 await ctx.send(f'{ctx.author.mention}, you are not the owner of at least one of those cards.')
                 return
         already_untagged = False
-        for tag in user_tags:
-            tagged_cards = user_tags[tag]
-            for code in codes:
+        for code in codes:
+            for tag in user_tags:
+                tagged_cards = user_tags[tag]
                 if code in tagged_cards:
                     users.update_one(
                         {'_id': str(ctx.author.id)},
@@ -276,7 +276,7 @@ class Tags(commands.Cog):
                 else:
                     already_untagged = True
         if already_untagged:
-            await ctx.send(f'{ctx.author.mention}, at least one of the cards were alreasy untagged. The others have been succesfully untagged.')
+            await ctx.send(f'{ctx.author.mention}, at least one of the cards were already untagged. The others have been succesfully untagged.')
         else:
             await ctx.send(f'{ctx.author.mention}, the cards have been succesfully untagged.')
 
