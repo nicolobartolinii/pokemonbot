@@ -312,7 +312,11 @@ Other
 @bot.command(name='aggiornaroba')
 @commands.is_owner()
 async def aggiornaroba(ctx: commands.Context):
-    # users.update_many({}, {'$set': {'coins': 0}})
-    pass
+    general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
+    free_codes = general_bot_settings_db['freeCodes']
+    for code in free_codes:
+        card = grabbed_cards.find_one({'_id': str(code)})
+        if card is not None:
+            await ctx.send(f'{code}')
 
 bot.run(TOKEN)
