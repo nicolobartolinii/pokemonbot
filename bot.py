@@ -25,6 +25,7 @@ bot.load_extension('wishlist')
 bot.load_extension('trades')
 bot.load_extension('tags')
 bot.load_extension('profile')
+bot.load_extension('minigames')
 
 
 @bot.event
@@ -306,6 +307,7 @@ Other
 @bot.command(name='aggiornaroba')
 @commands.is_owner()
 async def aggiornaroba(ctx: commands.Context):
-    users.update_many({}, {'$set': {'coins': 0}})
+    # users.update_many({}, {'$set': {'coins': 0}})
+    pass
 
 bot.run(TOKEN)

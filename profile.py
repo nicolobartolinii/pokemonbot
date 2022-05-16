@@ -32,7 +32,8 @@ class Profile(commands.Cog):
             poke_name = None
             embed.set_thumbnail(url=member.avatar_url)
         embed.description = f'Level · **{user["level"]}**/20\n'
-        embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n\n'
+        embed.description += f'Experience · **{user["exp"]}** (**{round(((user["exp"] - EXP_AMOUNT[user["level"]])/(EXP_AMOUNT[user["level"] + 1] - EXP_AMOUNT[user["level"]]))*100, 1)}%** to level **{user["level"] + 1}**)\n'
+        embed.description += f'Coins · **{user["coins"]}**\n\n'
         embed.description += f'Favourite Pokémon · **{poke_name if not None else "None"}**\n\n'
         embed.description += f'Cards in collection · **{len(user["inventory"])}**\n'
         embed.description += f'Last card grabbed · `{user["inventory"][-1] if len(user["inventory"]) != 0 else "None"}`\n'
@@ -245,6 +246,19 @@ class Profile(commands.Cog):
             )
             await ctx.send(
                 f'{ctx.author.mention}, you successfully set **{poke_name.capitalize()}** as your favourite pokémon!')
+
+    @commands.command(name='coins', aliases=['money', 'balance'])
+    async def coins(self, ctx: commands.Context):
+        if not is_user_registered(ctx.author):
+            await ctx.send('You should first register an account using the `start` command.')
+            return
+        user = users.find_one({'_id': str(ctx.author.id)})
+        embed = discord.Embed(title='Coins', description='', colour=0xffcb05)
+        embed.description = f'{ctx.author.mention}, you have:\n\n'
+        embed.description += f'🪙 **{user["coins"]}** Coins'
+        embed.set_footer(text='Coins can be spent using the `shop` command.')
+        embed.set_thumbnail(url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
 
 
 def setup(bot: commands.Bot):
