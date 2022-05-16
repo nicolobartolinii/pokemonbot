@@ -318,9 +318,9 @@ async def aggiornaroba(ctx: commands.Context):
     #     card = grabbed_cards.find_one({'_id': str(code)})
     #     if card is not None:
     #         await ctx.send(f'{code}')
-    ids = grabbed_cards.find({}, {'_id': 1}).hint({'_id': 1})
+    ids = list(grabbed_cards.find({}, {'_id': 1}))
     for idd in ids:
-        ris = users.find({'$in': {'inventory': idd}})
+        ris = users.find({'inventory': {'$in': idd}})
         if len(ris) > 1:
             await ctx.send(f'doppione {idd}:\n{ris}')
         elif len(ris) == 0:
