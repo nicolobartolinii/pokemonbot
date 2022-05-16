@@ -135,7 +135,7 @@ async def add_exp(ctx: commands.Context, amount):
         '$inc': {'exp': amount}
     })
     user = users.find_one({'_id': str(ctx.author.id)})
-    while user['exp'] >= EXP_AMOUNT[user['level'] + 1]:
+    if user['exp'] >= EXP_AMOUNT[user['level'] + 1]:
         await level_up(ctx)
 
 
@@ -146,7 +146,10 @@ async def level_up(ctx: commands.Context):
         '$inc': {'level': 1}
     })
     user = users.find_one({'_id': str(ctx.author.id)})
-    await ctx.send(f'{ctx.author.mention}, you are now level `{user["level"]}`! Check your level and other informations with the `level` command.')
+    if user['exp'] > EXP_AMOUNT[user['level'] + 1]:
+        await level_up(ctx)
+    else:
+        await ctx.send(f'{ctx.author.mention}, you are now level `{user["level"]}`! Check your level and other informations with the `level` command.')
 
 
 def add_pokemons(first, last):
