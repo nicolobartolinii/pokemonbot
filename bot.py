@@ -322,9 +322,9 @@ async def aggiornaroba(ctx: commands.Context):
     for idd in ids:
         ris = list(users.find({'inventory': str(idd['_id'])}))
         if len(ris) > 1:
-            await ctx.send(f'doppione {idd}:\n{ris}')
+            await ctx.send(f'doppione {idd["_id"]}')
         elif len(ris) == 0:
-            await ctx.send(f'nullo {idd}')
+            await ctx.send(f'nullo {idd["_id"]}')
         elif len(ris) == 1:
             print(f'{idd} OK')
         elif ris is None:
