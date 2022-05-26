@@ -662,7 +662,10 @@ def sort_filtered_dict(cards_dict_list: list, sort_type: str = None, reverse=Fal
 
 def det_rewards(card_code: str) -> list:
     grabbed_card = grabbed_cards.find_one({'_id': card_code})
-    card_id = grabbed_card['cardId']
+    try:
+        card_id = grabbed_card['cardId']
+    except TypeError:
+        return [0, 0]
     card_print = grabbed_card['print']
     card = cards.find_one({'_id': card_id})
     rarity_class = RARITIES[card['rarity']]
