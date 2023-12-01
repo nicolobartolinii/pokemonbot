@@ -12,8 +12,7 @@ load_dotenv()
 PSW_MONGODB = os.getenv('PSW_MONGODB')
 API_KEY = os.getenv('API_KEY')
 
-client = MongoClient(f'mongodb+srv://nick:{PSW_MONGODB}@primocluster.kqoqp.mongodb.net/discord-bot?retryWrites=true&w'
-                     f'=majority')
+client = MongoClient(f'mongodb+srv://nick:{PSW_MONGODB}@primocluster.kqoqp.mongodb.net/?retryWrites=true&w=majority')
 
 db = client['discord-bot']
 

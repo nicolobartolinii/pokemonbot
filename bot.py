@@ -1,5 +1,6 @@
 from mongodb import *
 import os
+import asyncio
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
@@ -20,12 +21,17 @@ async def determine_prefix(bot: commands.Bot, message: discord.Message):
 bot = commands.Bot(command_prefix=determine_prefix, intents=intents)
 bot.remove_command('help')
 
-bot.load_extension('cards')
-bot.load_extension('wishlist')
-bot.load_extension('trades')
-bot.load_extension('tags')
-bot.load_extension('profile')
-bot.load_extension('minigames')
+async def load_extensions():
+    await bot.load_extension('cards')
+    await bot.load_extension('wishlist')
+    await bot.load_extension('trades')
+    await bot.load_extension('tags')
+    await bot.load_extension('profile')
+    await bot.load_extension('minigames')
+
+async def main():
+    await load_extensions()
+    await bot.start(TOKEN)
 
 
 @bot.event
@@ -330,4 +336,4 @@ async def aggiornaroba(ctx: commands.Context):
         elif ris is None:
             await ctx.send(f'None {idd["_id"]}')
 
-bot.run(TOKEN)
+asyncio.run(main())

@@ -372,5 +372,5 @@ class Wishlist(commands.Cog):
         await ctx.send(f'{ctx.author.mention}, your wishlist watch channel has been set to this channel.')
 
 
-def setup(bot: commands.Bot):
-    bot.add_cog(Wishlist(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(Wishlist(bot))

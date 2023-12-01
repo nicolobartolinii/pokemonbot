@@ -678,5 +678,5 @@ class Cards(commands.Cog):
                 f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
 
 
-def setup(bot: commands.Bot):
-    bot.add_cog(Cards(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(Cards(bot))

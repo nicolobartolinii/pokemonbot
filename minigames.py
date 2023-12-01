@@ -4,7 +4,7 @@ from mongodb import *
 import time
 
 
-class Profile(commands.Cog):
+class Minigames(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -13,5 +13,5 @@ class Profile(commands.Cog):
         pass
 
 
-def setup(bot: commands.Bot):
-    bot.add_cog(Profile(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(Minigames(bot))
