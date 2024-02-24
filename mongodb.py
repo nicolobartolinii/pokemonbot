@@ -195,12 +195,11 @@ def import_all_cards():
 
 def download_images():
     mongocards = list(cards.find())
-    print(len(mongocards))
-    for i in range(4530, 14679):
-        if not os.path.exists('./imagesLow'):
-            os.makedirs('./imagesLow')
-        if not os.path.exists('./imagesHigh'):
-            os.makedirs('./imagesHigh')
+    if not os.path.exists('./imagesLow'):
+        os.makedirs('./imagesLow')
+    if not os.path.exists('./imagesHigh'):
+        os.makedirs('./imagesHigh')
+    for i in range(0, len(mongocards)):
         url_low = mongocards[i]['imageLow']
         r_low = requests.get(url_low)
         filename_low = f'{url_low.split("/")[-2]}_{url_low.split("/")[-1]}'
@@ -211,6 +210,10 @@ def download_images():
             outfile.write(r_low.content)
         with open(f'./imagesHigh/{filename_high}', 'wb') as outfile:
             outfile.write(r_high.content)
+
+
+if __name__ == "__main__":
+    download_images()
 
 
 def get_new_card_code():

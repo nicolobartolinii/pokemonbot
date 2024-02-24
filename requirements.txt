@@ -1,0 +1,5 @@
+python-dotenv==0.20.0
+pokemontcgsdk==3.4.0
+pokebase==1.4.0
+pymongo[srv]==4.1.1
+discord.py==1.7.3

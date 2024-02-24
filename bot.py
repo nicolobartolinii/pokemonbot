@@ -22,12 +22,12 @@ bot = commands.Bot(command_prefix=determine_prefix, intents=intents)
 bot.remove_command('help')
 
 async def load_extensions():
-    await bot.load_extension('cards')
-    await bot.load_extension('wishlist')
-    await bot.load_extension('trades')
-    await bot.load_extension('tags')
-    await bot.load_extension('profile')
-    await bot.load_extension('minigames')
+    bot.load_extension('cards')
+    bot.load_extension('wishlist')
+    bot.load_extension('trades')
+    bot.load_extension('tags')
+    bot.load_extension('profile')
+    bot.load_extension('minigames')
 
 async def main():
     await load_extensions()
