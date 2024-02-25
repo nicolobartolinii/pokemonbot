@@ -1,6 +1,9 @@
 from mongodb import *
 import os
 import asyncio
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
@@ -58,6 +61,11 @@ async def on_guild_join(guild: discord.Guild):
             colour=0xffcb05
         )
         await text_channel.send(embed=embed)
+
+
+@bot.command(name='test')
+async def test(ctx):
+    await ctx.send('Test command is working!')
 
 
 @bot.command(name='channel')
