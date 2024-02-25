@@ -6,6 +6,13 @@ from mongodb import *
 from utils import *
 
 
+def spawn_channel_check():
+        async def predicate(ctx: commands.Context):
+            spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
+            return ctx.channel.id == spawn_channel_id
+        return commands.check(predicate)
+
+
 class Cards(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -38,13 +45,6 @@ class Cards(commands.Cog):
         else:
             await ctx.send(f'User {ctx.author.mention} already registered.')
             return
-
-    @staticmethod
-    def spawn_channel_check():
-        async def predicate(ctx: commands.Context):
-            spawn_channel_id = int(guilds.find_one({'_id': str(ctx.guild.id)})['spawnChannel'])
-            return ctx.channel.id == spawn_channel_id
-        return commands.check(predicate)
 
     @commands.command(name='spawn', aliases=['s', 'S'])
     @spawn_channel_check()
@@ -678,5 +678,5 @@ class Cards(commands.Cog):
                 f'Sorry {ctx.author.mention}, the spawn channel for this server is: {ctx.guild.get_channel(spawn_channel_id).mention}.')
 
 
-async def setup(bot: commands.Bot):
-    await bot.add_cog(Cards(bot))
+def setup(bot: commands.Bot):
+    bot.add_cog(Cards(bot))

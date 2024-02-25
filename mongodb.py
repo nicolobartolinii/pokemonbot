@@ -212,10 +212,6 @@ def download_images():
             outfile.write(r_high.content)
 
 
-if __name__ == "__main__":
-    download_images()
-
-
 def get_new_card_code():
     general_bot_settings_db = general_bot_settings.find_one({'_id': 0})
     if len(general_bot_settings_db['freeCodes']) != 0:

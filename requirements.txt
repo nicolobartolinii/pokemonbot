@@ -3,3 +3,4 @@ pokemontcgsdk==3.4.0
 pokebase==1.4.0
 pymongo[srv]==4.1.1
 discord.py==1.7.3
+pillow==9.1.0

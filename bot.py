@@ -22,12 +22,14 @@ bot = commands.Bot(command_prefix=determine_prefix, intents=intents)
 bot.remove_command('help')
 
 async def load_extensions():
+    print('entro in loadext')
     bot.load_extension('cards')
     bot.load_extension('wishlist')
     bot.load_extension('trades')
     bot.load_extension('tags')
     bot.load_extension('profile')
     bot.load_extension('minigames')
+    print('finisco loadext')
 
 async def main():
     await load_extensions()
@@ -83,6 +85,7 @@ async def server(ctx: commands.Context):
 
 @bot.command(name='help')
 async def help(ctx: commands.Context, command: str = None):
+    print('sono in help')
     if command is None:
         embed = discord.Embed(title='Pokémon Collector Commands', description='Use `help <command>` to see more details about a particular command.', colour=0xffcb05)
         embed.add_field(name='**📜Cards**', value='`burn`, `collection`, `multiburn`, `spawn`, `tagburn`, `view`', inline=True)

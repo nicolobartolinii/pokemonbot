@@ -241,5 +241,5 @@ class Trades(commands.Cog):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
 
-async def setup(bot: commands.Bot):
-    await bot.add_cog(Trades(bot))
+def setup(bot: commands.Bot):
+    bot.add_cog(Trades(bot))

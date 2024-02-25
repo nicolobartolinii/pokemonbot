@@ -306,5 +306,5 @@ class Tags(commands.Cog):
     async def multiuntag_error(self, ctx: commands.Context, error):
         await ctx.send('Something went wrong. Please use the `help` command to check the usage of commands.')
 
-async def setup(bot: commands.Bot):
-    await bot.add_cog(Tags(bot))
+def setup(bot: commands.Bot):
+    bot.add_cog(Tags(bot))
