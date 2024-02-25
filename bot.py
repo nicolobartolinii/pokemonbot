@@ -10,11 +10,14 @@ default_prefixes = ['p!', 'p', 'p$']
 
 
 async def determine_prefix(bot: commands.Bot, message: discord.Message):
+    print("ciao")
     guild = message.guild
     if guild:
         custom_prefix = guilds.find_one({'_id': str(guild.id)})['customPrefix']
+        print(custom_prefix)
         return [custom_prefix, custom_prefix.upper()]
     else:
+        print(default_prefixes)
         return default_prefixes
 
 
@@ -33,6 +36,7 @@ async def load_extensions():
 
 async def main():
     await load_extensions()
+    print('Extensions loaded')
     await bot.start(TOKEN)
     print('Bot started')
 
