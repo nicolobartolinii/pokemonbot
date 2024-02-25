@@ -21,15 +21,15 @@ async def determine_prefix(bot: commands.Bot, message: discord.Message):
 bot = commands.Bot(command_prefix=determine_prefix, intents=intents)
 bot.remove_command('help')
 
+
 async def load_extensions():
-    print('entro in loadext')
     bot.load_extension('cards')
     bot.load_extension('wishlist')
     bot.load_extension('trades')
     bot.load_extension('tags')
     bot.load_extension('profile')
     bot.load_extension('minigames')
-    print('finisco loadext')
+
 
 async def main():
     await load_extensions()
@@ -87,13 +87,19 @@ async def server(ctx: commands.Context):
 async def help(ctx: commands.Context, command: str = None):
     print('sono in help')
     if command is None:
-        embed = discord.Embed(title='Pokémon Collector Commands', description='Use `help <command>` to see more details about a particular command.', colour=0xffcb05)
-        embed.add_field(name='**📜Cards**', value='`burn`, `collection`, `multiburn`, `spawn`, `tagburn`, `view`', inline=True)
-        embed.add_field(name='**🏷Tags**', value='`createtag`, `deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`', inline=True)
+        embed = discord.Embed(title='Pokémon Collector Commands',
+                              description='Use `help <command>` to see more details about a particular command.',
+                              colour=0xffcb05)
+        embed.add_field(name='**📜Cards**', value='`burn`, `collection`, `multiburn`, `spawn`, `tagburn`, `view`',
+                        inline=True)
+        embed.add_field(name='**🏷Tags**',
+                        value='`createtag`, `deletetag`, `renametag`, `multitag`, `multiuntag`, `tag`, `tagemoji`, `tags`, `untag`',
+                        inline=True)
         embed.add_field(name='**ℹInfo**', value='`cardinfo`, `cooldown`, `help`, `lookup`, `server`', inline=True)
         embed.add_field(name='**✨Wishlist**', value='`wishadd`, `wishlist`, `wishremove`, `wishwatch`', inline=True)
         embed.add_field(name='**🔄Trades**', value='`give`, `trade`', inline=True)
-        embed.add_field(name='**👤Profile**', value='`coins`, `favpokemon`, `level`, `levelsinfo`, `start`, `profile`', inline=True)
+        embed.add_field(name='**👤Profile**', value='`coins`, `favpokemon`, `level`, `levelsinfo`, `start`, `profile`',
+                        inline=True)
         embed.add_field(name='**⚙Admin/Settings**', value='`channel`, `prefix`', inline=True)
         await ctx.send(embed=embed)
     elif command == 'collection' or command == 'c' or command == 'cards':
@@ -315,7 +321,8 @@ Other
                               colour=0xffcb05)
         await ctx.send(embed=embed)
     else:
-        await ctx.send(f'Sorry {ctx.author.mention}, that is not a valid command. Please use the `help` command to see the list of available commands.')
+        await ctx.send(
+            f'Sorry {ctx.author.mention}, that is not a valid command. Please use the `help` command to see the list of available commands.')
 
 
 @bot.command(name='aggiornaroba')
@@ -338,5 +345,6 @@ async def aggiornaroba(ctx: commands.Context):
             print(f'{idd} OK')
         elif ris is None:
             await ctx.send(f'None {idd["_id"]}')
+
 
 asyncio.run(main())
